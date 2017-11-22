@@ -1,4 +1,6 @@
-## Welcome to GitHub Pages
+## Welcome to my page
+
+This is my presentation [Metagenomics with R](https://mrsn4ke.github.io/Slides/MetagenomicsRGrenoble) for [R Users Grenoble](https://r-in-grenoble.github.io/index.html)
 
 You can use the [editor on GitHub](https://github.com/MrSn4ke/MrSn4ke.github.io/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
 
