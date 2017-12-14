@@ -18,3 +18,7 @@ This is the lesson Visualisation and other cool things with R I gave at [Mines N
 This is the presentation [Metagenomics with R](https://mrsn4ke.github.io/Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble) I made for [R Users Grenoble](https://r-in-grenoble.github.io/index.html) on November 23, 2017.
 
 
+## Simulation of Brownian Motion
+
+This is a [shiny app](https://mrsnake.shinyapps.io/BrownianMotion/) which simulates a Brownian Motion (there is an error with "Mean")
+
