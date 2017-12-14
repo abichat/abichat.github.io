@@ -6,12 +6,10 @@ Comming soon
 
 ## Mines Nancy Formation R
 
-This is lesson [Visualisation and other cool things with R] I gave at [Mines Nancy](http://mines-nancy.univ-lorraine.fr/) on Decembre 15, 2017.
+This is lesson Visualisation and other cool things with R I gave at [Mines Nancy](http://mines-nancy.univ-lorraine.fr/) on Decembre 15, 2017.
 
 Files:
-
 * [Glucose](https://mrsn4ke.github.io/Slides/FormationRMines/Glucose.txt)
-
 * [Pokemon](https://mrsn4ke.github.io/Slides/FormationRMines/Pokemon.txt)
 
 
