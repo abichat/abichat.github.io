@@ -6,7 +6,7 @@ Comming soon
 
 ## Mines Nancy Formation R
 
-This is lesson Visualisation and other cool things with R I gave at [Mines Nancy](http://mines-nancy.univ-lorraine.fr/) on Decembre 15, 2017.
+This is the lesson Visualisation and other cool things with R I gave at [Mines Nancy](http://mines-nancy.univ-lorraine.fr/) on Decembre 15, 2017.
 
 * Files:
   * [Glucose](https://mrsn4ke.github.io/Slides/FormationRMines/Glucose.txt)
@@ -15,6 +15,6 @@ This is lesson Visualisation and other cool things with R I gave at [Mines Nancy
 
 ## R Users Grenoble
 
-This is presentation [Metagenomics with R](https://mrsn4ke.github.io/Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble) I made for [R Users Grenoble](https://r-in-grenoble.github.io/index.html) on November 23, 2017.
+This is the presentation [Metagenomics with R](https://mrsn4ke.github.io/Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble) I made for [R Users Grenoble](https://r-in-grenoble.github.io/index.html) on November 23, 2017.
 
 
