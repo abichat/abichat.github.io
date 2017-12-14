@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Visualisation and other cool things with R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Antoine Bichat" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/fonts.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <script src="libs/datatables-binding/datatables.js"></script>
+    <link href="libs/dt-core/css/jquery.dataTables.min.css" rel="stylesheet" />
+    <link href="libs/dt-core/css/jquery.dataTables.extra.css" rel="stylesheet" />
+    <script src="libs/dt-core/js/jquery.dataTables.min.js"></script>
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Visualisation<br>and other cool things with R
+### Antoine Bichat
+### Mines Nancy<br>December 15, 2017
+
+---
+
+class: center, middle, inverse
+
+
+
+
+#Good practices
+
+---
+##Writing code
+
+* Use the arrow for assignation and equal sign for argument setting
+
+* Leave space after commas, and around arrows and equal signs
+
+* Use line breaks
+
+--
+
+
+```r
+x &lt;- rnorm(n = 100, mean = 3, sd = 0.1)
+
+hist(x, col = "grey", border = "black", breaks = 30,
+     main = "Normal distribution", xlab = "", ylab = "Frequency")
+```
+
+&lt;img src="FormationRMines_files/figure-html/writing-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+## Pipe operator %&gt;%
+
+
+```r
+# install.packages("magrittr")
+library(magrittr)
+```
+
+* To express clearly a sequence of multiple operations
+
+* `x %&gt;% f` is equivalent to `f(x)`
+
+* `x %&gt;% f(y)` is equivalent to `f(x, y)`
+
+--
+
+
+```r
+round(mean(sqrt(1:9), na.rm = TRUE), digits = 2)
+```
+
+```
+## [1] 2.15
+```
+
+--
+
+
+```r
+1:9 %&gt;%
+  sqrt %&gt;%
+  mean(na.rm = TRUE) %&gt;%
+  round(digits = 2)
+```
+
+```
+## [1] 2.15
+```
+
+---
+class: center, middle
+&lt;blockquote class="twitter-tweet" data-lang="fr" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;This is a reason for pipes.  &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://t.co/SFKVN2GpZZ"&gt;pic.twitter.com/SFKVN2GpZZ&lt;/a&gt;&lt;/p&gt;&amp;mdash; Tajti András (@atajti) &lt;a href="https://twitter.com/atajti/status/889112630673235968?ref_src=twsrc%5Etfw"&gt;23 juillet 2017&lt;/a&gt;&lt;/blockquote&gt;
+&lt;br&gt;
+&lt;blockquote class="twitter-tweet" data-lang="fr" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;And once again, Stackoverflow reminds us why we REALLY need the pipe. &lt;a href="https://twitter.com/hashtag/RStats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#RStats&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/tidyverse?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#tidyverse&lt;/a&gt; &lt;a href="https://t.co/diXgQiVMhO"&gt;pic.twitter.com/diXgQiVMhO&lt;/a&gt;&lt;/p&gt;&amp;mdash; Colin Fay (@_ColinFay) &lt;a href="https://twitter.com/_ColinFay/status/889901747480793090?ref_src=twsrc%5Etfw"&gt;25 juillet 2017&lt;/a&gt;&lt;/blockquote&gt;
+
+---
+&lt;img src="so-logo.png" alt="Drawing" style="width: 410px;"/&gt;
+
+.center[
+&lt;img src="so-meme.png" alt="Drawing" style="width: 380px;"/&gt;
+]
+
+---
+class: middle, center, inverse
+
+#Tips with R and RStudio
+
+---
+### Keybord shortcuts
+
+* Ctrl+L: clears console
+
+* Ctrl+Enter: runs selection
+
+* Ctrl+Shift+C: (un)comments selection
+
+* Ctrl+D: deletes selection
+
+* Alt+- : inserts arrow with spaces
+
+.footnote[
+[*] It's Command on Macs.
+]
+--
+
+### Code shortcuts
+
+* `rm(list = ls())` removes all objects from the current workspace
+
+* `graphics.off()` shuts down all open graphics devices
+
+* `cat("\014")` clears console
+
+---
+## Not recommended code tips 
+
+
+```r
+sqrt(x &lt;- 4) ; x ; 3 -&gt; y ; y
+```
+
+```
+## [1] 2
+```
+
+```
+## [1] 4
+```
+
+```
+## [1] 3
+```
+---
+
+## Useful code tips
+
+
+```r
+(x &lt;- LETTERS[1:4])
+```
+
+```
+## [1] "A" "B" "C" "D"
+```
+
+```r
+x %&lt;&gt;% tolower
+x
+```
+
+```
+## [1] "a" "b" "c" "d"
+```
+
+```r
+dput(x)
+```
+
+```
+## c("a", "b", "c", "d")
+```
+
+---
+## Time and {beepr}
+
+
+```r
+T1 &lt;- Sys.time()
+m4 &lt;- rnorm(n = 100000)^4
+T2 &lt;- Sys.time()
+difftime(T2, T1)
+```
+
+```
+## Time difference of 0.05402994 secs
+```
+
+```r
+mean(m4)
+```
+
+```
+## [1] 2.982003
+```
+
+```r
+# install.packages("beepr")
+library(beepr)
+beep()
+```
+
+---
+##TeleR
+
+.center[
+&lt;img src="TeleR1.png" alt="Drawing" style="height: 490px;"/&gt;
+&lt;img src="TeleR2.png" alt="Drawing" style="height: 490px;"/&gt;
+]
+
+---
+class: middle, center, inverse
+
+#Visualisation
+##With [**ggplot2**](http://ggplot2.org/)
+
+---
+## Iris dataset
+
+<div id="htmlwidget-bf061a4964ee27e5e789" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-bf061a4964ee27e5e789">{"x":{"filter":"none","fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150"],[5.1,4.9,4.7,4.6,5,5.4,4.6,5,4.4,4.9,5.4,4.8,4.8,4.3,5.8,5.7,5.4,5.1,5.7,5.1,5.4,5.1,4.6,5.1,4.8,5,5,5.2,5.2,4.7,4.8,5.4,5.2,5.5,4.9,5,5.5,4.9,4.4,5.1,5,4.5,4.4,5,5.1,4.8,5.1,4.6,5.3,5,7,6.4,6.9,5.5,6.5,5.7,6.3,4.9,6.6,5.2,5,5.9,6,6.1,5.6,6.7,5.6,5.8,6.2,5.6,5.9,6.1,6.3,6.1,6.4,6.6,6.8,6.7,6,5.7,5.5,5.5,5.8,6,5.4,6,6.7,6.3,5.6,5.5,5.5,6.1,5.8,5,5.6,5.7,5.7,6.2,5.1,5.7,6.3,5.8,7.1,6.3,6.5,7.6,4.9,7.3,6.7,7.2,6.5,6.4,6.8,5.7,5.8,6.4,6.5,7.7,7.7,6,6.9,5.6,7.7,6.3,6.7,7.2,6.2,6.1,6.4,7.2,7.4,7.9,6.4,6.3,6.1,7.7,6.3,6.4,6,6.9,6.7,6.9,5.8,6.8,6.7,6.7,6.3,6.5,6.2,5.9],[3.5,3,3.2,3.1,3.6,3.9,3.4,3.4,2.9,3.1,3.7,3.4,3,3,4,4.4,3.9,3.5,3.8,3.8,3.4,3.7,3.6,3.3,3.4,3,3.4,3.5,3.4,3.2,3.1,3.4,4.1,4.2,3.1,3.2,3.5,3.6,3,3.4,3.5,2.3,3.2,3.5,3.8,3,3.8,3.2,3.7,3.3,3.2,3.2,3.1,2.3,2.8,2.8,3.3,2.4,2.9,2.7,2,3,2.2,2.9,2.9,3.1,3,2.7,2.2,2.5,3.2,2.8,2.5,2.8,2.9,3,2.8,3,2.9,2.6,2.4,2.4,2.7,2.7,3,3.4,3.1,2.3,3,2.5,2.6,3,2.6,2.3,2.7,3,2.9,2.9,2.5,2.8,3.3,2.7,3,2.9,3,3,2.5,2.9,2.5,3.6,3.2,2.7,3,2.5,2.8,3.2,3,3.8,2.6,2.2,3.2,2.8,2.8,2.7,3.3,3.2,2.8,3,2.8,3,2.8,3.8,2.8,2.8,2.6,3,3.4,3.1,3,3.1,3.1,3.1,2.7,3.2,3.3,3,2.5,3,3.4,3],[1.4,1.4,1.3,1.5,1.4,1.7,1.4,1.5,1.4,1.5,1.5,1.6,1.4,1.1,1.2,1.5,1.3,1.4,1.7,1.5,1.7,1.5,1,1.7,1.9,1.6,1.6,1.5,1.4,1.6,1.6,1.5,1.5,1.4,1.5,1.2,1.3,1.4,1.3,1.5,1.3,1.3,1.3,1.6,1.9,1.4,1.6,1.4,1.5,1.4,4.7,4.5,4.9,4,4.6,4.5,4.7,3.3,4.6,3.9,3.5,4.2,4,4.7,3.6,4.4,4.5,4.1,4.5,3.9,4.8,4,4.9,4.7,4.3,4.4,4.8,5,4.5,3.5,3.8,3.7,3.9,5.1,4.5,4.5,4.7,4.4,4.1,4,4.4,4.6,4,3.3,4.2,4.2,4.2,4.3,3,4.1,6,5.1,5.9,5.6,5.8,6.6,4.5,6.3,5.8,6.1,5.1,5.3,5.5,5,5.1,5.3,5.5,6.7,6.9,5,5.7,4.9,6.7,4.9,5.7,6,4.8,4.9,5.6,5.8,6.1,6.4,5.6,5.1,5.6,6.1,5.6,5.5,4.8,5.4,5.6,5.1,5.1,5.9,5.7,5.2,5,5.2,5.4,5.1],[0.2,0.2,0.2,0.2,0.2,0.4,0.3,0.2,0.2,0.1,0.2,0.2,0.1,0.1,0.2,0.4,0.4,0.3,0.3,0.3,0.2,0.4,0.2,0.5,0.2,0.2,0.4,0.2,0.2,0.2,0.2,0.4,0.1,0.2,0.2,0.2,0.2,0.1,0.2,0.2,0.3,0.3,0.2,0.6,0.4,0.3,0.2,0.2,0.2,0.2,1.4,1.5,1.5,1.3,1.5,1.3,1.6,1,1.3,1.4,1,1.5,1,1.4,1.3,1.4,1.5,1,1.5,1.1,1.8,1.3,1.5,1.2,1.3,1.4,1.4,1.7,1.5,1,1.1,1,1.2,1.6,1.5,1.6,1.5,1.3,1.3,1.3,1.2,1.4,1.2,1,1.3,1.2,1.3,1.3,1.1,1.3,2.5,1.9,2.1,1.8,2.2,2.1,1.7,1.8,1.8,2.5,2,1.9,2.1,2,2.4,2.3,1.8,2.2,2.3,1.5,2.3,2,2,1.8,2.1,1.8,1.8,1.8,2.1,1.6,1.9,2,2.2,1.5,1.4,2.3,2.4,1.8,1.8,2.1,2.4,2.3,1.9,2.3,2.5,2.3,1.9,2,2.3,1.8],["setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","setosa","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","versicolor","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica","virginica"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Sepal.Length<\/th>\n      <th>Sepal.Width<\/th>\n      <th>Petal.Length<\/th>\n      <th>Petal.Width<\/th>\n      <th>Species<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":7,"columnDefs":[{"className":"dt-right","targets":[1,2,3,4]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[7,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+
+---
+##Scatterplot
+
+
+```r
+# install.packages("ggplot2")
+library(ggplot2)
+ggplot(iris) + geom_point(aes(x = Sepal.Length, y = Petal.Length))
+```
+
+&lt;img src="FormationRMines_files/figure-html/iris2-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+##Scatterplot with legend
+
+
+```r
+ggplot(iris) + 
+  geom_point(aes(x = Sepal.Length, y = Petal.Length, 
+                 color = Species, shape = Species)) +
+  labs(x = "Sepal length", y = "Petal Length") +
+  theme_bw()
+```
+
+&lt;img src="FormationRMines_files/figure-html/iris3-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+## Histogram
+
+
+```r
+ggplot(iris) + 
+  geom_histogram(aes(x = Sepal.Length), 
+                 fill = "grey50", color = "black") +
+  labs(x = "Sepal length", y = "Count") +
+  theme_bw()
+```
+
+&lt;img src="FormationRMines_files/figure-html/iris4-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+## Histogram with facetting
+
+
+```r
+ggplot(iris) + 
+  geom_histogram(aes(x = Sepal.Length, fill = Species), 
+                 color = "black") +
+  facet_grid(.~Species) +
+  labs(x = "Sepal length", y = "Count") +
+  theme_bw()
+```
+
+&lt;img src="FormationRMines_files/figure-html/iris5-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+## Boxplot
+
+
+```r
+p &lt;- ggplot(iris) + 
+  geom_boxplot(aes(x = Species, y = Sepal.Length, fill = Species),
+               alpha = 0.7) +
+  scale_fill_manual(values = c("firebrick", "forestgreen", "royalblue")) +
+  labs(x = "Species", y = "Sepal length") 
+p + theme_bw()
+```
+
+&lt;img src="FormationRMines_files/figure-html/iris6-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+##Theory of data visualisation
+
+ggplot stands for __Grammar of Graphics__
+
+&lt;br&gt;
+
+```
+ggplot(data = &lt;DATA&gt;) + 
+  &lt;GEOM_FUNCTION&gt;(mapping = aes(&lt;MAPPINGS&gt;), 
+                  stat = &lt;STAT&gt;, position = &lt;POSITION&gt;) +
+  &lt;COORDINATE_FUNCTION&gt; +
+  &lt;FACET_FUNCTION&gt;
+```
+
+&lt;br&gt;
+
+
+You can uniquely describe any plot as a combination of these 7 parameters.
+
+---
+&lt;br&gt;
+&lt;br&gt;
+&lt;blockquote class="twitter-tweet" data-lang="fr" align="center"&gt;&lt;p lang="en" dir="ltr"&gt;Then comes the inevitable &amp;quot;rotate ggplot2 axes&amp;quot; google, which brings me to this life-saving &lt;a href="https://twitter.com/StackOverflow?ref_src=twsrc%5Etfw"&gt;@StackOverflow&lt;/a&gt; post: &lt;a href="https://t.co/ZuZH52wsYZ"&gt;https://t.co/ZuZH52wsYZ&lt;/a&gt;&lt;/p&gt;&amp;mdash; Tanya Cashorali (@tanyacash21) &lt;a href="https://twitter.com/tanyacash21/status/910241426453270528?ref_src=twsrc%5Etfw"&gt;19 septembre 2017&lt;/a&gt;&lt;/blockquote&gt;
+
+---
+class: center, middle, inverse
+# Data manipulation
+##with the [**tidyverse**](https://www.tidyverse.org/)
+
+---
+##Tidyverse ?
+
+```r
+# install.packages("tidyverse")
+library(tidyverse)
+```
+
+Tidyverse is a collection of packages designed for data science
+
+&lt;br&gt;
+
+We will use {ggplot2}, {dplyr} and {tidyr}
+
+&lt;br&gt;
+
+It imports the `%&gt;%` pipe from {magrittr} but not the `%&lt;&gt;%` pipe
+
+&lt;br&gt;
+
+There are also the {purrr}, {readr} and {tibble} packages
+
+---
+## Diamonds dataset
+
+
+```r
+data(diamonds) # {ggplot2}
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; carat &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; cut &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; color &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; clarity &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; depth &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; table &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; price &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; x &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; y &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; z &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.23 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Ideal &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SI2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 61.5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 326 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.95 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.98 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.43 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.21 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SI1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 59.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 61 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 326 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.89 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.84 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.23 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Good &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; VS1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 56.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 327 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.31 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.29 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; I &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; VS2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 334 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.20 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.23 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.63 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.31 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Good &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; J &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SI2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 63.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 335 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.34 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.35 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.75 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.24 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Very Good &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; J &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; VVS2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62.8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 57 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 336 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.94 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.96 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.48 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.24 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Very Good &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; I &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; VVS1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62.3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 57 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 336 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.95 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.98 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.47 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.26 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Very Good &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; H &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; SI1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 61.9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 55 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 337 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.53 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.22 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; VS2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 65.1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 61 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 337 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.87 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.49 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.23 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Very Good &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; H &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; VS1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 59.4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 61 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 338 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.00 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.39 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## group_by() and summarise()
+
+
+```r
+diamonds %&gt;% 
+  group_by(cut) %&gt;% 
+  summarise(Mean = mean(carat), Max = max(carat)) %&gt;% 
+  knitr::kable(format = 'html')
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; cut &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Mean &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Max &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Fair &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0461366 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.01 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Good &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8491847 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.01 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Very Good &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8063814 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.00 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8919549 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.01 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ideal &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7028370 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.50 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## filter(), mutate(), arrange(), and select()
+
+
+```r
+diamonds %&gt;%
+  filter(x&gt;0 &amp; y&gt;0 &amp; z&gt;0) %&gt;%
+  mutate(vol = x*y*z) %&gt;%
+  arrange(vol) %&gt;%
+  select(carat, cut, color, x, y, z, vol) %&gt;%
+  head %&gt;% 
+  knitr::kable(format = 'html')
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; carat &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; cut &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; color &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; x &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; y &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; z &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; vol &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; D &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.73 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.68 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 31.70798 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; F &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.73 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.71 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.33 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.24324 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.81 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.24 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.26003 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.79 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.75 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.27 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.26237 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; E &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.79 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.26 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.29156 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Premium &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; D &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.77 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.72 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.31 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 32.39636 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## Use with {ggplot2}
+
+
+```r
+color_cut &lt;- diamonds %&gt;% 
+  group_by(color, cut) %&gt;%
+  summarise(price = mean(price))
+
+ggplot(color_cut, aes(x = color, y = price)) +
+  geom_line(aes(group = cut), color = "grey80") +
+  geom_point(aes(color = cut)) +
+  theme_bw()
+```
+
+&lt;img src="FormationRMines_files/figure-html/diamonds5-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+diamonds_count &lt;- diamonds %&gt;% 
+  group_by(color) %&gt;%
+  summarise(count = n())
+
+ggplot() +
+  geom_bar(data = diamonds, 
+           aes(x = color, fill = color), color = "black") +
+  geom_text(data = diamonds_count, 
+            aes(label = count, x = color, y = count/2)) +
+  theme_bw() +
+  theme(axis.title.x = element_blank(), legend.position = "none") +
+  labs(y = "Count")
+```
+
+&lt;img src="FormationRMines_files/figure-html/diamonds6-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+## Tidy data
+
+.center[
+&lt;img src="tidy.png" alt="Drawing" style="height: 240px;"/&gt;
+]
+
+1. Each variable forms a column
+
+2. Each observation forms a row
+
+3. Each type of observational unit forms a table
+
+---
+##Messy data
+
+.center[
+&lt;img src="messydata.png" alt="Drawing" style="height: 490px;"/&gt;
+]
+
+---
+## Grades dataset
+
+
+```r
+set.seed(1)
+
+Name &lt;- c("Jasmine", "Kate", "Mike", "Peter", "Thomas")
+Test1 &lt;- rnorm(n = 5, mean = c(11, 15, 16, 10, 8), sd = 2) %&gt;% round
+Test2 &lt;- rnorm(n = 5, mean = c(11, 15, 16, 10, 8), sd = 2) %&gt;% round
+Test3 &lt;- rnorm(n = 5, mean = c(11, 15, 16, 10, 8), sd = 2) %&gt;% round
+Test4 &lt;- rnorm(n = 5, mean = c(11, 15, 16, 10, 8), sd = 2) %&gt;% round
+Test5 &lt;- rnorm(n = 5, mean = c(11, 15, 16, 10, 8), sd = 2) %&gt;% round
+
+grades &lt;- data.frame(Name, Test1, Test2, Test3, Test4, Test5)
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Name &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Test1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Test2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Test3 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Test4 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Test5 &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Jasmine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Kate &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Mike &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 14 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 17 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 15 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 18 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 16 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Peter &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Thomas &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+## Tidy datasets with {tidyr}
+
+
+```r
+grades_gather &lt;- grades %&gt;% 
+  gather(key = Test, value = Grade, -Name)
+```
+
+<div id="htmlwidget-dc703e12195084a968e9" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dc703e12195084a968e9">{"x":{"filter":"none","fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25"],["Jasmine","Kate","Mike","Peter","Thomas","Jasmine","Kate","Mike","Peter","Thomas","Jasmine","Kate","Mike","Peter","Thomas","Jasmine","Kate","Mike","Peter","Thomas","Jasmine","Kate","Mike","Peter","Thomas"],["Test1","Test1","Test1","Test1","Test1","Test2","Test2","Test2","Test2","Test2","Test3","Test3","Test3","Test3","Test3","Test4","Test4","Test4","Test4","Test4","Test5","Test5","Test5","Test5","Test5"],[10,15,14,13,9,9,16,17,11,7,14,16,15,6,10,11,15,18,12,9,13,17,16,6,9]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Name<\/th>\n      <th>Test<\/th>\n      <th>Grade<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":7,"columnDefs":[{"className":"dt-right","targets":3},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[7,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+
+---
+
+
+```r
+ggplot(grades_gather) +
+  geom_bar(aes(x = Test, y = Grade, fill = Name), 
+           color = "black", stat = "identity") +
+  facet_grid(.~Name) +
+  guides(fill = FALSE) + 
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+&lt;img src="FormationRMines_files/figure-html/grades5-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle, center, inverse
+#Practice makes perfect
+
+---
+##Glucose dataset
+
+
+```r
+Glucose &lt;- read.table("Glucose.txt")
+```
+
+<div id="htmlwidget-3e12195084a968e94b75" style="width:100%;height:auto;" class="datatables html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3e12195084a968e94b75">{"x":{"filter":"none","fillContainer":false,"data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259","260","261","262","263","264","265","266","267","268","269","270","271","272","273","274","275","276","277","278","279","280","281","282","283","284","285","286","287","288","289","290","291","292","293","294","295","296","297","298","299","300","301","302","303","304","305","306","307","308","309","310","311","312","313","314","315","316","317","318","319","320","321","322","323","324","325","326","327","328","329","330","331","332","333","334","335","336","337","338","339","340","341","342","343","344","345","346","347","348","349","350","351","352","353","354","355","356","357","358","359","360","361","362","363","364","365","366","367","368","369","370","371","372","373","374","375","376","377","378"],[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],[-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,-0.25,0,0.5,1,1.5,2,3,4,5,6,7,-0.25,0,0.5,1,1.5,2,3,4,5,6,7],[4.9,4.5,7.84,5.46,5.08,4.32,3.91,3.99,4.15,4.41,4.91,4.18,9,9.74,6.95,6.92,4.66,3.45,4.2,4.63,4.22,4.92,8.09,6.74,4.3,4.28,4.59,4.49,5.29,4.95,4.34,4.05,3.78,8.71,7.12,6.17,4.22,4.31,3.15,3.64,3.88,5.03,4.99,9.1,10.03,9.2,8.31,7.92,4.86,4.63,3.52,4.17,4.6,4.72,9.53,10.02,10.25,9.29,5.45,4.82,4.09,3.52,3.92,4.61,4.65,7.9,6.13,4.45,4.17,4.96,4.36,4.26,4.13,4.16,3.42,7.09,6.98,6.13,5.36,6.13,3.67,4.37,4.31,4.52,4.22,8.46,9.12,7.5,6.02,4.66,4.69,4.26,4.29,4.47,3.94,4.14,7.82,8.68,6.22,5.1,5.16,4.38,4.22,4.27,4.51,4.5,8.74,8.8,7.1,8.2,7.42,5.79,4.85,4.94,2.07,4.33,4.1,4.36,6.92,9.06,8.11,5.69,5.91,5.65,4.58,3.79,5.37,5.35,7.94,5.64,5.06,5.49,4.77,4.48,4.39,4.45,4.95,4.4,7,7.8,7.78,7.3,5.82,5.14,3.59,4,4.47,4.47,7.95,7.21,6.35,5.58,4.57,3.9,3.44,4.18,4.32,4.19,4.22,7.45,8.07,6.84,6.86,4.79,3.87,3.6,4.92,4.87,5.12,6.32,9.48,9.88,6.28,5.58,5.26,4.1,4.25,4.55,4.42,4.07,5.48,9.05,8.04,7.19,4.87,5.4,4.35,4.51,4.66,5.1,5.22,7.2,4.95,4.45,3.88,3.65,4.21,null,4.44,3.82,4,6.56,6.48,5.66,7.74,4.45,4.07,3.73,3.58,4.27,4.33,6.61,6.89,5.64,4.85,4.82,3.82,4.31,3.81,2.92,4.31,4.45,7.34,6.75,7.55,6.42,5.75,4.56,4.3,3.92,4.55,4.44,5.56,8.39,7.85,7.4,6.23,4.59,4.31,3.96,4.05,4.38,4.54,8.86,10.01,10.47,9.91,6.11,4.37,3.38,4.02,3.84,5.34,4.91,5.69,8.21,2.97,4.3,4.18,4.93,5.16,5.54,3.76,4.7,6.76,4.98,5.02,5.95,4.9,4.79,5.25,5.42,4.81,4.85,6.08,8.28,5.73,5.68,4.66,4.62,4.85,4.69,4.86,4.3,4.71,7.44,7.08,6.3,6.5,4.5,4.36,4.83,4.5,4.79,4.82,9.29,8.99,8.15,5.71,5.24,4.95,5.06,5.24,4.74,5.06,5.04,8.86,9.97,8.45,6.58,4.74,4.28,4.04,4.34,4.35,5.24,5.04,8.72,4.85,5.57,6.33,4.81,4.55,4.48,5.15,4.13,3.95,5.53,8.55,7.09,5.34,5.56,4.23,3.95,4.29,4.61,4.68,6.01,7.35,6.38,6.16,4.41,4.96,4.33,4.54,4.81,4.45,4.12,7.14,5.68,6.07,5.96,5.2,4.83,4.5,4.71,4.33,4.48,8.06,8.49,4.5,7.15,5.91,4.27,4.78,null,5.72,4.43,4.75,6.95,6.64,7.72,7.03,6.38,5.17,4.71,5.14,5.19],["10am","10am","10am","10am","10am","10am","10am","10am","10am","10am","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10am","10am","10am","10am","10am","10am","10am","10am","10am","10am","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10am","10am","10am","10am","10am","10am","10am","10am","10am","10am","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10am","10am","10am","10am","10am","10am","10am","10am","10am","10am","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10am","10am","10am","10am","10am","10am","10am","10am","10am","10am","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10am","10am","10am","10am","10am","10am","10am","10am","10am","10am","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","2pm","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6am","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","6pm","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","2am","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm","10pm"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Subject<\/th>\n      <th>Time<\/th>\n      <th>conc<\/th>\n      <th>Meal<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":7,"columnDefs":[{"className":"dt-right","targets":[1,2,3]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"lengthMenu":[7,10,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+
+---
+
+&lt;img src="FormationRMines_files/figure-html/glucose3-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+Glucose %&gt;%
+  mutate(Subject = as.factor(Subject)) %&gt;%
+  ggplot(aes(Time, conc, color = Subject)) + 
+    geom_point() + 
+    geom_line() + 
+    facet_wrap(~Meal) +
+    theme_bw() +
+    labs(x = "Time", y = "Concentration")
+```
+
+&lt;img src="FormationRMines_files/figure-html/glucose3c-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+&lt;img src="FormationRMines_files/figure-html/glucose4-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+Glucose_stat &lt;- Glucose %&gt;%
+  group_by(Time) %&gt;%
+  summarise(mean = mean(conc, na.rm = TRUE), median = median(conc, na.rm = TRUE),
+            q5 = quantile(conc, probs = 0.05, na.rm = TRUE),
+            q95 = quantile(conc, probs = 0.95, na.rm = TRUE))
+
+ggplot(Glucose_stat, aes(x = Time)) +
+  geom_errorbar(aes(ymin = q5, ymax = q95)) +
+  geom_line(aes(y = mean), color = "blue") +
+  geom_point(aes(y = median), color = "red", size = 5) +
+  scale_x_continuous(breaks = c(-0.25, 0, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7)) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+  labs(y = "Concentration", title = "Summary of Concentration over time",
+       caption = "5th and 95th percentile are in black, median is in red and mean in blue.")
+```
+
+&lt;img src="FormationRMines_files/figure-html/glucose4c-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+## Pokemon dataset
+
+
+```r
+Pokemon &lt;- read.table("Pokemon.txt")
+Pokemon %&lt;&gt;% mutate(Generation = as.factor(Generation))
+```
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; Name &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Type.1 &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Type.2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Total &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; HP &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Attack &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Generation &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt; Legendary &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Bulbasaur &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Grass &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Poison &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 318 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 45 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 49 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Ivysaur &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Grass &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Poison &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 405 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 60 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 62 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Venusaur &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Grass &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Poison &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 525 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 80 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 82 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; VenusaurMega Venusaur &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Grass &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Poison &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 625 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 80 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 100 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Charmander &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fire &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 309 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 39 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 52 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Charmeleon &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fire &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 405 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 58 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 64 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Charizard &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fire &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Flying &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 534 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 84 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; CharizardMega Charizard X &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Fire &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; Dragon &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 634 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 78 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 130 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; FALSE &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+&lt;img src="FormationRMines_files/figure-html/pkmn3-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggplot(Pokemon, aes(x = Generation, y = Total, fill = Generation)) + 
+  geom_violin(aes(fill = Generation)) +
+  geom_boxplot(alpha = 0) +
+  geom_jitter(width = 0.3) +
+  scale_fill_discrete(guide = FALSE) +
+  labs(x = "Generation", y = "Total statistics") +
+  theme_bw()
+```
+
+&lt;img src="FormationRMines_files/figure-html/pkmn3c-1.svg" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+&lt;img src="FormationRMines_files/figure-html/pkmn4-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+Pokemon_poison &lt;- Pokemon %&gt;%
+  filter(Type.1 == "Poison" | Type.2 == "Poison") %&gt;%
+  arrange(desc(Total))
+
+ggplot(Pokemon_poison, aes(x = Attack, y = Sp..Atk)) +
+  geom_smooth(method = "lm", color = "purple") +
+  geom_point(color = "purple") +
+  geom_text(aes(label = Name), check_overlap = TRUE) +
+  theme_bw() +
+  labs(y = "Special attack")
+```
+
+&lt;img src="FormationRMines_files/figure-html/pkmn4c-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+&lt;img src="FormationRMines_files/figure-html/pkmn5-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggplot(Pokemon, aes(x = 1, fill = Legendary)) + 
+  geom_bar(position = "stack") +
+  coord_polar(theta = "y") +
+  theme_void() +
+  labs(x = NULL, y = NULL)
+```
+
+&lt;img src="FormationRMines_files/figure-html/pkmn5c-1.svg" style="display: block; margin: auto;" /&gt;
+
+
+---
+
+&lt;img src="FormationRMines_files/figure-html/pkmn6-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+pkmn_total_summary &lt;- Pokemon %&gt;% 
+  group_by(Generation) %&gt;%
+  summarise(Mean = mean(Total), Median = median(Total),
+            q25 = quantile(Total, 0.25), q75 = quantile(Total, 0.75)) %&gt;%
+  gather(key = Statistic, value = Value, -Generation)
+
+ggplot() + 
+  geom_histogram(data = Pokemon, aes(x = Total, fill = Generation), 
+                 bins = 80, col = "black") +
+  geom_vline(data = pkmn_total_summary, 
+             aes(xintercept = Value, linetype = Statistic)) +
+  facet_grid(Generation~., scales = "free_y") +
+  guides(fill = FALSE) +
+  labs(x = "Total statistics", y = "Count") +
+  theme_bw()
+```
+
+&lt;img src="FormationRMines_files/figure-html/pkmn6c-1.svg" style="display: block; margin: auto;" /&gt;
+
+---
+class: middle, center, inverse
+# Going further and references
+
+---
+### ggplot2
+
+* ggplot2: Elegant Graphics for Data Analysis (Hadley Wickham)
+
+* [**R User Grenoble presentation**](https://privefl.github.io/R-presentation/ggplot2.html)
+
+### Tidy data
+
+* [**Tidy data**](http://tidyr.tidyverse.org/articles/tidy-data.html)
+
+* [**Messy data**](https://medium.com/@miles.mcbain/tidying-the-australian-same-sex-marriage-postal-survey-data-with-r-5d35cea07962)
+
+
+### Visualisation
+
+* [**The Worst Chart In The World**](http://www.businessinsider.fr/us/pie-charts-are-the-worst-2013-6/)
+
+
+
+---
+class: center, middle, inverse
+
+# Thanks for your attention :) 
+
+&lt;a href="mailto:antoine.bichat@mines-nancy.org"&gt;antoine.bichat@mines-nancy.org&lt;/a&gt; 
+
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  tex2jax: {
+    skipTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+  }
+});
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+base
+DT
+htmltools
+magrittr
+beepr
+ggplot2
+tidyverse
+tibble
+tidyr
+readr
+purrr
+dplyr
+stringr
+forcats
+bindrcpp
