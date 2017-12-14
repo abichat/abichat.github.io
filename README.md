@@ -8,9 +8,9 @@ Comming soon
 
 This is lesson Visualisation and other cool things with R I gave at [Mines Nancy](http://mines-nancy.univ-lorraine.fr/) on Decembre 15, 2017.
 
-Files:
-* [Glucose](https://mrsn4ke.github.io/Slides/FormationRMines/Glucose.txt)
-* [Pokemon](https://mrsn4ke.github.io/Slides/FormationRMines/Pokemon.txt)
+* Files:
+  * [Glucose](https://mrsn4ke.github.io/Slides/FormationRMines/Glucose.txt)
+  * [Pokemon](https://mrsn4ke.github.io/Slides/FormationRMines/Pokemon.txt)
 
 
 ## R Users Grenoble
