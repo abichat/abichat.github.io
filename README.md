@@ -20,5 +20,5 @@ This is the presentation [Metagenomics with R](https://abichat.github.io/Slides/
 
 ## Simulation of Brownian Motion
 
-This is a [shiny app](https://mrsnake.shinyapps.io/BrownianMotion/) which simulates a Brownian Motion (there is an error with "Mean")
+This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simulates a Brownian Motion (there is an error with "Mean")
 
