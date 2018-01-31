@@ -7,7 +7,6 @@ Comming soon
 <br>
 
 ---
-
 # Presentations
 
 ## Mines Nancy Formation R
@@ -26,7 +25,6 @@ This is the presentation [Metagenomics with R](https://abichat.github.io/Slides/
 <br>
 
 ---
-
 # Miscellaneous
 
 ## Simulation of Brownian Motion
