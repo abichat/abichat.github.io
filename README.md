@@ -8,6 +8,7 @@ Comming soon
 
 ---
 <div style = "margin-top: -30px"></div>
+
 # Presentations
 
 ## Mines Nancy Formation R
@@ -26,7 +27,8 @@ This is the presentation [Metagenomics with R](https://abichat.github.io/Slides/
 <br>
 
 ---
-<div style = "margin-top: -20px"></div>
+<div style = "margin-top: -30px"></div>
+
 # Miscellaneous
 
 ## Simulation of Brownian Motion
