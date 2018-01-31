@@ -3,6 +3,7 @@
 ```markdown
 Comming soon
 ```
+---
 
 ## Presentations
 
@@ -18,6 +19,8 @@ This is the lesson [Visualisation and other cool things with R](https://abichat.
 ### R Users Grenoble
 
 This is the presentation [Metagenomics with R](https://abichat.github.io/Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble) I made for [R Users Grenoble](https://r-in-grenoble.github.io/index.html) on November 23, 2017.
+
+---
 
 ## Miscellaneous
 
