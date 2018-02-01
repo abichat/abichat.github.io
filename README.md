@@ -35,12 +35,16 @@ This is the presentation [Metagenomics with R](https://abichat.github.io/Slides/
 
 This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simulates a Brownian Motion (there is an error with "Mean")
 
+<br>
+
 ---
 <div style = "margin-top: -30px"></div>
 
 # Social
 
-<i class="fab fa-github"></i>  <i class="fab fa-stack-overflow"></i>  <i class="fab fa-twitter"></i>
+<i class="fab fa-github"></i>  
+<i class="fab fa-stack-overflow"></i>  
+<i class="fab fa-twitter"></i>
 
 
 
