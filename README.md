@@ -4,9 +4,9 @@
 Comming soon
 ```
 <br>
-
+<center>
 ![SignificantXKCD](https://imgs.xkcd.com/comics/significant.png)
-
+</center>
 
 <br>
 
