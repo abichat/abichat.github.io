@@ -6,10 +6,9 @@ Comming soon
 <br>
 
 <p align="center">
-  <img src="https://imgs.xkcd.com/comics/significant.png"/>
-<p align="center">
-</p>
-  <a href="https://xkcd.com">From xkcd</a>
+  <a href="https://xkcd.com">  
+    <img src="https://imgs.xkcd.com/comics/significant.png"/>
+  </a>
 </p>
 
 <br>
