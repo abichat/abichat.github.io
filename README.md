@@ -9,7 +9,7 @@ Comming soon
   <img src="https://imgs.xkcd.com/comics/significant.png"/>
 </p>
 <p align="center">
-  From [xkcd](https://xkcd.com)
+  From xkcd.com
 </p>
 
 <br>
