@@ -5,7 +5,9 @@ Comming soon
 ```
 <br>
 
-<center>![SignificantXKCD](https://imgs.xkcd.com/comics/significant.png)</center>
+<p align="center">
+  <img src="https://imgs.xkcd.com/comics/significant.png"/>
+</p>
 
 <br>
 
