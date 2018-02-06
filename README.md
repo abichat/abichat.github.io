@@ -7,7 +7,7 @@ Comming soon
 
 <p align="center">
   <a href="https://xkcd.com" target="_blank">  
-    <img src="https://imgs.xkcd.com/comics/significant.png"/>
+    <img src="https://imgs.xkcd.com/comics/significant.png" alt="Significant XKCD">
   </a>
 </p>
 
