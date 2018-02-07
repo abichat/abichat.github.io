@@ -55,7 +55,7 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 
 
 <center>
-<a href="//www.linkedin.com/in/antoinebichat/" target="_blank"><i class="icon ion-social-linkedin"></i></a> &nbsp;
-<a href="https://github.com/abichat" target="_blank"><i class="fab fa-github"></i></a> &nbsp;
-<a href="https://twitter.com/_abichat" target="_blank"><i class="icon ion-social-twitter"></i></a> 
+<a href="//www.linkedin.com/in/antoinebichat/" target="_blank"><i class="fab fa-linkedin fa-3x"></i></a> &nbsp;
+<a href="https://github.com/abichat" target="_blank"><i class="fab fa-github fa-3x"></i></a> &nbsp;
+<a href="https://twitter.com/_abichat" target="_blank"><i class="fab fa-twitter fa-3x"></i></a> 
 </center>
