@@ -2,9 +2,7 @@
 <link href="web-fonts-with-css/css/fontawesome-all.css" rel="stylesheet">
 </head>
 
-# Welcome to my page
-
- <i class="fas fa-cog fa-spin"></i>
+# Welcome to my page <i class="fas fa-cog fa-spin" fa-2x></i>
 
 ```markdown
 Comming soon
@@ -59,7 +57,7 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 
 <center>
   <div class="fa-3x">
-    <a href="//www.linkedin.com/in/antoinebichat/" target="_blank" class="black"><i class="fab fa-linkedin"></i></a> &nbsp;
+    <a href="//www.linkedin.com/in/antoinebichat/" target="_blank"><i class="fab fa-linkedin"></i></a> &nbsp;
     <a href="https://github.com/abichat" target="_blank"><i class="fab fa-github"></i></a> &nbsp;
     <a href="https://twitter.com/_abichat" target="_blank"><i class="fab fa-twitter"></i></a> 
   </div>
