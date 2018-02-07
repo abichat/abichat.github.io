@@ -49,13 +49,8 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 
 # Social
 
-<i class="fab fa-github"></i>  
-
-<a href="https://github.com/abichat"><i class="fab fa-github"></i></a>
-
-<i class="fab fa-stack-overflow"></i>  
-
-<i class="fab fa-twitter"></i>
-
+<i class="icon ion-social-github"></i>
+<i class="icon ion-social-linkedin"></i>
+<i class="icon ion-social-twitter"></i>
 
 :)
