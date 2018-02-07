@@ -1,3 +1,7 @@
+<head>
+<link href="css/ionicons.css" rel="stylesheet">
+</head>
+
 # Welcome to my page
 
 ```markdown
@@ -54,5 +58,3 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 <i class="ion ion-social-linkedin"></i>
 
 <i class="ion ion-social-twitter"></i>
-
-:)
