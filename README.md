@@ -2,8 +2,6 @@
 <link href="web-fonts-with-css/css/fontawesome-all.css" rel="stylesheet">
 </head>
 
-<body link="#000000" vlink="#808080" alink="#FF0000"> 
-
 # Welcome to my page 
 
 ```markdown
@@ -60,7 +58,7 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 
 <center>
   <div class="fa-3x">
-    <a href="//www.linkedin.com/in/antoinebichat/" target="_blank"><i class="fab fa-linkedin"></i></a> &nbsp;
+    <a href="//www.linkedin.com/in/antoinebichat/" target="_blank" style="color: #000000"><i class="fab fa-linkedin"></i></a> &nbsp;
     <a href="https://github.com/abichat" target="_blank"><i class="fab fa-github"></i></a> &nbsp;
     <a href="https://twitter.com/_abichat" target="_blank"><i class="fab fa-twitter"></i></a> 
   </div>
