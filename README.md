@@ -34,7 +34,7 @@ This is the lesson <a href="https://abichat.github.io/Slides/FormationRMines/For
 
 ## R Users Grenoble
 
-This is the presentation [Metagenomics with R](https://abichat.github.io/Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble) I made for [R Users Grenoble](https://r-in-grenoble.github.io/index.html) on November 23, 2017.
+This is the presentation <a href="https://abichat.github.io/Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble" target="_blank">Metagenomics with R</a> I made for <a href="https://r-in-grenoble.github.io/index.html" target="_blank">R Users Grenoble</a> on November 23, 2017.
 
 <br>
 
