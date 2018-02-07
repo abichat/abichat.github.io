@@ -25,11 +25,11 @@ Comming soon
 
 ## Mines Nancy Formation R
 
-This is the lesson [Visualisation and other cool things with R](https://abichat.github.io/Slides/FormationRMines/FormationRMines) I gave at [Mines Nancy](http://mines-nancy.univ-lorraine.fr/) on Decembre 15, 2017.
+This is the lesson <a href="https://abichat.github.io/Slides/FormationRMines/FormationRMines" target="_blank">Visualisation and other cool things with R</a> I gave at <a href="http://mines-nancy.univ-lorraine.fr/" target="_blank">Mines Nancy</a> on Decembre 15, 2017.
 
 * Files:
-  * [Glucose](https://abichat.github.io/Slides/FormationRMines/Glucose.txt)
-  * [Pokemon](https://abichat.github.io/Slides/FormationRMines/Pokemon.txt)
+  * <a href="https://abichat.github.io/Slides/FormationRMines/Glucose.txt" target="_blank">Glucose</a>
+  * <a href="https://abichat.github.io/Slides/FormationRMines/Pokemon.txt" target="_blank">Pokemon</a>
 
 
 ## R Users Grenoble
