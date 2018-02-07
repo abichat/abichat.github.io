@@ -2,11 +2,14 @@
 <link href="web-fonts-with-css/css/fontawesome-all.css" rel="stylesheet">
 </head>
 
-# Welcome to my page <i class="fas fa-cog fa-spin" fa-2x></i>
+<body link="#000000" vlink="#808080" alink="#FF0000"> 
+
+# Welcome to my page 
 
 ```markdown
 Comming soon
 ```
+<i class="fas fa-cog fa-spin" fa-2x></i>
 
 <br>
 
