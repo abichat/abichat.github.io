@@ -7,8 +7,10 @@
 ```markdown
 Comming soon
 ```
-<i class="fas fa-cog fa-spin" fa-2x></i>
-
+<center>
+<i class="fas fa-cog fa-spin" fa-3x></i>
+</center>
+  
 <br>
 
 <p align="center">
@@ -59,7 +61,7 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 <center>
   <div class="fa-3x">
     <a href="//www.linkedin.com/in/antoinebichat/" target="_blank" style="color: #000000"><i class="fab fa-linkedin"></i></a> &nbsp;
-    <a href="https://github.com/abichat" target="_blank"><i class="fab fa-github"></i></a> &nbsp;
-    <a href="https://twitter.com/_abichat" target="_blank"><i class="fab fa-twitter"></i></a> 
+    <a href="https://github.com/abichat" target="_blank" style="color: #000000"><i class="fab fa-github"></i></a> &nbsp;
+    <a href="https://twitter.com/_abichat" target="_blank" style="color: #000000"><i class="fab fa-twitter"></i></a> 
   </div>
 </center>
