@@ -50,7 +50,7 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 # Social
 
 <i class="icon ion-social-github"></i>
-<i class="icon ion-social-linkedin"></i>
-<i class="icon ion-social-twitter"></i>
 
-:)
+<i class="icon ion-social-linkedin"></i>
+
+<i class="icon ion-social-twitter"></i>
