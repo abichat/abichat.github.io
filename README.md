@@ -2,6 +2,10 @@
 <link href="css/ionicons.css" rel="stylesheet">
 </head>
 
+i.your-class.ion-loading-c {
+  font-size: 90px;
+}
+
 # Welcome to my page
 
 ```markdown
