@@ -1,10 +1,6 @@
 <head>
-<link href="css/ionicons.css" rel="stylesheet">
+<link href="css/ionicons.min.css" rel="stylesheet">
 </head>
-
-i.your-class.ion-loading-c {
-  font-size: 90px;
-}
 
 # Welcome to my page
 
