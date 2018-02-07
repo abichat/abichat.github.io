@@ -1,5 +1,5 @@
 <head>
-<link href="css/ionicons.min.css" rel="stylesheet">
+<link href="web-fonts-with-css/css/fontawesome-all.css" rel="stylesheet">
 </head>
 
 # Welcome to my page
@@ -56,6 +56,6 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 
 <center>
 <a href="//www.linkedin.com/in/antoinebichat/" target="_blank"><i class="icon ion-social-linkedin"></i></a> &nbsp;
-<a href="https://github.com/abichat" target="_blank"><i class="icon ion-social-github"></i></a> &nbsp;
+<a href="https://github.com/abichat" target="_blank"><i class="fab fa-github"></i></a> &nbsp;
 <a href="https://twitter.com/_abichat" target="_blank"><i class="icon ion-social-twitter"></i></a> 
 </center>
