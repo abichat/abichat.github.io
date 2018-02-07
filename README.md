@@ -7,9 +7,6 @@
 ```markdown
 Comming soon
 ```
-<center>
-<i class="fas fa-cog fa-spin" fa-3x></i>
-</center>
   
 <br>
 
@@ -48,7 +45,7 @@ This is the presentation [Metagenomics with R](https://abichat.github.io/Slides/
 
 ## Simulation of Brownian Motion
 
-This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simulates a Brownian Motion (there is an error with "Mean")
+This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simulates a Brownian Motion (there is an error with "Mean" <i class="fas fa-cog fa-spin" fa-3x></i>)
 
 <br>
 
@@ -60,8 +57,9 @@ This is a [shiny app](https://abichat.shinyapps.io/BrownianMotion/) which simula
 
 <center>
   <div class="fa-3x">
-    <a href="//www.linkedin.com/in/antoinebichat/" target="_blank" style="color: #000000"><i class="fab fa-linkedin"></i></a> &nbsp;
+    <a href="https//www.linkedin.com/in/antoinebichat/" target="_blank" style="color: #000000"><i class="fab fa-linkedin"></i></a> &nbsp;
     <a href="https://github.com/abichat" target="_blank" style="color: #000000"><i class="fab fa-github"></i></a> &nbsp;
+    <a href="https://stackoverflow.com/users/8031980" target="_blank" style="color: #000000"><i class="fab fa-stack-overflow"></i></a> &nbsp;
     <a href="https://twitter.com/_abichat" target="_blank" style="color: #000000"><i class="fab fa-twitter"></i></a> 
   </div>
 </center>
