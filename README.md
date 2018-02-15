@@ -27,7 +27,7 @@ Comming soon
 
 ## RStats
 
-* <a href="https://abichat.github.io/Slides/FormationRMines/FormationRMines" target="_blank">Visualisation and other cool things with R</a>: lesson I gave at <a href="http://mines-nancy.univ-lorraine.fr/" target="_blank">Mines Nancy</a> on Decembre 15, 2017. (Files: <a href="https://abichat.github.io/Slides/FormationRMines/Glucose.txt" target="_blank">Glucose.txt</a>, <a href="https://abichat.github.io/Slides/FormationRMines/Pokemon.txt" target="_blank">Pokemon.txt</a>)
+* <a href="https://abichat.github.io/Slides/FormationRMines/FormationRMines" target="_blank">Visualisation and other cool things with R</a>: lesson I gave at <a href="http://mines-nancy.univ-lorraine.fr/" target="_blank">Mines Nancy</a> on Decembre 15, 2017. Files: <a href="https://abichat.github.io/Slides/FormationRMines/Glucose.txt" target="_blank">Glucose.txt</a>, <a href="https://abichat.github.io/Slides/FormationRMines/Pokemon.txt" target="_blank">Pokemon.txt</a>.
 
 
 * <a href="https://abichat.github.io/Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble" target="_blank">Metagenomics with R</a>: presentation I made for <a href="https://r-in-grenoble.github.io/index.html" target="_blank">R Users Grenoble</a> on November 23, 2017.
