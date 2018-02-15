@@ -23,7 +23,7 @@ Comming soon
 
 # Presentations
 
-<div style = "margin-top: -30px"></div>
+<div style = "margin-top: -15px"></div>
 
 ## RStats
 
@@ -39,7 +39,7 @@ Comming soon
 
 # Miscellaneous
 
-<div style = "margin-top: -30px"></div>
+<div style = "margin-top: -20px"></div>
 
 ## Simulation of Brownian Motion
 
