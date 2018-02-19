@@ -1,0 +1,128 @@
+---
+title: "Science Communication with R"
+author: "Antoine Bichat"
+date: "State Of the R - AgroPariTech<br>February 23, 2018"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
+library(tidyverse)
+```
+
+class: inverse, center, middle
+
+# Code presentation
+
+
+---
+# Syntax
+
+
+* Use `<-` for assignation and `=` for arguments
+
+* Leave a space
+
+  * before `(` (except when it’s part of a function call)
+
+  * after `)` or `,` 
+
+  * around `=`, `<-`, `+`, `*`, `==`, ...
+  
+```{r, fig.height=3}
+x <- rnorm(n = 100000)^2 + rnorm(n = 100000)^2
+hist(x[x < 10], col = "grey", xlab = "", ylab = "Count", 
+     main = "Chi-squared empirical distribution")
+```
+
+
+---
+# Functions names
+ 
+* When possible, use verbs for function names: `add_row()` or instead of `row_adder()`
+
+--
+
+* A function should do one thing well (it should be called either because it has side-effects or because it returns a value; not both)
+
+--
+
+* Don't hesitate to split your long function in smaller ones.
+
+--
+
+* Only use `return()` for early returns.
+
+--
+
+* Comment your functions (use the `Ctrl + Maj + C shortcut`)
+
+---
+# Pipes
+
+* For long pipes, use one verb per line
+
+* Don't ommit the brackets
+
+```{r eval=FALSE}
+# Good
+summary_SL <-
+  iris %>% 
+  drop_na() %>% 
+  group_by(Species) %>% 
+  summarise(Mean_SL = mean(Sepal.Length))
+
+# Bad
+summary_SL <- iris %>% drop_na %>% group_by(Species) %>% 
+  summarise(Mean_SL=mean(Sepal.Length))
+
+iris %>% 
+  drop_na %>% 
+  group_by(Species) %>% 
+  summarise(Mean_SL=mean(Sepal.Length)) -> summary_SL
+```
+
+
+---
+# Useful help
+
+* The Ctrl + Maj + A shortcut rearranges your code
+
+--
+
+* {styler} package
+
+
+```{r slyler}
+ugly_code <- "a<-function( x){1+1}           "
+styler::style_text(ugly_code)
+```
+
+
+
+---
+class: middle, center, inverse
+
+# References
+
+
+---
+## Style
+
+* The tidyverse style guide http://style.tidyverse.org
+
+## Rmarkdown
+
+---
+class: center, middle, inverse
+
+# Thanks for your attention!
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
