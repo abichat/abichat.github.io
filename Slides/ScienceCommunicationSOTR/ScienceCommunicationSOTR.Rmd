@@ -120,6 +120,9 @@ class: middle, center, inverse
 
 ## Rmarkdown
 
+
+## Xaringan
+
 ---
 class: center, middle, inverse
 
