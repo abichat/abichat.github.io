@@ -1,5 +1,6 @@
 ---
 title: "Science Communication with R"
+subtitle: "Style, R Markdown & Xaringan"
 author: "Antoine Bichat"
 date: "State Of the R - AgroPariTech<br>February 23, 2018"
 output:
@@ -30,7 +31,7 @@ class: inverse, center, middle
 
 * Leave a space
 
-  * before `(` (except when it’s part of a function call)
+  * before `(` (except when it's part of a function call)
 
   * after `)` or `,` 
 
@@ -54,11 +55,11 @@ hist(x[x < 10], col = "grey", xlab = "", ylab = "Count",
 
 --
 
-* Don't hesitate to split your long function in smaller ones.
+* Don't hesitate to split your long function in smaller ones
 
 --
 
-* Only use `return()` for early returns.
+* Only use `return()` for early returns
 
 --
 
@@ -104,8 +105,18 @@ iris %>%
 ugly_code <- "a<-function( x){1+1}           "
 styler::style_text(ugly_code)
 ```
+---
+class: inverse, center, middle
+
+# R Markdown
+<img src="https://www.rstudio.com/wp-content/uploads/2014/04/rmarkdown-200x232.png" width="200" height="232">
 
 
+---
+class: inverse, center, middle
+
+# Xaringan
+<img src="https://camo.githubusercontent.com/f91f64981633838bdedfee54df8595534c3cd9ba/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f622f62652f53686172696e67616e5f747269706c652e737667" width="232" height="232">
 
 ---
 class: middle, center, inverse
@@ -118,14 +129,24 @@ class: middle, center, inverse
 
 * The tidyverse style guide http://style.tidyverse.org
 
-## Rmarkdown
+## R Markdown
 
+* Official site https://rmarkdown.rstudio.com
+
+* Cheat Sheet https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf
 
 ## Xaringan
+
+* Documentation  https://slides.yihui.name/xaringan
 
 ---
 class: center, middle, inverse
 
 # Thanks for your attention!
+
+#### `r icon::fa("github", size = 1)` <a href="https://github.com/abichat">@abichat</a>
+<div style = "margin-top: -20px"></div>
+####`r icon::fa("envelope", size = 1)` <a href="mailto:antoine.bichat@mines-nancy.org?subject=Science%20Communication%20with%20R">antoine.bichat@mines-nancy.org</a>
+
 
 .footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
