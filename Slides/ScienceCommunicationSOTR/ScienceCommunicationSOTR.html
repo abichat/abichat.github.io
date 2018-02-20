@@ -173,12 +173,23 @@ install.packages("rmarkdown")
 ]
 
 ---
+# Compile `.Rmd`
+
+Use the `Knit` button to produce a HTML file.
+
+.center[
+  &lt;img src="CreateRmd4.png" width="150"&gt;
+]
+
+Shortcut: Ctrl + Maj + K
+
+---
 class: center, middle
 
 # Markdown syntax
 
 ---
-# Titles and text formatting
+# Titles and text fonts
 
 ```
 # Big title
@@ -200,7 +211,9 @@ _Italic_, __bold__, and `monospace`
 
 
 ---
-# Lists and 
+# Lists and more
+
+&lt;div style = "margin-top: -30px"&gt;&lt;/div&gt;
 
 .pull-left[
 ```
@@ -213,7 +226,7 @@ _Italic_, __bold__, and `monospace`
 3. list
 ]
 
----
+--
 
 .pull-right[
 ```
@@ -226,15 +239,13 @@ _Italic_, __bold__, and `monospace`
   * with indent
 ]
 
-&lt;br&gt;
-
 --
 
 ```
-&gt; You can insert quotes and horizontal rule:
+&gt; You can insert quotes, horizontal rule and $\LaTeX$ expressions:
 ```
 
-&gt; You can insert quotes and horizontal rule:
+&gt; You can insert quotes, horizontal rule and `\(\LaTeX\)` expressions:
 
 &lt;br&gt;
 
@@ -245,6 +256,16 @@ _Italic_, __bold__, and `monospace`
 ```
 
 ***
+
+&lt;br&gt;
+
+--
+
+```
+$$ \frac{1}{n} \sum_{i=1}^n X_i $$
+```
+
+$$ \frac{1}{n} \sum_{i=1}^n X_i $$
 
 ---
 # Insert links and pictures
@@ -274,7 +295,108 @@ It also works directly with HTML syntax:
 &lt;img src="https://slides.yihui.name/gif/impossible-parking.gif"&gt;
 ```
 
+---
+class: middle, center
 
+# Chunks
+
+---
+# Basic chunks
+
+
+````
+```{r }
+x &lt;- 4
+x
+```
+````
+
+Output:
+
+
+```r
+x &lt;- 4
+x
+```
+
+```
+## [1] 4
+```
+
+
+---
+# Echo
+
+To display the output of a code chunk but not the underlying R code, you specify the `echo=FALSE` option.
+
+
+````
+```{r chunkecho, echo=FALSE}
+x &lt;- 5
+x
+```
+````
+
+Output:
+
+
+```
+## [1] 5
+```
+
+---
+# Eval
+
+To display R code without evaluating it, you specify the `eval=FALSE` chunk option.
+
+
+````
+```{r chunkeval, eval=FALSE}
+x &lt;- 5
+x
+```
+````
+
+Output:
+
+
+```r
+x &lt;- 10
+```
+
+--
+
+
+```r
+x 
+```
+
+```
+## [1] 5
+```
+
+---
+# Fig options
+
+
+````
+```{r chunkfig, fig.align="center", fig.height=4, fig.width=8}
+plot(iris$Sepal.Length, iris$Sepal.Width)
+```
+````
+
+
+```r
+plot(iris$Sepal.Length, iris$Sepal.Width)
+```
+
+&lt;img src="ScienceCommunicationSOTR_files/figure-html/chunkfig-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+# Name your chunks !
+
+
+.footnote[[<i class="fa  fa-link "></i> Pets or livestock? Naming your RMarkdown chunks](http://www.masalmon.eu/2017/08/08/chunkpets/)]
 ---
 class: inverse, center, middle
 
