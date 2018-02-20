@@ -186,11 +186,11 @@ _Italic_, *bold*, and `monospace`
 ```
 
 # Big title
-<div style = "margin-top: -20px"></div> 
+
 ## Title
-<div style = "margin-top: -20px"></div> 
+
 ### Small title
-<div style = "margin-top: -20px"></div> 
+
 _Italic_, __bold__, and `monospace`
 
 
@@ -223,13 +223,15 @@ _Italic_, __bold__, and `monospace`
   * with indent
 ]
 
+<br>
+
 --
 
 ```
-> You can insert quotes, horizontal rule and $\LaTeX$ expressions:
+> You can insert quotes, $\LaTeX$ expressions and horizontal rule:
 ```
 
-> You can insert quotes, horizontal rule and $\LaTeX$ expressions:
+> You can insert quotes, $\LaTeX$ expressions and horizontal rule:
 
 <br>
 
@@ -288,7 +290,7 @@ class: middle, center
 # Basic chunks
 
 ```{r comment=NA,echo=FALSE}
-cat("```{r }\nx <- 4\nx\n```")
+cat("```{r}\nx <- 4\nx\n```")
 ```
 
 Output:
@@ -348,8 +350,21 @@ plot(iris$Sepal.Length, iris$Sepal.Width)
 ```
 
 ---
-# Name your chunks !
+# Name your chunks!
 
+* In RStudio you can navigate named chunks fairly easily
+
+--
+
+* The goal of named chunk is clear (or it should be)
+
+--
+
+* Easier to debugging
+
+--
+
+* Caching is more efficient with named chunks (otherwise it uses chunk positions)
 
 .footnote[[`r icon::fa("link", size = 1)` Pets or livestock? Naming your RMarkdown chunks](http://www.masalmon.eu/2017/08/08/chunkpets/)]
 ---
