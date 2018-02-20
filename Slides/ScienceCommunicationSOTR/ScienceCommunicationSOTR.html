@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="author" content="Antoine Bichat" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css/fonts.css" rel="stylesheet" />
     <link href="libs/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
   </head>
   <body>
@@ -126,6 +126,154 @@ class: inverse, center, middle
 # R Markdown
 &lt;img src="https://www.rstudio.com/wp-content/uploads/2014/04/rmarkdown-200x232.png" width="200" height="232"&gt;
 
+---
+#R Markdown?
+
+* Markdown is a _lightweight markup language_ with plain text formatting syntax that can be converted to HTML. It is completely independent from R. The extention is typically `.md`.
+
+--
+
+* R Markdown is an extension of the markdown syntax that enables R code to be executed. The extention is typically `.Rmd`.
+
+--
+
+* `rmarkdown` is a a library which proceses and converts `.Rmd` files into a number of different formats, including HTML or `.pdf`. The core function is `rmarkdown::render()`.
+
+
+
+```r
+install.packages("rmarkdown")
+```
+
+.footnote[[<i class="fa  fa-stack-overflow "></i> Relationship between R Markdown, Knitr, Pandoc, and Bookdown](https://stackoverflow.com/questions/40563479)]
+
+---
+# Create a new `.Rmd`
+
+.pull-left[
+.center[
+  &lt;img src="CreateRmd1.png" width="400"&gt;
+]
+]
+
+--
+
+.pull-right[
+  &lt;div style = "margin-top: 80px"&gt;&lt;/div&gt; 
+  .center[
+    &lt;img src="CreateRmd2.png" width="400"&gt;
+  ]
+]
+
+---
+# New `.Rmd`
+
+.center[
+  &lt;img src="CreateRmd3.png" width="700"&gt;
+]
+
+---
+class: center, middle
+
+# Markdown syntax
+
+---
+# Titles and text formatting
+
+```
+# Big title
+
+## Title
+
+### Small title
+
+_Italic_, *bold*, and `monospace`
+```
+
+# Big title
+&lt;div style = "margin-top: -20px"&gt;&lt;/div&gt; 
+## Title
+&lt;div style = "margin-top: -20px"&gt;&lt;/div&gt; 
+### Small title
+&lt;div style = "margin-top: -20px"&gt;&lt;/div&gt; 
+_Italic_, __bold__, and `monospace`
+
+
+---
+# Lists and 
+
+.pull-left[
+```
+1. This is
+2. an ordered
+3. list
+```
+1. This is
+2. an ordered
+3. list
+]
+
+---
+
+.pull-right[
+```
+ * This is
+ * a bullet list
+   * with indent
+```
+* This is
+* a bullet list
+  * with indent
+]
+
+&lt;br&gt;
+
+--
+
+```
+&gt; You can insert quotes and horizontal rule:
+```
+
+&gt; You can insert quotes and horizontal rule:
+
+&lt;br&gt;
+
+--
+
+```
+---
+```
+
+***
+
+---
+# Insert links and pictures
+
+```
+[My personal page](https://abichat.github.io/)
+```
+
+[My personal page](https://abichat.github.io/)
+
+--
+
+
+```
+![](https://slides.yihui.name/gif/impossible-parking.gif)
+```
+
+![](https://slides.yihui.name/gif/impossible-parking.gif)
+
+--
+
+It also works directly with HTML syntax:
+
+
+```
+&lt;a href="https://abichat.github.io/"&gt;My personal page&lt;/a&gt;
+&lt;img src="https://slides.yihui.name/gif/impossible-parking.gif"&gt;
+```
+
 
 ---
 class: inverse, center, middle
@@ -172,15 +320,8 @@ class: center, middle, inverse
 "highlightLines": true,
 "countIncrementalSlides": false
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
-  window.dispatchEvent(new Event('resize'));
-});
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
-  if (!r) return;
-  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
-  d.head.appendChild(s);
-})();</script>
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
+(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({

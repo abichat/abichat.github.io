@@ -111,6 +111,153 @@ class: inverse, center, middle
 # R Markdown
 <img src="https://www.rstudio.com/wp-content/uploads/2014/04/rmarkdown-200x232.png" width="200" height="232">
 
+---
+#R Markdown?
+
+* Markdown is a _lightweight markup language_ with plain text formatting syntax that can be converted to HTML. It is completely independent from R. The extention is typically `.md`.
+
+--
+
+* R Markdown is an extension of the markdown syntax that enables R code to be executed. The extention is typically `.Rmd`.
+
+--
+
+* `rmarkdown` is a a library which proceses and converts `.Rmd` files into a number of different formats, including HTML or `.pdf`. The core function is `rmarkdown::render()`.
+
+
+```{r install, eval=FALSE}
+install.packages("rmarkdown")
+```
+
+.footnote[[`r icon::fa("stack-overflow", size = 1)` Relationship between R Markdown, Knitr, Pandoc, and Bookdown](https://stackoverflow.com/questions/40563479)]
+
+---
+# Create a new `.Rmd`
+
+.pull-left[
+.center[
+  <img src="CreateRmd1.png" width="400">
+]
+]
+
+--
+
+.pull-right[
+  <div style = "margin-top: 80px"></div> 
+  .center[
+    <img src="CreateRmd2.png" width="400">
+  ]
+]
+
+---
+# New `.Rmd`
+
+.center[
+  <img src="CreateRmd3.png" width="700">
+]
+
+---
+class: center, middle
+
+# Markdown syntax
+
+---
+# Titles and text formatting
+
+```
+# Big title
+
+## Title
+
+### Small title
+
+_Italic_, *bold*, and `monospace`
+```
+
+# Big title
+<div style = "margin-top: -20px"></div> 
+## Title
+<div style = "margin-top: -20px"></div> 
+### Small title
+<div style = "margin-top: -20px"></div> 
+_Italic_, __bold__, and `monospace`
+
+
+---
+# Lists and 
+
+.pull-left[
+```
+1. This is
+2. an ordered
+3. list
+```
+1. This is
+2. an ordered
+3. list
+]
+
+---
+
+.pull-right[
+```
+ * This is
+ * a bullet list
+   * with indent
+```
+* This is
+* a bullet list
+  * with indent
+]
+
+<br>
+
+--
+
+```
+> You can insert quotes and horizontal rule:
+```
+
+> You can insert quotes and horizontal rule:
+
+<br>
+
+--
+
+```
+---
+```
+
+***
+
+---
+# Insert links and pictures
+
+```
+[My personal page](https://abichat.github.io/)
+```
+
+[My personal page](https://abichat.github.io/)
+
+--
+
+
+```
+![](https://slides.yihui.name/gif/impossible-parking.gif)
+```
+
+![](https://slides.yihui.name/gif/impossible-parking.gif)
+
+--
+
+It also works directly with HTML syntax:
+
+
+```
+<a href="https://abichat.github.io/">My personal page</a>
+<img src="https://slides.yihui.name/gif/impossible-parking.gif">
+```
+
 
 ---
 class: inverse, center, middle
