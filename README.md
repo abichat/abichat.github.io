@@ -27,6 +27,9 @@ Comming soon
 
 ## RStats
 
+* <a href="abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html" target="_blank">Science Communication with R</a>: presentation for <a href="https://stateofther.github.io" target="_blank">State of the R AgroParisTech</a> on February 23, 2018.
+
+
 * <a href="https://abichat.github.io/Slides/FormationRMines/FormationRMines" target="_blank">Visualisation and other cool things with R</a>: lesson at <a href="http://mines-nancy.univ-lorraine.fr/" target="_blank">Mines Nancy</a> on Decembre 15, 2017. Files: <a href="https://abichat.github.io/Slides/FormationRMines/Glucose.txt" target="_blank">Glucose.txt</a>, <a href="https://abichat.github.io/Slides/FormationRMines/Pokemon.txt" target="_blank">Pokemon.txt</a>.
 
 
