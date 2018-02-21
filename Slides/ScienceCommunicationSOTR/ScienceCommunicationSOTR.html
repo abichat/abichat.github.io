@@ -49,7 +49,7 @@ class: inverse, center, middle
 
   * after `)` or `,` 
 
-  * around `=`, `&lt;-`, `+`, `*`, `==`, ...
+  * around `=`, `&lt;-`, `+`, `*`, `==`, etc
   
 
 ```r
@@ -186,7 +186,7 @@ install.packages("rmarkdown")
 ---
 # Compile `.Rmd`
 
-Use the `Knit` button to produce a HTML file.
+Use the `Knit` button to produce a HTML file
 
 .center[
   &lt;img src="CreateRmd4.png" width="150"&gt;
@@ -316,7 +316,7 @@ class: middle, center
 # Chunks
 
 ---
-# Basic chunks
+# Basic chunk
 
 
 ````
@@ -344,7 +344,7 @@ x
 ---
 # Echo
 
-To display the output of a code chunk but not the underlying R code, you specify the `echo=FALSE` option.
+To display the output of a code chunk but not the underlying R code, you specify the `echo=FALSE` option
 
 
 ````
@@ -366,7 +366,7 @@ Output:
 ---
 # Eval
 
-To display R code without evaluating it, you specify the `eval=FALSE` chunk option.
+To display R code without evaluating it, you specify the `eval=FALSE` chunk option
 
 
 ````
@@ -405,12 +405,16 @@ plot(iris$Sepal.Length, iris$Sepal.Width)
 ```
 ````
 
+--
+
 
 ```r
 plot(iris$Sepal.Length, iris$Sepal.Width)
 ```
 
 &lt;img src="ScienceCommunicationSOTR_files/figure-html/chunkfig-1.png" style="display: block; margin: auto;" /&gt;
+
+--
 
 Finding the good picture size is a trial and error process...
 
@@ -425,9 +429,13 @@ knitr::include_graphics(
 ```
 ````
 
+--
+
 &lt;img src="https://slides.yihui.name/gif/impossible-parking.gif" width="70%" style="display: block; margin: auto;" /&gt;
 
-It allows you to use the chunk options for image size.
+--
+
+It allows you to use the chunk options for image size
 
 ---
 # Name your chunks!
@@ -458,7 +466,7 @@ class: inverse, center, middle
 ---
 # Xaringan?
 
-Xaringan is a package to create slides with R Markdown.
+Xaringan is a package to create slides with R Markdown
 
 --
 
@@ -536,22 +544,22 @@ Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
 
 &lt;br&gt;
 
-.center[I'm centerd]
+.center[I'm centered]
 
 .footnote[I'm a footnote]
 
 ---
-# Include map with leaflet
+# Include an interactive map with leaflet
 
 
 
 ```r
 library(leaflet)
-leaflet() %&gt;% addTiles() %&gt;% setView(2.34822, 48.83976, zoom = 18)
+leaflet() %&gt;% addTiles() %&gt;% setView(2.34822, 48.83976, zoom = 17)
 ```
 
-<div id="htmlwidget-5430ad9f6eba533256e2" style="width:100%;height:360px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-5430ad9f6eba533256e2">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.83976,2.34822],18,[]]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-09a20c0b7675a3b19770" style="width:100%;height:360px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-09a20c0b7675a3b19770">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.83976,2.34822],17,[]]},"evals":[],"jsHooks":[]}</script>
 
 
 
@@ -581,9 +589,9 @@ class: center, middle, inverse
 
 # Thanks for your attention!
 
-#### <i class="fa  fa-github "></i> &lt;a href="https://github.com/abichat"&gt;@abichat&lt;/a&gt;
+#### <i class="fa  fa-github "></i> &lt;a href="https://github.com/abichat" target="_blank"&gt;@abichat&lt;/a&gt;
 &lt;div style = "margin-top: -20px"&gt;&lt;/div&gt;
-#### <i class="fa  fa-link "></i> &lt;a href="https://abichat.github.io"&gt;abichat.github.io&lt;/a&gt;
+#### <i class="fa  fa-link "></i> &lt;a href="https://abichat.github.io" target="_blank"&gt;abichat.github.io&lt;/a&gt;
 &lt;div style = "margin-top: -20px"&gt;&lt;/div&gt;
 ####<i class="fa  fa-envelope "></i> &lt;a href="mailto:antoine.bichat@mines-nancy.org?subject=Science%20Communication%20with%20R"&gt;antoine.bichat@mines-nancy.org&lt;/a&gt;
 

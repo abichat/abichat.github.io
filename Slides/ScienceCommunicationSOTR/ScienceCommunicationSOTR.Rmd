@@ -35,7 +35,7 @@ class: inverse, center, middle
 
   * after `)` or `,` 
 
-  * around `=`, `<-`, `+`, `*`, `==`, ...
+  * around `=`, `<-`, `+`, `*`, `==`, etc
   
 ```{r, fig.height=3, fig.align = "center"}
 x <- rnorm(n = 100000)^2 + rnorm(n = 100000)^2
@@ -160,7 +160,7 @@ install.packages("rmarkdown")
 ---
 # Compile `.Rmd`
 
-Use the `Knit` button to produce a HTML file.
+Use the `Knit` button to produce a HTML file
 
 .center[
   <img src="CreateRmd4.png" width="150">
@@ -290,7 +290,7 @@ class: middle, center
 # Chunks
 
 ---
-# Basic chunks
+# Basic chunk
 
 ```{r comment=NA,echo=FALSE}
 cat("```{r}\nx <- 4\nx\n```")
@@ -309,7 +309,7 @@ x
 ---
 # Echo
 
-To display the output of a code chunk but not the underlying R code, you specify the `echo=FALSE` option.
+To display the output of a code chunk but not the underlying R code, you specify the `echo=FALSE` option
 
 ```{r comment=NA,echo=FALSE}
 cat("```{r chunkecho, echo=FALSE}\nx <- 5\nx\n```")
@@ -327,7 +327,7 @@ x
 ---
 # Eval
 
-To display R code without evaluating it, you specify the `eval=FALSE` chunk option.
+To display R code without evaluating it, you specify the `eval=FALSE` chunk option
 
 ```{r comment=NA,echo=FALSE}
 cat("```{r chunkeval, eval=FALSE}\nx <- 5\n```")
@@ -354,9 +354,13 @@ x
 cat('```{r chunkfig, fig.align="center", fig.height=4, fig.width=8}\nplot(iris$Sepal.Length, iris$Sepal.Width)\n```')
 ```
 
+--
+
 ```{r chunkfig, fig.align="center", fig.height=4, fig.width=8}
 plot(iris$Sepal.Length, iris$Sepal.Width)
 ```
+
+--
 
 Finding the good picture size is a trial and error process...
 
@@ -367,12 +371,16 @@ Finding the good picture size is a trial and error process...
 cat('```{r betterway, fig.align="center", out.width="70%", echo=FALSE}\nknitr::include_graphics(\n  "https://slides.yihui.name/gif/impossible-parking.gif")\n```')
 ```
 
+--
+
 ```{r betterway, fig.align="center", out.width="70%", echo=FALSE}
 knitr::include_graphics(
   "https://slides.yihui.name/gif/impossible-parking.gif")
 ```
 
-It allows you to use the chunk options for image size.
+--
+
+It allows you to use the chunk options for image size
 
 ---
 # Name your chunks!
@@ -403,7 +411,7 @@ class: inverse, center, middle
 ---
 # Xaringan?
 
-Xaringan is a package to create slides with R Markdown.
+Xaringan is a package to create slides with R Markdown
 
 --
 
@@ -476,17 +484,17 @@ Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
 
 <br>
 
-.center[I'm centerd]
+.center[I'm centered]
 
 .footnote[I'm a footnote]
 
 ---
-# Include map with leaflet
+# Include an interactive map with leaflet
 
 
 ```{r, out.width='100%', fig.height=5}
 library(leaflet)
-leaflet() %>% addTiles() %>% setView(2.34822, 48.83976, zoom = 18)
+leaflet() %>% addTiles() %>% setView(2.34822, 48.83976, zoom = 17)
 ```
 
 
@@ -517,9 +525,9 @@ class: center, middle, inverse
 
 # Thanks for your attention!
 
-#### `r icon::fa("github", size = 1)` <a href="https://github.com/abichat">@abichat</a>
+#### `r icon::fa("github", size = 1)` <a href="https://github.com/abichat" target="_blank">@abichat</a>
 <div style = "margin-top: -20px"></div>
-#### `r icon::fa("link", size = 1)` <a href="https://abichat.github.io">abichat.github.io</a>
+#### `r icon::fa("link", size = 1)` <a href="https://abichat.github.io" target="_blank">abichat.github.io</a>
 <div style = "margin-top: -20px"></div>
 ####`r icon::fa("envelope", size = 1)` <a href="mailto:antoine.bichat@mines-nancy.org?subject=Science%20Communication%20with%20R">antoine.bichat@mines-nancy.org</a>
 
