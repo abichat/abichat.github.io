@@ -5,8 +5,18 @@
     <meta charset="utf-8">
     <meta name="author" content="Antoine Bichat" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/fonts.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
     <link href="libs/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet/leaflet.js"></script>
+    <link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+    <link href="libs/leaflet-label/leaflet.label.css" rel="stylesheet" />
+    <script src="libs/leaflet-label/leaflet.label.js"></script>
+    <script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
+    <script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
+    <script src="libs/leaflet-binding/leaflet.js"></script>
   </head>
   <body>
     <textarea id="source">
@@ -131,6 +141,8 @@ class: inverse, center, middle
 
 * Markdown is a _lightweight markup language_ with plain text formatting syntax that can be converted to HTML. It is completely independent from R. The extention is typically `.md`.
 
+.footnote[[<i class="fa  fa-stack-overflow "></i> Relationship between R Markdown, Knitr, Pandoc, and Bookdown](https://stackoverflow.com/questions/40563479)]
+
 --
 
 * R Markdown is an extension of the markdown syntax that enables R code to be executed. The extention is typically `.Rmd`.
@@ -145,7 +157,6 @@ class: inverse, center, middle
 install.packages("rmarkdown")
 ```
 
-.footnote[[<i class="fa  fa-stack-overflow "></i> Relationship between R Markdown, Knitr, Pandoc, and Bookdown](https://stackoverflow.com/questions/40563479)]
 
 ---
 # Create a new `.Rmd`
@@ -198,7 +209,7 @@ class: center, middle
 
 ### Small title
 
-_Italic_, *bold*, and `monospace`
+_Italic_, *italic*, __bold__, **bold**, and `monospace`
 ```
 
 # Big title
@@ -207,7 +218,7 @@ _Italic_, *bold*, and `monospace`
 
 ### Small title
 
-_Italic_, __bold__, and `monospace`
+_Italic_, *italic*, __bold__, **bold**, and `monospace`
 
 
 ---
@@ -218,7 +229,9 @@ _Italic_, __bold__, and `monospace`
 .pull-left[
 ```
 1. This is
+
 2. an ordered
+
 3. list
 ```
 1. This is
@@ -231,8 +244,10 @@ _Italic_, __bold__, and `monospace`
 .pull-right[
 ```
  * This is
+
  * a bullet list
-   * with indent
+
+    * with indent
 ```
 * This is
 * a bullet list
@@ -249,17 +264,15 @@ _Italic_, __bold__, and `monospace`
 
 &gt; You can insert quotes, `\(\LaTeX\)` expressions and horizontal rule:
 
-&lt;br&gt;
 
 --
 
 ```
----
+ ***
 ```
 
 ***
 
-&lt;br&gt;
 
 --
 
@@ -313,6 +326,8 @@ x
 ```
 ````
 
+--
+
 Output:
 
 
@@ -339,6 +354,8 @@ x
 ```
 ````
 
+--
+
 Output:
 
 
@@ -355,9 +372,10 @@ To display R code without evaluating it, you specify the `eval=FALSE` chunk opti
 ````
 ```{r chunkeval, eval=FALSE}
 x &lt;- 5
-x
 ```
 ````
+
+--
 
 Output:
 
@@ -394,10 +412,29 @@ plot(iris$Sepal.Length, iris$Sepal.Width)
 
 &lt;img src="ScienceCommunicationSOTR_files/figure-html/chunkfig-1.png" style="display: block; margin: auto;" /&gt;
 
+Find the godd picture size is a try-error process...
+
+---
+# Better way to include picture
+
+
+````
+```{r betterway, fig.align="center", out.width="70%", echo=FALSE}
+knitr::include_graphics(
+  "https://slides.yihui.name/gif/impossible-parking.gif")
+```
+````
+
+&lt;img src="https://slides.yihui.name/gif/impossible-parking.gif" width="70%" style="display: block; margin: auto;" /&gt;
+
+It allows you to use the chunk options for image size.
+
 ---
 # Name your chunks!
 
 * In RStudio you can navigate named chunks fairly easily
+
+.footnote[[<i class="fa  fa-link "></i> Pets or livestock? Naming your RMarkdown chunks](http://www.masalmon.eu/2017/08/08/chunkpets/)]
 
 --
 
@@ -411,12 +448,112 @@ plot(iris$Sepal.Length, iris$Sepal.Width)
 
 * Caching is more efficient with named chunks (otherwise it uses chunk positions)
 
-.footnote[[<i class="fa  fa-link "></i> Pets or livestock? Naming your RMarkdown chunks](http://www.masalmon.eu/2017/08/08/chunkpets/)]
 ---
 class: inverse, center, middle
 
 # Xaringan
 &lt;img src="https://camo.githubusercontent.com/f91f64981633838bdedfee54df8595534c3cd9ba/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f622f62652f53686172696e67616e5f747269706c652e737667" width="232" height="232"&gt;
+
+
+---
+# Xaringan?
+
+Xaringan is a package to create slides with R Markdown.
+
+--
+
+It is developped by Yihui Xie <i class="fa  fa-github "></i> &lt;a href="https://github.com/yihui"&gt;@yihui&lt;/a&gt;
+
+
+```r
+devtools::install_github('yihui/xaringan')
+```
+
+--
+
+.center[
+  &lt;img src="CreateRmd5.png" width="400"&gt;
+]
+
+---
+# How it works?
+
+The syntax is almost the same as R Markdown
+
+--
+
+Slides are separated by `---`
+
+--
+
+You can build incremental slides with `--` 
+
+--
+
+&lt;br&gt;
+
+
+```
+---
+# How it works?
+
+The syntax is almost the same as R Markdown
+
+--
+
+Slides are separated by `---`
+
+--
+
+You can build incremental slides with `--` 
+```
+
+
+---
+# Tips
+
+You can change slide configuration (for titles) with `class`
+
+
+```
+---
+class: middle, center, inverse
+```
+
+&lt;br&gt; 
+
+--
+
+To skip a lign, use the `&lt;br&gt;` HTML tag
+
+--
+
+&lt;br&gt;
+
+Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
+
+--
+
+&lt;br&gt;
+
+.center[I'm centerd]
+
+.footnote[I'm a footnote]
+
+---
+# Include map with leaflet
+
+
+
+```r
+library(leaflet)
+leaflet() %&gt;% addTiles() %&gt;% setView(2.34822, 48.83976, zoom = 17)
+```
+
+<div id="htmlwidget-3b39c7d4133ef59fb70a" style="width:100%;height:360px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3b39c7d4133ef59fb70a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.83976,2.34822],17,[]]},"evals":[],"jsHooks":[]}</script>
+
+
 
 ---
 class: middle, center, inverse
@@ -446,6 +583,8 @@ class: center, middle, inverse
 
 #### <i class="fa  fa-github "></i> &lt;a href="https://github.com/abichat"&gt;@abichat&lt;/a&gt;
 &lt;div style = "margin-top: -20px"&gt;&lt;/div&gt;
+#### <i class="fa  fa-link "></i> &lt;a href="https://abichat.github.io"&gt;abichat.github.io&lt;/a&gt;
+&lt;div style = "margin-top: -20px"&gt;&lt;/div&gt;
 ####<i class="fa  fa-envelope "></i> &lt;a href="mailto:antoine.bichat@mines-nancy.org?subject=Science%20Communication%20with%20R"&gt;antoine.bichat@mines-nancy.org&lt;/a&gt;
 
 
@@ -457,8 +596,15 @@ class: center, middle, inverse
 "highlightLines": true,
 "countIncrementalSlides": false
 });
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {window.dispatchEvent(new Event('resize'));});
-(function() {var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler"); if (!r) return; s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }"; d.head.appendChild(s);})();</script>
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
 
 <script type="text/x-mathjax-config">
 MathJax.Hub.Config({

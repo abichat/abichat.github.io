@@ -116,6 +116,8 @@ class: inverse, center, middle
 
 * Markdown is a _lightweight markup language_ with plain text formatting syntax that can be converted to HTML. It is completely independent from R. The extention is typically `.md`.
 
+.footnote[[`r icon::fa("stack-overflow", size = 1)` Relationship between R Markdown, Knitr, Pandoc, and Bookdown](https://stackoverflow.com/questions/40563479)]
+
 --
 
 * R Markdown is an extension of the markdown syntax that enables R code to be executed. The extention is typically `.Rmd`.
@@ -129,7 +131,6 @@ class: inverse, center, middle
 install.packages("rmarkdown")
 ```
 
-.footnote[[`r icon::fa("stack-overflow", size = 1)` Relationship between R Markdown, Knitr, Pandoc, and Bookdown](https://stackoverflow.com/questions/40563479)]
 
 ---
 # Create a new `.Rmd`
@@ -182,7 +183,7 @@ class: center, middle
 
 ### Small title
 
-_Italic_, *bold*, and `monospace`
+_Italic_, *italic*, __bold__, **bold**, and `monospace`
 ```
 
 # Big title
@@ -191,7 +192,7 @@ _Italic_, *bold*, and `monospace`
 
 ### Small title
 
-_Italic_, __bold__, and `monospace`
+_Italic_, *italic*, __bold__, **bold**, and `monospace`
 
 
 ---
@@ -202,7 +203,9 @@ _Italic_, __bold__, and `monospace`
 .pull-left[
 ```
 1. This is
+
 2. an ordered
+
 3. list
 ```
 1. This is
@@ -215,8 +218,10 @@ _Italic_, __bold__, and `monospace`
 .pull-right[
 ```
  * This is
+
  * a bullet list
-   * with indent
+
+    * with indent
 ```
 * This is
 * a bullet list
@@ -233,17 +238,15 @@ _Italic_, __bold__, and `monospace`
 
 > You can insert quotes, $\LaTeX$ expressions and horizontal rule:
 
-<br>
 
 --
 
 ```
----
+ ***
 ```
 
 ***
 
-<br>
 
 --
 
@@ -293,6 +296,8 @@ class: middle, center
 cat("```{r}\nx <- 4\nx\n```")
 ```
 
+--
+
 Output:
 
 ```{r simplechunk}
@@ -310,6 +315,8 @@ To display the output of a code chunk but not the underlying R code, you specify
 cat("```{r chunkecho, echo=FALSE}\nx <- 5\nx\n```")
 ```
 
+--
+
 Output:
 
 ```{r chunkecho, echo=FALSE}
@@ -323,8 +330,10 @@ x
 To display R code without evaluating it, you specify the `eval=FALSE` chunk option.
 
 ```{r comment=NA,echo=FALSE}
-cat("```{r chunkeval, eval=FALSE}\nx <- 5\nx\n```")
+cat("```{r chunkeval, eval=FALSE}\nx <- 5\n```")
 ```
+
+--
 
 Output:
 
@@ -349,10 +358,28 @@ cat('```{r chunkfig, fig.align="center", fig.height=4, fig.width=8}\nplot(iris$S
 plot(iris$Sepal.Length, iris$Sepal.Width)
 ```
 
+Find the godd picture size is a try-error process...
+
+---
+# Better way to include picture
+
+```{r comment=NA,echo=FALSE}
+cat('```{r betterway, fig.align="center", out.width="70%", echo=FALSE}\nknitr::include_graphics(\n  "https://slides.yihui.name/gif/impossible-parking.gif")\n```')
+```
+
+```{r betterway, fig.align="center", out.width="70%", echo=FALSE}
+knitr::include_graphics(
+  "https://slides.yihui.name/gif/impossible-parking.gif")
+```
+
+It allows you to use the chunk options for image size.
+
 ---
 # Name your chunks!
 
 * In RStudio you can navigate named chunks fairly easily
+
+.footnote[[`r icon::fa("link", size = 1)` Pets or livestock? Naming your RMarkdown chunks](http://www.masalmon.eu/2017/08/08/chunkpets/)]
 
 --
 
@@ -366,12 +393,103 @@ plot(iris$Sepal.Length, iris$Sepal.Width)
 
 * Caching is more efficient with named chunks (otherwise it uses chunk positions)
 
-.footnote[[`r icon::fa("link", size = 1)` Pets or livestock? Naming your RMarkdown chunks](http://www.masalmon.eu/2017/08/08/chunkpets/)]
 ---
 class: inverse, center, middle
 
 # Xaringan
 <img src="https://camo.githubusercontent.com/f91f64981633838bdedfee54df8595534c3cd9ba/68747470733a2f2f75706c6f61642e77696b696d656469612e6f72672f77696b6970656469612f636f6d6d6f6e732f622f62652f53686172696e67616e5f747269706c652e737667" width="232" height="232">
+
+
+---
+# Xaringan?
+
+Xaringan is a package to create slides with R Markdown.
+
+--
+
+It is developped by Yihui Xie `r icon::fa("github", size = 1)` <a href="https://github.com/yihui">@yihui</a>
+
+```{r eval=FALSE}
+devtools::install_github('yihui/xaringan')
+```
+
+--
+
+.center[
+  <img src="CreateRmd5.png" width="400">
+]
+
+---
+# How it works?
+
+The syntax is almost the same as R Markdown
+
+--
+
+Slides are separated by `---`
+
+--
+
+You can build incremental slides with `--` 
+
+--
+
+<br>
+
+```{r comment=NA,echo=FALSE}
+cat('---
+# How it works?\n\nThe syntax is almost the same as R Markdown
+
+--
+
+Slides are separated by `---`
+
+--
+
+You can build incremental slides with `--` ')
+```
+
+
+---
+# Tips
+
+You can change slide configuration (for titles) with `class`
+
+```{r comment=NA,echo=FALSE}
+cat('---
+class: middle, center, inverse')
+```
+
+<br> 
+
+--
+
+To skip a lign, use the `<br>` HTML tag
+
+--
+
+<br>
+
+Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
+
+--
+
+<br>
+
+.center[I'm centerd]
+
+.footnote[I'm a footnote]
+
+---
+# Include map with leaflet
+
+
+```{r, out.width='100%', fig.height=5}
+library(leaflet)
+leaflet() %>% addTiles() %>% setView(2.34822, 48.83976, zoom = 17)
+```
+
+
 
 ---
 class: middle, center, inverse
@@ -400,6 +518,8 @@ class: center, middle, inverse
 # Thanks for your attention!
 
 #### `r icon::fa("github", size = 1)` <a href="https://github.com/abichat">@abichat</a>
+<div style = "margin-top: -20px"></div>
+#### `r icon::fa("link", size = 1)` <a href="https://abichat.github.io">abichat.github.io</a>
 <div style = "margin-top: -20px"></div>
 ####`r icon::fa("envelope", size = 1)` <a href="mailto:antoine.bichat@mines-nancy.org?subject=Science%20Communication%20with%20R">antoine.bichat@mines-nancy.org</a>
 
