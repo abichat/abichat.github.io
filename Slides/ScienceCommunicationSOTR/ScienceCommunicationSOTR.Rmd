@@ -2,7 +2,7 @@
 title: "Science Communication with R"
 subtitle: "Style, R Markdown & Xaringan"
 author: "Antoine Bichat"
-date: "State Of the R - AgroPariTech<br>February 23, 2018"
+date: "State of the R - AgroParisTech<br>February 23, 2018"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -70,7 +70,7 @@ hist(x[x < 10], col = "grey", xlab = "", ylab = "Count",
 
 * For long pipes, use one verb per line
 
-* Don't ommit the brackets
+* Don't ommit the parenthesis
 
 ```{r eval=FALSE}
 # Good
@@ -163,7 +163,7 @@ install.packages("rmarkdown")
 Use the `Knit` button to produce a HTML file
 
 .center[
-  <img src="CreateRmd4.png" width="150">
+  <img src="CreateRmd4.png" width="300">
 ]
 
 Shortcut: Ctrl + Maj + K
