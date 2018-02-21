@@ -242,7 +242,7 @@ _Italic_, *italic*, __bold__, **bold**, and `monospace`
 --
 
 ```
- ***
+---
 ```
 
 ***
@@ -358,7 +358,7 @@ cat('```{r chunkfig, fig.align="center", fig.height=4, fig.width=8}\nplot(iris$S
 plot(iris$Sepal.Length, iris$Sepal.Width)
 ```
 
-Find the godd picture size is a try-error process...
+Finding the good picture size is a trial and error process...
 
 ---
 # Better way to include picture
@@ -387,7 +387,7 @@ It allows you to use the chunk options for image size.
 
 --
 
-* Easier to debugging
+* Easier to debug
 
 --
 
@@ -486,7 +486,7 @@ Use `.footnote[Text]` to add a footnote and `.center[Text]` to center text
 
 ```{r, out.width='100%', fig.height=5}
 library(leaflet)
-leaflet() %>% addTiles() %>% setView(2.34822, 48.83976, zoom = 17)
+leaflet() %>% addTiles() %>% setView(2.34822, 48.83976, zoom = 18)
 ```
 
 
