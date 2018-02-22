@@ -1,5 +1,6 @@
 <head>
 <link href="web-fonts-with-css/css/fontawesome-all.css" rel="stylesheet">
+<link rel="icon" type="image/png" href="/img/icon.png">
 </head>
 
 # Welcome to my page 
