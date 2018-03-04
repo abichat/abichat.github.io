@@ -1,5 +1,5 @@
 ---
-title: "IM, deux ans après"
+title: "IM, deux ans aprÃ¨s"
 subtitle: ""
 author: "Antoine Bichat"
 date: "Lundi 12 mars 2018"
@@ -20,17 +20,17 @@ options(htmltools.dir.version = FALSE)
 
 .pull-left[
 
-* Secondaire en région Lyonnaise
+* Secondaire en rÃ©gion Lyonnaise
  
-* MP* et 5/2 au Lycée du Parc
+* MP* et 5/2 au LycÃ©e du Parc
 
-* Intégration en 2014
+* IntÃ©gration en 2014
 
 * IM
 
-* 3A hors école en Biomathématiques
+* 3A hors Ã©cole en BiomathÃ©matiques
 
-* Thèse en Biostatistique
+* ThÃ¨se en Biostatistique
 
 ]
 
@@ -51,7 +51,7 @@ knitr::include_graphics("logo_mines_noir.png")
 ```
 
 ---
-## Vie à Mines Nancy
+## Vie Ã  Mines Nancy
 
 <div style = "margin-top: -20px"></div>
 
@@ -63,14 +63,14 @@ knitr::include_graphics("logo_mines_noir.png")
 
 <ul>
 <ul>
-<li><p>Délégué</p></li>
-<li><p>Elève Administrateur</p></li>
+<li><p>DÃ©lÃ©guÃ©</p></li>
+<li><p>ElÃ¨ve Administrateur</p></li>
 </ul>
 </ul>
 
 --
 
-* Ingénierie Mathématique
+* IngÃ©nierie MathÃ©matique
 
 * Mineure Biologie 
 
@@ -78,11 +78,11 @@ knitr::include_graphics("logo_mines_noir.png")
 
 --
 
-* Voeux de 3A hors-école
+* Voeux de 3A hors-Ã©cole
   
-  * _Mathématques de la modélisation_, UPMC 
+  * _MathÃ©matques de la modÃ©lisation_, UPMC 
   
-  * _Mathématiques pour les sciences du vivant_, Saclay
+  * _MathÃ©matiques pour les sciences du vivant_, Saclay
 
 ---
 class: center, middle
@@ -104,7 +104,7 @@ knitr::include_graphics("logo_upmc.png")
 ```
 
 ---
-## Une université dans Paris
+## Une universitÃ© dans Paris
 
 ```{r, out.width='100%', fig.height=6, echo=FALSE, warning=FALSE}
 library(leaflet)
@@ -114,13 +114,13 @@ leaflet() %>% addTiles() %>% setView(2.35654, 48.847125, zoom = 15)
 ---
 class: center, middle
 
-# Nestlé Research Center
+# NestlÃ© Research Center
 
 
 ---
 class: center, middle
 
-# Thèse CIFRE
+# ThÃ¨se CIFRE
 
 ```{r logocifre, fig.align="center", out.width="30%", echo=FALSE}
 knitr::include_graphics("logo_cifre.jpg")
