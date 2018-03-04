@@ -46,7 +46,9 @@ knitr::include_graphics("https://slides.yihui.name/gif/impossible-parking.gif")
 ## Vie à Mines Nancy
 
 * Les assos
-Pics
+
+Mines Tank - Forum - RDD - JTM
+
   * Délégué 
   * Elève Administrateur 
   
@@ -54,7 +56,11 @@ Pics
 
 * Mineure Biologie 
 
-
+* Voeux de 3A hors-école
+  
+  * _Mathématques de la modélisation_, UPMC 
+  
+  * _Mathématiques pour les sciences du vivant_, Saclay
 
 ---
 class: center, middle
@@ -85,6 +91,10 @@ class: center, middle
 class: center, middle
 
 # LaMME
+
+```{r piclamme, fig.align="center", out.width="30%", echo=FALSE}
+knitr::include_graphics("logo_lamme.svg")
+```
 
 ---
 class: center, middle
