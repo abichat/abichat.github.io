@@ -1,0 +1,109 @@
+---
+title: "IM, deux ans après"
+subtitle: ""
+author: "Antoine Bichat"
+date: "Lundi 12 mars 2018"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+```
+
+# Mini CV
+
+.pull-left[
+
+* Secondaire en région Lyonnaise
+ 
+* MP* et 5/2 au Lycée du Parc
+
+* Intégration en 2014
+
+]
+
+
+.pull-right[
+Include pic
+]
+
+---
+class: center, middle
+
+# Mines Nancy
+
+```{r picminesnancy, fig.align="center", out.width="50%", echo=FALSE}
+knitr::include_graphics("https://slides.yihui.name/gif/impossible-parking.gif")
+```
+
+---
+## Vie à Mines Nancy
+
+* Les assos
+Pics
+  * Délégué 
+  * Elève Administrateur 
+  
+* IM 
+
+* Mineure Biologie 
+
+
+
+---
+class: center, middle
+
+# Enterome
+
+---
+# 
+
+---
+class: center, middle
+
+# UPMC
+
+
+---
+class: center, middle
+
+# Nestlé Research Center
+
+
+---
+class: center, middle
+
+# Thèse CIFRE
+
+---
+class: center, middle
+
+# LaMME
+
+---
+class: center, middle
+
+# Enterome (bis)
+
+
+---
+class: center, middle, inverse
+
+# Merci pour votre attention !
+
+#### `r icon::fa("github", size = 1)` <a href="https://github.com/abichat" target="_blank">@abichat</a>
+<div style = "margin-top: -20px"></div>
+#### `r icon::fa("linkedin-square", size = 1)` <a href="https://www.linkedin.com/in/antoinebichat" target="_blank">antoinebichat</a>
+<div style = "margin-top: -20px"></div>
+#### `r icon::fa("link", size = 1)` <a href="https://abichat.github.io" target="_blank">abichat.github.io</a>
+<div style = "margin-top: -20px"></div>
+####`r icon::fa("envelope", size = 1)` <a href="mailto:antoine.bichat@mines-nancy.org?subject=Science%20Communication%20with%20R">antoine.bichat@mines-nancy.org</a>
+
+
+.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
