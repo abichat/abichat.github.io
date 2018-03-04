@@ -1,5 +1,5 @@
 ---
-title: "IM, deux ans aprÃ¨s"
+title: "IM, deux ans après"
 subtitle: ""
 author: "Antoine Bichat"
 date: "Lundi 12 mars 2018"
@@ -20,17 +20,25 @@ options(htmltools.dir.version = FALSE)
 
 .pull-left[
 
-* Secondaire en rÃ©gion Lyonnaise
+* Secondaire en région Lyonnaise
  
-* MP* et 5/2 au LycÃ©e du Parc
+* MP* et 5/2 au Lycée du Parc
 
-* IntÃ©gration en 2014
+* Intégration en 2014
+
+* IM
+
+* 3A hors école en Biomathématiques
+
+* Thèse en Biostatistique
 
 ]
 
-
 .pull-right[
-Include pic
+
+```{r photoab, fig.align="center", out.width="70%", echo=FALSE}
+knitr::include_graphics("photo_ab.jpg")
+```
 ]
 
 ---
@@ -38,34 +46,50 @@ class: center, middle
 
 # Mines Nancy
 
-```{r picminesnancy, fig.align="center", out.width="50%", echo=FALSE}
-knitr::include_graphics("https://slides.yihui.name/gif/impossible-parking.gif")
+```{r logomines, fig.align="center", out.width="30%", echo=FALSE}
+knitr::include_graphics("logo_mines_noir.png")
 ```
 
 ---
-## Vie Ã  Mines Nancy
+## Vie à Mines Nancy
+
+<div style = "margin-top: -20px"></div>
 
 * Les assos
 
-Mines Tank - Forum - RDD - JTM
+<center>
+<img src="logo_feh.png" height="100"> &nbsp;&nbsp;&nbsp;  <img src="logo_minestank.png" height="100"> &nbsp;&nbsp;&nbsp;  <img src="logo_rdd.png" height="120"> &nbsp;&nbsp;&nbsp;  <img src="logo_jtm.png" height="100">
+</center>
 
-  * DÃ©lÃ©guÃ© 
-  * ElÃ¨ve Administrateur 
-  
-* IM 
+<ul>
+<ul>
+<li><p>Délégué</p></li>
+<li><p>Elève Administrateur</p></li>
+</ul>
+</ul>
+
+--
+
+* Ingénierie Mathématique
 
 * Mineure Biologie 
 
-* Voeux de 3A hors-Ã©cole
+* Parcours Recherche
+
+--
+
+* Voeux de 3A hors-école
   
-  * _MathÃ©matques de la modÃ©lisation_, UPMC 
+  * _Mathématques de la modélisation_, UPMC 
   
-  * _MathÃ©matiques pour les sciences du vivant_, Saclay
+  * _Mathématiques pour les sciences du vivant_, Saclay
 
 ---
 class: center, middle
 
 # Enterome
+
+
 
 ---
 # 
@@ -75,24 +99,39 @@ class: center, middle
 
 # UPMC
 
+```{r logoupmc, fig.align="center", out.width="30%", echo=FALSE}
+knitr::include_graphics("logo_upmc.png")
+```
+
+---
+## Une université dans Paris
+
+```{r, out.width='100%', fig.height=6, echo=FALSE, warning=FALSE}
+library(leaflet)
+leaflet() %>% addTiles() %>% setView(2.35654, 48.847125, zoom = 15)
+```
 
 ---
 class: center, middle
 
-# NestlÃ© Research Center
+# Nestlé Research Center
 
 
 ---
 class: center, middle
 
-# ThÃ¨se CIFRE
+# Thèse CIFRE
+
+```{r logocifre, fig.align="center", out.width="30%", echo=FALSE}
+knitr::include_graphics("logo_cifre.jpg")
+```
 
 ---
 class: center, middle
 
 # LaMME
 
-```{r piclamme, fig.align="center", out.width="30%", echo=FALSE}
+```{r logolamme, fig.align="center", out.width="30%", echo=FALSE}
 knitr::include_graphics("logo_lamme.svg")
 ```
 
