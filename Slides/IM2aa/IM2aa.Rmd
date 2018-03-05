@@ -125,7 +125,15 @@ knitr::include_graphics("logo_enterome.png")
 
 <br>
 
-* Hihi
+--
+
+* Apports :
+
+  * Utilisation de R 
+  
+  * Interaction avec des informaticiens, biologistes, medecins, ...
+  
+  * Proposition de thèse
 
 ---
 class: center, middle
@@ -145,6 +153,43 @@ leaflet() %>% addTiles() %>% setView(2.35654, 48.847125, zoom = 15)
 ```
 
 ---
+# Quelques chiffres
+
+* 32 000 étudiants 
+
+* 4 500 enseignants-chercheurs et chercheurs
+
+* 125 laboratoires de recherche
+
+* 6 parcours de M2 de mathématiques différents :
+
+ * Mathématiques Fondamentales
+ * Probabilités et Modèles Aléatoires
+ * Probabilités et Finances
+ * __Mathématiques de la Modélisation__
+ * Ingénierie Mathématique
+ * Statistique
+ * Préparation à l'Agrégation
+ 
+
+---
+## Nouvelle identité
+
+* Sorbonne Université depuis le 1er janvier 2018
+
+* 53 400 étudiants
+
+<br>
+
+```{r logosorbonne, fig.align="center", out.width="40%", echo=FALSE}
+knitr::include_graphics("logo_sorbonne.svg")
+```
+
+---
+## 
+
+
+---
 class: center, middle
 
 # Nestlé Research Center
@@ -162,6 +207,9 @@ knitr::include_graphics("logo_cifre.jpg")
 ```
 
 ---
+# Le dispositif
+
+---
 class: center, middle
 
 # LaMME
@@ -169,6 +217,18 @@ class: center, middle
 ```{r logolamme, fig.align="center", out.width="30%", echo=FALSE}
 knitr::include_graphics("logo_lamme.svg")
 ```
+
+---
+# Le laboratoire
+
+* Hébergé à l'Institut de Biologie, de Génomique et de BioInformatique 
+
+* 3 équipes de recherche :
+
+  * Analyse et Equations aux Dérivées Partielles
+  * Probabilités et Mathématiques Financières
+  * __Statistique et Génome__
+
 
 ---
 class: center, middle
@@ -187,6 +247,16 @@ knitr::include_graphics("gutmic.png")
 ```
 
 ---
+class: center, middle
+
+# p-valeur
+```{r pval, fig.align="center", out.width="40%", echo=FALSE, fig.cap='From <a href="https://xkcd.com" target="_blank">xkcd</a>'}
+knitr::include_graphics("pvaluexkcd.jpg")
+```
+
+
+
+---
 class: center, middle, inverse
 
 # Merci pour votre attention !
@@ -200,4 +270,4 @@ class: center, middle, inverse
 ####`r icon::fa("envelope", size = 1)` <a href="mailto:antoine.bichat@mines-nancy.org?subject=Science%20Communication%20with%20R">antoine.bichat@mines-nancy.org</a>
 
 
-.footnote[Slides created via the R package [**xaringan**](https://github.com/yihui/xaringan).]
+.footnote[Slides created via the R package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]
