@@ -107,9 +107,9 @@ class: center, middle
 
 * Laboratoire pharmaceutique
 
-  * spécialisé dans les maladies inflamatoires de l'intestin
+  * spécialisé dans les maladies relatives au microbiote intestinal (maladies inflammatoires, cancers, ulcères, ...)
   
-  * qui développe des molécules imitant l'action des bactéries
+  * développe des médicaments et des biomarqueurs 
   
 &lt;br&gt;
 
@@ -154,8 +154,8 @@ class: center, middle
 ---
 ## Une université dans Paris
 
-<div id="htmlwidget-d94c59bf935c6359f96a" style="width:100%;height:432px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-d94c59bf935c6359f96a">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.847125,2.35654],15,[]]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-12cfa85a31178ae7f7e3" style="width:100%;height:432px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-12cfa85a31178ae7f7e3">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.847125,2.35654],15,[]]},"evals":[],"jsHooks":[]}</script>
 
 ---
 # Quelques chiffres
@@ -188,9 +188,6 @@ class: center, middle
 
 &lt;img src="logo_sorbonne.svg" width="40%" style="display: block; margin: auto;" /&gt;
 
----
-## 
-
 
 ---
 class: center, middle
@@ -216,7 +213,7 @@ class: center, middle
 &lt;img src="logo_lamme.svg" width="30%" style="display: block; margin: auto;" /&gt;
 
 ---
-# Le laboratoire
+## Le laboratoire
 
 * Hébergé à l'Institut de Biologie, de Génomique et de BioInformatique 
 
@@ -240,6 +237,22 @@ class: center, middle
 &lt;img src="gutmic.png" width="30%" style="display: block; margin: auto;" /&gt;
 
 ---
+## Quelques chiffres
+
+
+
+.pull-left[
+*  
+
+* 
+]
+
+.pull_right[
+&lt;img src="IM2aa_files/figure-html/plotpubli-1.png" width="50%" /&gt;
+]
+
+
+---
 class: center, middle
 
 # p-valeur
@@ -248,7 +261,52 @@ class: center, middle
 &lt;p class="caption"&gt;From &lt;a href="https://xkcd.com" target="_blank"&gt;xkcd&lt;/a&gt;&lt;/p&gt;
 &lt;/div&gt;
 
+---
+## Définition et utilisation
 
+Soit `\(H_0\)` une hypothèse nulle et `\(X\)` une série d'observations.
+
+`$$p = \mathbb{P}\left(X\mid H_0\right)$$`
+
+--
+
+`\(p\)` mesure la probabilité d'obtenir un résultat "au moins aussi extrême" que celui observé "sachant l'hypothèse nulle".
+
+&lt;br&gt;
+--
+
+Extension du raisonnement par l'absurde : on rejette `\(H_0\)` dans le cas où les observations sont hautement improbables ( `\(p&lt;0.05\)` ).
+
+
+&lt;br&gt;
+--
+
+Sous l'hupothèse nulle, `\(p\sim\mathcal{U}\left([0,1]\right)\)`, donc avec un seuil `\(\alpha = 0.05\)`, on a 5% de chance de faire une "fausse découverte".
+
+
+&lt;br&gt;
+--
+
+.center[
+<i class="fa  fa-exclamation-triangle "></i> `\(p \neq \mathbb{P}\left(H_0\mid X\right)\)`
+]
+
+---
+## Problème des tests multiples
+
+Si l'on teste `\(m\)` hypothèses, quelle est la probabilité de faire au moins une fausse découverte ?
+
+--
+
+Soit `\(A_i = \left\{A_i\text{ est vraie}\right\} \bigcup \left\{p_i&lt; \alpha\right\}\)`. On a `\(\mathbb{P}\left(A_i\right) = \alpha\)`.
+
+--
+
+`$$\mathbb{P}\left(\bigcup_{i=1}^m A_i\right) = 1- \mathbb{P}\left(\overline{\bigcup_{i=1}^m A_i}\right) = 1- \mathbb{P}\left(\bigcap_{i=1}^m \overline{A_i}\right) = 1- \mathbb{P}\left( \overline{A_i}\right)^m = 1- \left( 1-\alpha\right)^m$$`
+
+--
+
+&lt;img src="IM2aa_files/figure-html/dfpval-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
 class: center, middle, inverse

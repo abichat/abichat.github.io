@@ -11,8 +11,10 @@ output:
     css: ["./IM2aa.css", "default-fonts"]
 ---
 
-```{r setup, include=FALSE}
-options(htmltools.dir.version = FALSE)
+```{r setup, include=FALSE, warning=FALSE}
+options(htmltools.dir.version = FALSE, dev = 'pdf')
+library(leaflet)
+library(ggplot2)
 ```
 
 # Mini CV
@@ -98,9 +100,9 @@ knitr::include_graphics("logo_enterome.png")
 
 * Laboratoire pharmaceutique
 
-  * spécialisé dans les maladies inflamatoires de l'intestin
+  * spécialisé dans les maladies relatives au microbiote intestinal (maladies inflammatoires, cancers, ulcères, ...)
   
-  * qui développe des molécules imitant l'action des bactéries
+  * développe des médicaments et des biomarqueurs 
   
 <br>
 
@@ -148,7 +150,6 @@ knitr::include_graphics("logo_upmc.png")
 ## Une université dans Paris
 
 ```{r, out.width='100%', fig.height=6, echo=FALSE, warning=FALSE}
-library(leaflet)
 leaflet() %>% addTiles() %>% setView(2.35654, 48.847125, zoom = 15)
 ```
 
@@ -185,9 +186,6 @@ leaflet() %>% addTiles() %>% setView(2.35654, 48.847125, zoom = 15)
 knitr::include_graphics("logo_sorbonne.svg")
 ```
 
----
-## 
-
 
 ---
 class: center, middle
@@ -219,7 +217,7 @@ knitr::include_graphics("logo_lamme.svg")
 ```
 
 ---
-# Le laboratoire
+## Le laboratoire
 
 * Hébergé à l'Institut de Biologie, de Génomique et de BioInformatique 
 
@@ -247,6 +245,43 @@ knitr::include_graphics("gutmic.png")
 ```
 
 ---
+## Quelques chiffres
+
+```{r publi, echo=FALSE}
+dfpubli <- 
+  data.frame(
+    Year = 1990:2017,
+    Number = c(727, 748, 844, 782, 918,1030, 1220, 1500, 1900, 2400, 
+               2920, 3230, 3940, 4460, 5660, 7100, 8440, 10600, 12600, 15300, 
+               18600, 23600, 31200, 39100, 46900, 52300, 52500, 44500)
+  )
+p <-
+  ggplot(dfpubli, aes(Year, Number/1000)) + 
+  geom_col() + 
+  theme_minimal() +
+  scale_x_continuous(breaks = c(1990, 1995, 2000, 2005, 2010, 2015)) +
+  labs(x = "Année de publication", y = "Nombre (milliers)",
+       title = "Articles contenant 'Microbiome' ou 'Microbiota'",
+       caption = "Source : Google Scholar") +
+  coord_fixed(ratio = 0.3) +
+  theme(axis.text = element_text(size = 13), axis.title = element_text(size = 15), 
+        plot.title = element_text(size = 17), plot.caption = element_text(size = 13))
+```
+
+.pull-left[
+*  
+
+* 
+]
+
+.pull_right[
+```{r plotpubli, echo=FALSE, out.width="50%"}
+print(p)
+```
+]
+
+
+---
 class: center, middle
 
 # p-valeur
@@ -254,7 +289,63 @@ class: center, middle
 knitr::include_graphics("pvaluexkcd.jpg")
 ```
 
+---
+## Définition et utilisation
 
+Soit $H_0$ une hypothèse nulle et $X$ une série d'observations.
+
+$$p = \mathbb{P}\left(X\mid H_0\right)$$
+
+--
+
+$p$ mesure la probabilité d'obtenir un résultat "au moins aussi extrême" que celui observé "sachant l'hypothèse nulle".
+
+<br>
+--
+
+Extension du raisonnement par l'absurde : on rejette $H_0$ dans le cas où les observations sont hautement improbables ( $p<0.05$ ).
+
+
+<br>
+--
+
+Sous l'hupothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte".
+
+
+<br>
+--
+
+.center[
+`r icon::fa_exclamation_triangle()` $p \neq \mathbb{P}\left(H_0\mid X\right)$
+]
+
+---
+## Problème des tests multiples
+
+Si l'on teste $m$ hypothèses, quelle est la probabilité de faire au moins une fausse découverte ?
+
+--
+
+Soit $A_i = \left\{A_i\text{ est vraie}\right\} \bigcup \left\{p_i< \alpha\right\}$. On a $\mathbb{P}\left(A_i\right) = \alpha$.
+
+--
+
+$$\mathbb{P}\left(\bigcup_{i=1}^m A_i\right) = 1- \mathbb{P}\left(\overline{\bigcup_{i=1}^m A_i}\right) = 1- \mathbb{P}\left(\bigcap_{i=1}^m \overline{A_i}\right) = 1- \mathbb{P}\left( \overline{A_i}\right)^m = 1- \left( 1-\alpha\right)^m$$
+
+--
+
+```{r dfpval, echo=FALSE, fig.height=4, fig.align='center'}
+dfpval <- data.frame(n <- 1:15, p = 1-(1-0.05)^n)
+ggplot(dfpval, aes(n,p)) + 
+  geom_line(size = 1, alpha = 0.5) +
+  geom_point(size = 3) + 
+  scale_x_continuous(breaks = seq(2, 15, 2)) +
+  scale_y_continuous(limits = c(0, 0.7)) +
+  theme_minimal() +
+  theme(axis.text = element_text(size = 13), axis.title = element_text(size = 13), 
+        plot.title = element_text(size = 17), plot.caption = element_text(size = 10)) +
+  labs(x = "Nombre d'hypothèses à tester", y = "Probabilité d'avoir au moins un FP")
+```
 
 ---
 class: center, middle, inverse
