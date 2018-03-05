@@ -140,6 +140,55 @@ knitr::include_graphics("logo_enterome.png")
 ---
 class: center, middle
 
+# Le microbiote
+```{r gutmic, fig.align="center", out.width="30%", echo=FALSE}
+knitr::include_graphics("gutmic.png")
+```
+
+---
+## Qu'est-ce que c'est ?
+
+```{r publi, echo=FALSE}
+dfpubli <- 
+  data.frame(
+    Year = 1990:2017,
+    Number = c(727, 748, 844, 782, 918,1030, 1220, 1500, 1900, 2400, 
+               2920, 3230, 3940, 4460, 5660, 7100, 8440, 10600, 12600, 15300, 
+               18600, 23600, 31200, 39100, 46900, 52300, 52500, 44500)
+  )
+p <-
+  ggplot(dfpubli, aes(Year, Number/1000)) + 
+  geom_col() + 
+  theme_minimal() +
+  scale_x_continuous(breaks = c(1990, 1995, 2000, 2005, 2010, 2015)) +
+  labs(x = "Année de publication", y = "Nombre (milliers)",
+       title = "Articles contenant 'Microbiome' ou 'Microbiota'",
+       caption = "Source : Google Scholar") +
+  # coord_fixed(ratio = 0.3) +
+  theme(axis.text = element_text(size = 13), axis.title = element_text(size = 15), 
+        plot.title = element_text(size = 17), plot.caption = element_text(size = 13))
+```
+
+
+* Le **microbiote** est l'ensemble des individus présents dans un environnement donné
+
+* Le **métagénome** (**microbiome** en englais) est l'ensemble des génomes du microbiote 
+
+* La **métagénomique** est l'étude du microbiome via séquençage direct
+
+--
+
+<!-- <div style = "margin-top: -30px"></div> -->
+
+```{r plotpubli, echo=FALSE, fig.width=7, fig.height=3, fig.align='center', dpi=300}
+print(p)
+```
+
+
+
+---
+class: center, middle
+
 # UPMC
 
 ```{r logoupmc, fig.align="center", out.width="40%", echo=FALSE}
@@ -234,53 +283,6 @@ class: center, middle
 # Enterome, le retour
 ```{r logoenteromebis, fig.align="center", out.width="40%", echo=FALSE}
 knitr::include_graphics("logo_enterome.png")
-```
-
----
-class: center, middle
-
-# Le microbiote
-```{r gutmic, fig.align="center", out.width="30%", echo=FALSE}
-knitr::include_graphics("gutmic.png")
-```
-
----
-## Qu'est-ce que c'est ?
-
-```{r publi, echo=FALSE}
-dfpubli <- 
-  data.frame(
-    Year = 1990:2017,
-    Number = c(727, 748, 844, 782, 918,1030, 1220, 1500, 1900, 2400, 
-               2920, 3230, 3940, 4460, 5660, 7100, 8440, 10600, 12600, 15300, 
-               18600, 23600, 31200, 39100, 46900, 52300, 52500, 44500)
-  )
-p <-
-  ggplot(dfpubli, aes(Year, Number/1000)) + 
-  geom_col() + 
-  theme_minimal() +
-  scale_x_continuous(breaks = c(1990, 1995, 2000, 2005, 2010, 2015)) +
-  labs(x = "Année de publication", y = "Nombre (milliers)",
-       title = "Articles contenant 'Microbiome' ou 'Microbiota'",
-       caption = "Source : Google Scholar") +
-  # coord_fixed(ratio = 0.3) +
-  theme(axis.text = element_text(size = 13), axis.title = element_text(size = 15), 
-        plot.title = element_text(size = 17), plot.caption = element_text(size = 13))
-```
-
-
-* Le **microbiote** est l'ensemble des individus présents dans un environnement donné
-
-* Le **métagénome** (**microbiome** en englais) est l'ensemble des génomes du microbiote 
-
-* La **métagénomique** est l'étude du microbiome via séquençage direct
-
---
-
-<!-- <div style = "margin-top: -30px"></div> -->
-
-```{r plotpubli, echo=FALSE, fig.width=7, fig.height=3, fig.align='center', dpi=300}
-print(p)
 ```
 
 
