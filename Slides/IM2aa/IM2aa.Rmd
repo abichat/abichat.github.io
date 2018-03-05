@@ -245,7 +245,7 @@ knitr::include_graphics("gutmic.png")
 ```
 
 ---
-## Quelques chiffres
+## Qu'est-ce que c'est ?
 
 ```{r publi, echo=FALSE}
 dfpubli <- 
@@ -263,22 +263,26 @@ p <-
   labs(x = "Année de publication", y = "Nombre (milliers)",
        title = "Articles contenant 'Microbiome' ou 'Microbiota'",
        caption = "Source : Google Scholar") +
-  coord_fixed(ratio = 0.3) +
+  # coord_fixed(ratio = 0.3) +
   theme(axis.text = element_text(size = 13), axis.title = element_text(size = 15), 
         plot.title = element_text(size = 17), plot.caption = element_text(size = 13))
 ```
 
-.pull-left[
-*  
 
-* 
-]
+* Le **microbiote** est l'ensemble des individus présents dans un environnement donné
 
-.pull_right[
-```{r plotpubli, echo=FALSE, out.width="50%"}
+* Le **métagénome** (**microbiome** en englais) est l'ensemble des génomes du microbiote 
+
+* La **métagénomique** est l'étude du microbiome via séquençage direct
+
+--
+
+<!-- <div style = "margin-top: -30px"></div> -->
+
+```{r plotpubli, echo=FALSE, fig.width=7, fig.height=3, fig.align='center', dpi=300}
 print(p)
 ```
-]
+
 
 
 ---
@@ -309,7 +313,7 @@ Extension du raisonnement par l'absurde : on rejette $H_0$ dans le cas où les o
 <br>
 --
 
-Sous l'hupothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte".
+Sous l'hypothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte".
 
 
 <br>
@@ -318,6 +322,15 @@ Sous l'hupothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seui
 .center[
 `r icon::fa_exclamation_triangle()` $p \neq \mathbb{P}\left(H_0\mid X\right)$
 ]
+
+---
+## Exemple visuel
+
+La p-valeur peut être obtenue par comparaison avec un score de référence.
+
+```{r mc, echo=FALSE, fig.align='center', dpi=200}
+knitr::include_graphics("mc3-1.png")
+```
 
 ---
 ## Problème des tests multiples
@@ -334,13 +347,13 @@ $$\mathbb{P}\left(\bigcup_{i=1}^m A_i\right) = 1- \mathbb{P}\left(\overline{\big
 
 --
 
-```{r dfpval, echo=FALSE, fig.height=4, fig.align='center'}
+```{r dfpval, echo=FALSE, fig.height=3.2, fig.align='center', dpi=300}
 dfpval <- data.frame(n <- 1:15, p = 1-(1-0.05)^n)
 ggplot(dfpval, aes(n,p)) + 
   geom_line(size = 1, alpha = 0.5) +
   geom_point(size = 3) + 
   scale_x_continuous(breaks = seq(2, 15, 2)) +
-  scale_y_continuous(limits = c(0, 0.7)) +
+  scale_y_continuous(limits = c(0, 0.6)) +
   theme_minimal() +
   theme(axis.text = element_text(size = 13), axis.title = element_text(size = 13), 
         plot.title = element_text(size = 17), plot.caption = element_text(size = 10)) +
