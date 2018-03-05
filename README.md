@@ -50,7 +50,7 @@ Comming soon
 
 ## Simulation of Brownian Motion
 
-This is a <a href="https://abichat.shinyapps.io/BrownianMotion/" target="_blank">shiny app</a> which simulates a Brownian Motion.
+This <a href="https://abichat.shinyapps.io/BrownianMotion/" target="_blank">shiny app</a> simulates a Brownian Motion.
 
 <br>
 
