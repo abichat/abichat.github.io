@@ -9,7 +9,7 @@
 Comming soon
 ```
 <center>
-  <i class="fas fa-cog fa-spin" fa-3x></i><i class="fas fa-cog fa-spin" fa-3x></i><i class="fas fa-cog fa-spin" fa-3x></i>
+  <i class="fas fa-cog fa-spin" fa-3x></i><i class="fas fa-cog fa-spin-reverse" fa-3x></i><i class="fas fa-cog fa-spin" fa-3x></i>
 </center>
   
 <br>
