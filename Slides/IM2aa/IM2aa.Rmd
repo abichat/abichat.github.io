@@ -1,8 +1,6 @@
 ---
 title: "IM, deux ans après"
-subtitle: ""
-author: "Antoine Bichat"
-date: "Lundi 12 mars 2018"
+author: "Antoine Bichat<br>Lundi 12 mars 2018"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -10,6 +8,7 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+    css: ["./IM2aa.css", "default-fonts"]
 ---
 
 ```{r setup, include=FALSE}
@@ -58,7 +57,7 @@ knitr::include_graphics("logo_mines_noir.png")
 * Les assos
 
 <center>
-<img src="logo_feh.png" height="100"> &nbsp;&nbsp;&nbsp;  <img src="logo_minestank.png" height="100"> &nbsp;&nbsp;&nbsp;  <img src="logo_rdd.png" height="120"> &nbsp;&nbsp;&nbsp;  <img src="logo_jtm.png" height="100">
+<img src="logo_feh.png" height="110"> &nbsp;&nbsp;&nbsp;  <img src="logo_minestank.png" height="100"> &nbsp;&nbsp;&nbsp;  <img src="logo_rdd.png" height="120"> &nbsp;&nbsp;&nbsp;  <img src="logo_jtm.png" height="100">
 </center>
 
 <ul>
@@ -88,18 +87,52 @@ knitr::include_graphics("logo_mines_noir.png")
 class: center, middle
 
 # Enterome
+```{r logoenterome, fig.align="center", out.width="40%", echo=FALSE}
+knitr::include_graphics("logo_enterome.png")
+```
 
 
 
 ---
-# 
+## La société
+
+* Laboratoire pharmaceutique
+
+  * spécialisé dans les maladies inflamatoires de l'intestin
+  
+  * qui développe des molécules imitant l'action des bactéries
+  
+<br>
+
+* 40 salariés dont 20 sur le site parisien 
+
+  * $\pm$ 6 personnes dans l'équipe bioinfo-biostat
+
+<br>
+
+* Financement par levées de fonds (32 M€ en 2018) et prestations scientifiques
+
+
+
+---
+## Stage d'assistant ingénieur
+
+* Trouvé sur le site de la <a href="https://www.sfbi.fr" target="_blank">Société Française de BioInformatique</a>
+
+<br>
+
+* Automatisation d'un rapport de contrôle qualité en R
+
+<br>
+
+* Hihi
 
 ---
 class: center, middle
 
 # UPMC
 
-```{r logoupmc, fig.align="center", out.width="30%", echo=FALSE}
+```{r logoupmc, fig.align="center", out.width="40%", echo=FALSE}
 knitr::include_graphics("logo_upmc.png")
 ```
 
@@ -115,7 +148,9 @@ leaflet() %>% addTiles() %>% setView(2.35654, 48.847125, zoom = 15)
 class: center, middle
 
 # Nestlé Research Center
-
+```{r logonestler, fig.align="center", out.width="50%", echo=FALSE}
+knitr::include_graphics("logo_nestler.jpg")
+```
 
 ---
 class: center, middle
@@ -138,8 +173,18 @@ knitr::include_graphics("logo_lamme.svg")
 ---
 class: center, middle
 
-# Enterome (bis)
+# Enterome, le retour
+```{r logoenteromebis, fig.align="center", out.width="40%", echo=FALSE}
+knitr::include_graphics("logo_enterome.png")
+```
 
+---
+class: center, middle
+
+# Le microbiote
+```{r gutmic, fig.align="center", out.width="30%", echo=FALSE}
+knitr::include_graphics("gutmic.png")
+```
 
 ---
 class: center, middle, inverse
