@@ -8,6 +8,9 @@
 ```markdown
 Comming soon
 ```
+<center>
+  <i class="fas fa-cog fa-spin" fa-3x></i><i class="fas fa-cog fa-spin" fa-3x></i><i class="fas fa-cog fa-spin" fa-3x></i>
+</center>
   
 <br>
 
@@ -47,7 +50,7 @@ Comming soon
 
 ## Simulation of Brownian Motion
 
-This is a <a href="https://abichat.shinyapps.io/BrownianMotion/" target="_blank">shiny app</a> which simulates a Brownian Motion (there is an error with "Mean" <i class="fas fa-cog fa-spin" fa-3x></i>)
+This is a <a href="https://abichat.shinyapps.io/BrownianMotion/" target="_blank">shiny app</a> which simulates a Brownian Motion.
 
 <br>
 
