@@ -184,6 +184,12 @@ p <-
 print(p)
 ```
 
+---
+## Quelques chiffres
+
+
+---
+## Le rôle du microbiote
 
 
 ---
@@ -203,7 +209,7 @@ leaflet() %>% addTiles() %>% setView(2.35654, 48.847125, zoom = 15)
 ```
 
 ---
-# Quelques chiffres
+## Quelques chiffres
 
 * 32 000 étudiants 
 
@@ -235,6 +241,80 @@ leaflet() %>% addTiles() %>% setView(2.35654, 48.847125, zoom = 15)
 knitr::include_graphics("logo_sorbonne.svg")
 ```
 
+---
+## Ma formation
+
+<div style = "margin-top: -30px"></div>
+
+* __Mathématiques pour les Sciences Biologiques et Médicales__
+
+  * Equations aux dérivées partielles
+  * Méthodes numériques pour les EDP instationnaires
+  * Processus de Markov, application à la dynamique des populations 
+  * Calcul stochastique
+  
+--
+
+<ul>
+<ul>
+<li>Méthodes mathématiques pour la biologie</li>
+<li>Méthodes numériques probabilistes</li>
+<li>Statistique et apprentissage</li>
+</ul>
+</ul>
+
+--
+
+<ul>
+<ul>
+<li>Méthodes probabilistes en neurosciences</li>
+<li>Modélisation de la résistance des bactéries aux antibiotiques</li>
+</ul>
+</ul>
+
+--
+
+* __Certificat Big Data__
+
+  * Apprentissage statistique
+  * Outils pour l'apprentissage statistique distribué
+  * Big data et applications
+
+--
+
+<ul>
+<ul>
+<li>Statistique et apprentissage</li>
+<li>Apprentissage en grande dimension</li>
+<li>Analyse statistique de graphes</li>
+</ul>
+</ul>
+
+
+---
+## Ce qui change
+
+* Les effectifs
+
+--
+
+* Les cours à la carte
+
+--
+
+* Les interactions avec les autres élèves
+
+--
+
+* Les interactions avec les enseignants
+
+--
+
+* Les supports pédagogiques
+
+--
+
+* La BU
 
 ---
 class: center, middle
@@ -243,6 +323,18 @@ class: center, middle
 ```{r logonestler, fig.align="center", out.width="50%", echo=FALSE}
 knitr::include_graphics("logo_nestler.jpg")
 ```
+
+---
+## Nestlé
+
+---
+## Le centre
+
+---
+## Le stage
+
+---
+## La Suisse
 
 ---
 class: center, middle
@@ -254,7 +346,12 @@ knitr::include_graphics("logo_cifre.jpg")
 ```
 
 ---
-# Le dispositif
+## Le dispositif
+
+
+---
+## Quelques chiffres
+
 
 ---
 class: center, middle
@@ -326,7 +423,7 @@ Sous l'hypothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seui
 ]
 
 ---
-## Exemple visuel
+## Exemple
 
 La p-valeur peut être obtenue par comparaison avec un score de référence.
 
