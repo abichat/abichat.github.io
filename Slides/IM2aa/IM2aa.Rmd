@@ -158,7 +158,7 @@ dfpubli <-
   )
 p <-
   ggplot(dfpubli, aes(Year, Number/1000)) + 
-  geom_col() + 
+  geom_col(fill = "grey50", color = "black") + 
   theme_minimal() +
   scale_x_continuous(breaks = c(1990, 1995, 2000, 2005, 2010, 2015)) +
   labs(x = "Année de publication", y = "Nombre (milliers)",
@@ -190,6 +190,14 @@ print(p)
 
 ---
 ## Le rôle du microbiote
+
+---
+## Comment l'analyser ?
+
+<br>
+
+Présentation  <a href="https://abichat.github.io/Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble" target="_blank"><i>Metagenomics with R</i></a> à <a href="https://r-in-grenoble.github.io" target="_blank">R Users Grenoble</a>
+
 
 
 ---
@@ -327,11 +335,84 @@ knitr::include_graphics("logo_nestler.jpg")
 ---
 ## Nestlé
 
+
+.pull-left[
+<br>
+```{r brands, fig.align="center", out.width="100%", echo=FALSE}
+knitr::include_graphics("nestle_brands.jpg")
+```
+]
+
+--
+
+.pull-right[
+```{r dfaa, fig.align="center", out.width="100%", echo=FALSE, dpi=300}
+dfaa <- data.frame(Entreprise = factor(c("Nestlé", "Unilever", "PepsiCo", "The Coco-Cola Company", "Danone", "Mondelez"), 
+                                           levels = c("Nestlé", "Unilever", "PepsiCo", "The Coco-Cola Company", "Danone", "Mondelez")),
+                   Pays = c("Suisse", "Royaume-Uni/Pays-Bas", "Etats-Unis", "Etats-Unis", "France", "Etats-Unis"),
+                   CA = c(95.6, 66.3, 63.5, 35.4, 30.5, 25.6))
+ggplot(dfaa, aes(Entreprise, CA, fill = Pays)) +
+  geom_col() +
+  geom_label(aes(y = CA/2, label = CA), alpha = 0.3, fill = "white") +
+  scale_x_discrete(breaks = c("Nestlé", "Unilever", "PepsiCo", "The Coco-Cola Company", "Danone", "Mondelez")) +
+  # scale_fill_manual(values = c("red", "blue", "grey", "purple")) +
+  theme_minimal() +
+  labs(x = NULL, y = "Chiffre d'affaires (en milliards de $)") +
+  theme(axis.text = element_text(size = 13), axis.title = element_text(size = 13),
+        plot.title = element_text(size = 17), plot.caption = element_text(size = 10), 
+        axis.text.x = element_text(angle = 20, hjust = 1),
+        legend.position = "top")
+```
+]
+
+--
+
+
+* 335 000 employés dont 5 000 en R&D
+
+* 436 usines dans 86 pays
+
+
+
 ---
-## Le centre
+## Le centre de recherche de Vers-Chez-Les-Blancs
+
+* Intitute of Food Safety & Analytical Science
+
+* Intitute of Material Science
+
+* __Intitute of Nutritional Science__
+
+--
+
+  * Department of Cognitive Development
+  
+  * Department of Dietary Recommendations
+  
+  * Department of Metabolic Health
+  
+  * __Department of Gut Ecosystem__
+  
+--
+
+<ul>
+<ul>
+<ul>
+<li><p>Gatrointestinal Physiology</p></li>
+<li><p>Immunology</p></li>
+<li><p><b>Host-Microbe Interaction<b></p></li>
+</ul>
+</ul>
+</ul>
 
 ---
 ## Le stage
+
+* Analyse exploratoire
+
+* Nouveau pipeline
+
+* Influence du régime alimentaire
 
 ---
 ## La Suisse
@@ -412,7 +493,7 @@ Extension du raisonnement par l'absurde : on rejette $H_0$ dans le cas où les o
 <br>
 --
 
-Sous l'hypothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte".
+Sous l'hypothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte" (faux positif).
 
 
 <br>
