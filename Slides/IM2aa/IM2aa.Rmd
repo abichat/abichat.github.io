@@ -585,18 +585,21 @@ $$p = \mathbb{P}\left(X\mid H_0\right)$$
 $p$ mesure la probabilité d'obtenir un résultat "au moins aussi extrême" que celui observé "sachant l'hypothèse nulle".
 
 <br>
+
 --
 
 Extension du raisonnement par l'absurde : on rejette $H_0$ dans le cas où les observations sont hautement improbables $(p<0.05)$.
 
 
 <br>
+
 --
 
 Sous l'hypothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte" (faux positif).
 
 
 <br>
+
 --
 
 .center[
