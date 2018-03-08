@@ -131,7 +131,7 @@ knitr::include_graphics("logo_enterome.png")
 
   * Utilisation de R 
   
-  * Interaction avec des informaticiens, biologistes, medecins, ...
+  * Interaction avec des informaticiens, biologistes, médecins, ...
   
   * Proposition de thèse
 
@@ -169,7 +169,7 @@ p <-
 
 * Le **microbiote** est l'ensemble des individus présents dans un environnement donné
 
-* Le **métagénome** (**microbiome** en englais) est l'ensemble des génomes du microbiote 
+* Le **métagénome** (**microbiome** en anglais) est l'ensemble des génomes du microbiote 
 
 * La **métagénomique** est l'étude du microbiome via séquençage direct
 
@@ -186,9 +186,9 @@ print(p)
 
 * 100 000 milliards de micro-organismes
 
-* entre 100 000 et 800 000 gènes (contre 23 000 chez l'Homme)
+* Entre 100 000 et 800 000 gènes (contre 23 000 chez l'Homme)
  
-* 350 espèces différentes dans un individu
+* En moyenne, 350 espèces différentes dans un individu
 
 * 2 kilos (contre 1,5 kg pour le cerveau humain)
 
@@ -199,7 +199,7 @@ print(p)
 Un organe à part entière ? 
 
 ---
-## Interaction hôte-microbiome
+## Interaction hôte-microbiote
 
 * Système immunitaire et allergies
 
@@ -437,10 +437,16 @@ ggplot(dfaa, aes(Entreprise, CA, fill = Pays)) +
 <ul>
 <li><p>Gatrointestinal Physiology</p></li>
 <li><p>Immunology</p></li>
-<li><p><b>Host-Microbe Interaction<b></p></li>
+<li><p><b>Host-Microbe Interaction</b></p></li>
 </ul>
 </ul>
 </ul>
+
+--
+
+<br>
+
+* 700 employés dont une trentaine de stagiaires
 
 ---
 ## Le stage
@@ -505,6 +511,10 @@ knitr::include_graphics("logo_cifre.jpg")
 knitr::include_graphics("ANRT.png")
 ``` 
 
+<br>
+
+--
+
 * Double encadrement et bi-culturalité
 
 * Pas de restriction sur le secteur d'acivité de l'entreprise
@@ -559,6 +569,8 @@ knitr::include_graphics("logo_enterome.png")
 * La manière de dire les choses a autant, et parfois plus, d'importance que ce qui est dit
 
 --
+
+<br>
 
 * Six types de profil :
 
@@ -634,7 +646,7 @@ Extension du raisonnement par l'absurde : on rejette $H_0$ dans le cas où les o
 
 --
 
-Sous l'hypothèse nulle $p\sim\mathcal{U}\left([0,1]\right)$ donc, avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte" (faux positif). 
+Sous l'hypothèse nulle $p\sim\mathcal{U}\left([0,1]\right)$. Avec un seuil $\alpha = 0.05$, on a donc 5% de chance de faire une "fausse découverte" (faux positif). 
 
 
 <br>
