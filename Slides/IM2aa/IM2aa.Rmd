@@ -193,7 +193,7 @@ print(p)
 
 * 200 espèces différentes
 
-* 2 kilos
+* 2 kilos (contre 1,5 kg pour le cerveau humain)
 
 --
 
@@ -216,6 +216,14 @@ Un organe à part entière ?
 --
 
 * Contrôle du fer 
+
+--
+
+* Autisme ?
+
+--
+
+* Olfaction et préférences alimentaires
 
 --
 
@@ -458,7 +466,7 @@ ggplot(dfaa, aes(Entreprise, CA, fill = Pays)) +
 
   * Connaissances en microbiote
   
-  * Programmation R
+  * Programmation R (et un peu Shell)
   
   * Anglais
   
@@ -466,10 +474,12 @@ ggplot(dfaa, aes(Entreprise, CA, fill = Pays)) +
   
   
 ---
-## Quelques résultats
+## Influence du régime alimentaire
 
-<!-- Inclure incfluence CS vs VD -->
 
+```{r diet, fig.align="center", out.width="90%", echo=FALSE}
+knitr::include_graphics("mixedplot.png") 
+```
 
 ---
 ## La Suisse 🇨🇭
@@ -522,9 +532,9 @@ knitr::include_graphics("logo_enterome.png")
 ---
 ## Process Com 
 
-* Modèle de compréhension des personnalités pour développer des stratégies de communication adaptées.
+* Modèle de compréhension des personnalités pour développer des stratégies de communication adaptées
 
-* La manière de dire les choses a autant, et parfois plus, d'importance que ce qui est dit.
+* La manière de dire les choses a autant, et parfois plus, d'importance que ce qui est dit
 
 --
 
@@ -554,7 +564,7 @@ knitr::include_graphics("logo_lamme.svg")
 
 
 ---
-## Le laboratoire
+## Laboratoire de Mathématiques et Modélisation d'Évry
 
 * Hébergé à l'Institut de Biologie, de Génomique et de BioInformatique 
 
@@ -587,7 +597,7 @@ knitr::include_graphics("pvaluexkcd.jpg")
 
 Soit $H_0$ une hypothèse nulle et $X$ une série d'observations.
 
-$$p = \mathbb{P}\left(X\mid H_0\right)$$
+$$p = \mathbb{P}\left(X\mid H_0\right).$$
 
 --
 
@@ -664,7 +674,7 @@ $$\mathbb{P}\left(\bigcup_{i=1}^m A_i\right) \leq \sum_{i=1}^m \mathbb{P}\left(A
 
 Mais on ne s'autorise qu'une seule erreur, quelque soit le nombre d'hypothèses.
 
-Procédure très conservative 😕
+Procédure très conservative... 😕
 
 ---
 ## Correction FDR (_False Discovery Rate_)
@@ -677,11 +687,11 @@ $$\mathbb{E}\left[\frac{\text{nombre de fausses découvertes}}{\text{nombre de d
 
 __Procédure__ :
 
-1. Ordonner les p-valeurs $(p_{(1)} \leq p_{(2)} \leq \ldots \leq p_{(m)})$ en notant $p_{(0)}=0$.
+1. Ordonner les p-valeurs $(p_{(1)} \leq p_{(2)} \leq \ldots \leq p_{(m)})$ en notant $p_{(0)}=0$
 
-2. Poser $\hat{\ell} = \max\left\{\ell \in \{0, 1, \ldots, m\} : p_{(\ell)}\leq \frac{\alpha \ell}{m} \right\}$.
+2. Poser $\hat{\ell} = \max\left\{\ell \in \{0, 1, \ldots, m\} : p_{(\ell)}\leq \frac{\alpha \ell}{m} \right\}$
 
-3. Rejeter les $\hat{\ell}$ hypothèses ayant les plus petites p-valeurs.
+3. Rejeter les $\hat{\ell}$ hypothèses ayant les plus petites p-valeurs
 
 --
 

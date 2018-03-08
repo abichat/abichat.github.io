@@ -177,7 +177,7 @@ class: center, middle
 
 * 200 espèces différentes
 
-* 2 kilos
+* 2 kilos (contre 1,5 kg pour le cerveau humain)
 
 --
 
@@ -203,6 +203,14 @@ Un organe à part entière ?
 
 --
 
+* Autisme ?
+
+--
+
+* Olfaction et préférences alimentaires
+
+--
+
 * Préférences sexuelles
 
 ---
@@ -224,8 +232,8 @@ class: center, middle
 ---
 ## Une université dans Paris
 
-<div id="htmlwidget-8b2765fe755c288d37bd" style="width:100%;height:432px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8b2765fe755c288d37bd">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.847125,2.35654],15,[]]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-ce5b2c7eaa441f205993" style="width:100%;height:432px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ce5b2c7eaa441f205993">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.847125,2.35654],15,[]]},"evals":[],"jsHooks":[]}</script>
 
 ---
 ## Quelques chiffres
@@ -417,7 +425,7 @@ class: center, middle
 
   * Connaissances en microbiote
   
-  * Programmation R
+  * Programmation R (et un peu Shell)
   
   * Anglais
   
@@ -425,10 +433,10 @@ class: center, middle
   
   
 ---
-## Quelques résultats
+## Influence du régime alimentaire
 
-&lt;!-- Inclure incfluence CS vs VD --&gt;
 
+&lt;img src="mixedplot.png" width="90%" style="display: block; margin: auto;" /&gt;
 
 ---
 ## La Suisse 🇨🇭
@@ -477,9 +485,9 @@ class: center, middle
 ---
 ## Process Com 
 
-* Modèle de compréhension des personnalités pour développer des stratégies de communication adaptées.
+* Modèle de compréhension des personnalités pour développer des stratégies de communication adaptées
 
-* La manière de dire les choses a autant, et parfois plus, d'importance que ce qui est dit.
+* La manière de dire les choses a autant, et parfois plus, d'importance que ce qui est dit
 
 --
 
@@ -507,7 +515,7 @@ class: center, middle
 
 
 ---
-## Le laboratoire
+## Laboratoire de Mathématiques et Modélisation d'Évry
 
 * Hébergé à l'Institut de Biologie, de Génomique et de BioInformatique 
 
@@ -539,7 +547,7 @@ class: center, middle
 
 Soit `\(H_0\)` une hypothèse nulle et `\(X\)` une série d'observations.
 
-`$$p = \mathbb{P}\left(X\mid H_0\right)$$`
+`$$p = \mathbb{P}\left(X\mid H_0\right).$$`
 
 --
 
@@ -603,7 +611,7 @@ Au lieu de rejeter avec un seuil `\(\alpha\)`, on va rejeter à un seuil `\(\fra
 
 Mais on ne s'autorise qu'une seule erreur, quelque soit le nombre d'hypothèses.
 
-Procédure très conservative 😕
+Procédure très conservative... 😕
 
 ---
 ## Correction FDR (_False Discovery Rate_)
@@ -616,11 +624,11 @@ On s'autorise un certain pourcentage de fausses découvertes parmi nos découver
 
 __Procédure__ :
 
-1. Ordonner les p-valeurs `\((p_{(1)} \leq p_{(2)} \leq \ldots \leq p_{(m)})\)` en notant `\(p_{(0)}=0\)`.
+1. Ordonner les p-valeurs `\((p_{(1)} \leq p_{(2)} \leq \ldots \leq p_{(m)})\)` en notant `\(p_{(0)}=0\)`
 
-2. Poser `\(\hat{\ell} = \max\left\{\ell \in \{0, 1, \ldots, m\} : p_{(\ell)}\leq \frac{\alpha \ell}{m} \right\}\)`.
+2. Poser `\(\hat{\ell} = \max\left\{\ell \in \{0, 1, \ldots, m\} : p_{(\ell)}\leq \frac{\alpha \ell}{m} \right\}\)`
 
-3. Rejeter les `\(\hat{\ell}\)` hypothèses ayant les plus petites p-valeurs.
+3. Rejeter les `\(\hat{\ell}\)` hypothèses ayant les plus petites p-valeurs
 
 --
 
