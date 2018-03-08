@@ -713,7 +713,7 @@ Procédure très conservative... 😕
 
 On s'autorise un certain pourcentage de fausses découvertes parmi nos découvertes : on cherche à contrôler la quantité
 
-$$\mathbb{E}\left[\frac{\text{nombre de fausses découvertes}}{\text{nombre de découvertes}}\right].$$
+$$\mathbb{E}\left[\frac{\text{nombre de fausses découvertes}}{\text{nombre de découvertes}  \ \wedge \ 1}\right].$$
 
 --
 
