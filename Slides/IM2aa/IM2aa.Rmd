@@ -472,7 +472,7 @@ ggplot(dfaa, aes(Entreprise, CA, fill = Pays)) +
 
 
 ---
-## La Suisse
+## La Suisse 🇨🇭
 
 
 
@@ -522,17 +522,26 @@ knitr::include_graphics("logo_enterome.png")
 ---
 ## Process Com 
 
-* ... pour étudier sa manière de communiquer, notamment sous stress
+* Modèle de compréhension des personnalités pour développer des stratégies de communication adaptées.
 
-* Meilleure communication au sein de l'équipe
+* La manière de dire les choses a autant, et parfois plus, d'importance que ce qui est dit.
+
+--
 
 * Six types de profil :
 
-  * Travaillomane
+  * __Empathique__ (chaleureux, sensible, compatissant)
+
+  * __Travaillomane__ (logique, organisé, responsable)
   
-  * Rebelle
+  * Persévérant (dévoué, consciencieux, observateur)
   
-  * 
+  * Rêveur (calme, imaginatif, réfléchi)
+  
+  * Promoteur (adaptable, charmeur, plein de ressources)
+  
+  * Rebelle (créatif, ludique, spontané)
+  
   
 ---
 class: center, middle
@@ -603,7 +612,7 @@ Sous l'hypothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seui
 --
 
 .center[
-`r icon::fa_exclamation_triangle()` $p \neq \mathbb{P}\left(H_0\mid X\right)$
+⚠️ $p \neq \mathbb{P}\left(H_0\mid X\right)$ ⚠️
 ]
 
 ---
@@ -644,27 +653,43 @@ ggplot(dfpval, aes(n,p)) +
 ```
 
 ---
-## Corrections multiples
+## Correction de Bonferroni
 
-__Correction de Bonferroni__. Au lieu de rejeter avec un seuil $\alpha$, on va rejeter à un seuil $\frac{\alpha}{m}$.
+Au lieu de rejeter avec un seuil $\alpha$, on va rejeter à un seuil $\frac{\alpha}{m}$.
 
 $$\mathbb{P}\left(\bigcup_{i=1}^m A_i\right) \leq \sum_{i=1}^m \mathbb{P}\left(A_i\right)=\sum_{i=1}^m \frac{\alpha}{m} = \alpha$$
 
-Mais on ne s'autorise qu'une seule erreur, quelque soit le nombre d'hypothèses.
-
-<br>
-
 --
 
-__Correction FDR__ (_False Discovery Rate_). On s'autorise un certain pourcentage de fausses découvertes parmi nos découvertes : on cherche à contrôler
+
+Mais on ne s'autorise qu'une seule erreur, quelque soit le nombre d'hypothèses.
+
+Procédure très conservative 😕
+
+---
+## Correction FDR (_False Discovery Rate_)
+
+On s'autorise un certain pourcentage de fausses découvertes parmi nos découvertes : on cherche à contrôler la quantité
 
 $$\mathbb{E}\left[\frac{\text{nombre de fausses découvertes}}{\text{nombre de découvertes}}\right].$$
 
+--
 
+__Procédure__ :
 
+1. Ordonner les p-valeurs $(p_{(1)} \leq p_{(2)} \leq \ldots \leq p_{(m)})$ en notant $p_{(0)}=0$.
 
+2. Poser $\hat{\ell} = \max\left\{\ell \in \{0, 1, \ldots, m\} : p_{(\ell)}\leq \frac{\alpha \ell}{m} \right\}$.
 
+3. Rejeter les $\hat{\ell}$ hypothèses ayant les plus petites p-valeurs.
 
+--
+
+<br>
+
+.center[
+<a href="https://roquain.shinyapps.io/FDR_tutorial/" target="_blank">Application Shiny d'Étienne Roquain</a>
+]
 
 ---
 class: center, middle, inverse

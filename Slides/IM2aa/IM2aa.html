@@ -224,8 +224,8 @@ class: center, middle
 ---
 ## Une université dans Paris
 
-<div id="htmlwidget-7ee937ef84a7a08e6ca8" style="width:100%;height:432px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-7ee937ef84a7a08e6ca8">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.847125,2.35654],15,[]]},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-8b2765fe755c288d37bd" style="width:100%;height:432px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8b2765fe755c288d37bd">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"maxNativeZoom":null,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"continuousWorld":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":null,"unloadInvisibleTiles":null,"updateWhenIdle":null,"detectRetina":false,"reuseTiles":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}],"setView":[[48.847125,2.35654],15,[]]},"evals":[],"jsHooks":[]}</script>
 
 ---
 ## Quelques chiffres
@@ -431,7 +431,7 @@ class: center, middle
 
 
 ---
-## La Suisse
+## La Suisse 🇨🇭
 
 
 
@@ -477,17 +477,26 @@ class: center, middle
 ---
 ## Process Com 
 
-* ... pour étudier sa manière de communiquer, notamment sous stress
+* Modèle de compréhension des personnalités pour développer des stratégies de communication adaptées.
 
-* Meilleure communication au sein de l'équipe
+* La manière de dire les choses a autant, et parfois plus, d'importance que ce qui est dit.
+
+--
 
 * Six types de profil :
 
-  * Travaillomane
+  * __Empathique__ (chaleureux, sensible, compatissant)
+
+  * __Travaillomane__ (logique, organisé, responsable)
   
-  * Rebelle
+  * Persévérant (dévoué, consciencieux, observateur)
   
-  * 
+  * Rêveur (calme, imaginatif, réfléchi)
+  
+  * Promoteur (adaptable, charmeur, plein de ressources)
+  
+  * Rebelle (créatif, ludique, spontané)
+  
   
 ---
 class: center, middle
@@ -555,7 +564,7 @@ Sous l'hypothèse nulle, `\(p\sim\mathcal{U}\left([0,1]\right)\)`, donc avec un 
 --
 
 .center[
-<i class="fa  fa-exclamation-triangle "></i> `\(p \neq \mathbb{P}\left(H_0\mid X\right)\)`
+⚠️ `\(p \neq \mathbb{P}\left(H_0\mid X\right)\)` ⚠️
 ]
 
 ---
@@ -583,27 +592,43 @@ Soit `\(A_i = \left\{H_{0,i}\text{ est vraie}\right\} \bigcap \left\{p_i&lt; \al
 &lt;img src="IM2aa_files/figure-html/dfpval-1.png" style="display: block; margin: auto;" /&gt;
 
 ---
-## Corrections multiples
+## Correction de Bonferroni
 
-__Correction de Bonferroni__. Au lieu de rejeter avec un seuil `\(\alpha\)`, on va rejeter à un seuil `\(\frac{\alpha}{m}\)`.
+Au lieu de rejeter avec un seuil `\(\alpha\)`, on va rejeter à un seuil `\(\frac{\alpha}{m}\)`.
 
 `$$\mathbb{P}\left(\bigcup_{i=1}^m A_i\right) \leq \sum_{i=1}^m \mathbb{P}\left(A_i\right)=\sum_{i=1}^m \frac{\alpha}{m} = \alpha$$`
 
-Mais on ne s'autorise qu'une seule erreur, quelque soit le nombre d'hypothèses.
-
-&lt;br&gt;
-
 --
 
-__Correction FDR__ (_False Discovery Rate_). On s'autorise un certain pourcentage de fausses découvertes parmi nos découvertes : on cherche à contrôler
+
+Mais on ne s'autorise qu'une seule erreur, quelque soit le nombre d'hypothèses.
+
+Procédure très conservative 😕
+
+---
+## Correction FDR (_False Discovery Rate_)
+
+On s'autorise un certain pourcentage de fausses découvertes parmi nos découvertes : on cherche à contrôler la quantité
 
 `$$\mathbb{E}\left[\frac{\text{nombre de fausses découvertes}}{\text{nombre de découvertes}}\right].$$`
 
+--
 
+__Procédure__ :
 
+1. Ordonner les p-valeurs `\((p_{(1)} \leq p_{(2)} \leq \ldots \leq p_{(m)})\)` en notant `\(p_{(0)}=0\)`.
 
+2. Poser `\(\hat{\ell} = \max\left\{\ell \in \{0, 1, \ldots, m\} : p_{(\ell)}\leq \frac{\alpha \ell}{m} \right\}\)`.
 
+3. Rejeter les `\(\hat{\ell}\)` hypothèses ayant les plus petites p-valeurs.
 
+--
+
+&lt;br&gt;
+
+.center[
+&lt;a href="https://roquain.shinyapps.io/FDR_tutorial/" target="_blank"&gt;Application Shiny d'Étienne Roquain&lt;/a&gt;
+]
 
 ---
 class: center, middle, inverse
