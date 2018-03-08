@@ -185,13 +185,13 @@ print(p)
 ```
 
 ---
-## Quelques chiffres
+## Quelques chiffres sur le microbiote intestinal
 
 * 100 000 milliards de micro-organismes
 
-* 600 000 gènes (contre 23 000 chez l'homme)
-
-* 200 espèces différentes
+* entre 100 000 et 800 000 gènes (contre 23 000 chez l'homme)
+ 
+* 350 espèces différentes dans un individu
 
 * 2 kilos (contre 1,5 kg pour le cerveau humain)
 
@@ -200,6 +200,7 @@ print(p)
 <br>
 
 Un organe à part entière ? 
+
 ---
 ## Interaction hôte-microbiome
 
