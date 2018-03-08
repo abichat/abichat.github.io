@@ -490,7 +490,44 @@ knitr::include_graphics("mixedplot.png")
 ---
 ## La Suisse 🇨🇭
 
+<div style = "margin-top: -30px"></div>
 
+.pull-left[
+
+
+* Quitus international 
+
+* CHF 1.- ~ 0,90 €
+
+* Tout est cher 💸
+
+* Permis de travail
+
+* 4 langues officielles
+
+* Expressions suisses
+
+* Demi-tarif / Abonnement général 
+
+* Spécialités culinaires
+
+
+
+]
+
+--
+
+
+.pull-right[
+```{r pic1, fig.align="center", out.width="100%", echo=FALSE}
+knitr::include_graphics("Pic1.jpg") 
+```
+
+```{r pic2, fig.align="center", out.width="100%", echo=FALSE}
+knitr::include_graphics("Pic2.jpg") 
+```
+
+]
 
 
 ---
