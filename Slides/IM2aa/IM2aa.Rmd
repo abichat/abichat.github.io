@@ -21,9 +21,9 @@ library(ggplot2)
 
 .pull-left[
 
-* Secondaire en région Lyonnaise
+* Secondaire en région lyonnaise
  
-* MP* et 5/2 au Lycée du Parc
+* MP* et 5/2 au lycée du Parc
 
 * Intégration en 2014
 
@@ -45,7 +45,6 @@ knitr::include_graphics("photo_ab.jpg")
 ---
 class: center, middle
 
-# Mines Nancy
 
 ```{r logomines, fig.align="center", out.width="30%", echo=FALSE}
 knitr::include_graphics("logo_mines_noir.png")
@@ -65,7 +64,7 @@ knitr::include_graphics("logo_mines_noir.png")
 <ul>
 <ul>
 <li><p>Délégué</p></li>
-<li><p>Elève Administrateur</p></li>
+<li><p>Élève Administrateur</p></li>
 </ul>
 </ul>
 
@@ -81,14 +80,13 @@ knitr::include_graphics("logo_mines_noir.png")
 
 * Voeux de 3A hors-école
   
-  * _Mathématques de la modélisation_, UPMC 
+  * _Mathématiques de la Modélisation_, UPMC 
   
-  * _Mathématiques pour les sciences du vivant_, Saclay
+  * _Mathématiques pour les Sciences du Vivant_, Saclay
 
 ---
 class: center, middle
 
-# Enterome
 ```{r logoenterome, fig.align="center", out.width="40%", echo=FALSE}
 knitr::include_graphics("logo_enterome.png")
 ```
@@ -140,13 +138,12 @@ knitr::include_graphics("logo_enterome.png")
 ---
 class: center, middle
 
-# Le microbiote
 ```{r gutmic, fig.align="center", out.width="30%", echo=FALSE}
 knitr::include_graphics("gutmic.png")
 ```
 
 ---
-## Qu'est-ce que c'est ?
+## Le microbiote
 
 ```{r publi, echo=FALSE}
 dfpubli <- 
@@ -189,7 +186,7 @@ print(p)
 
 * 100 000 milliards de micro-organismes
 
-* entre 100 000 et 800 000 gènes (contre 23 000 chez l'homme)
+* entre 100 000 et 800 000 gènes (contre 23 000 chez l'Homme)
  
 * 350 espèces différentes dans un individu
 
@@ -230,6 +227,10 @@ Un organe à part entière ?
 
 * Préférences sexuelles
 
+--
+
+* Bactériothérapie fécale
+
 ---
 ## Comment l'analyser ?
 
@@ -242,7 +243,6 @@ Présentation  <a href="https://abichat.github.io/Slides/MetagenomicsRGrenoble/M
 ---
 class: center, middle
 
-# UPMC
 
 ```{r logoupmc, fig.align="center", out.width="40%", echo=FALSE}
 knitr::include_graphics("logo_upmc.png")
@@ -291,11 +291,10 @@ knitr::include_graphics("logo_sorbonne.svg")
 ---
 ## Ma formation
 
-<div style = "margin-top: -30px"></div>
 
 * __Mathématiques pour les Sciences Biologiques et Médicales__
 
-  * Equations aux dérivées partielles
+  * Équations aux dérivées partielles
   * Méthodes numériques pour les EDP instationnaires
   * Processus de Markov, application à la dynamique des populations 
   * Calcul stochastique
@@ -331,7 +330,6 @@ knitr::include_graphics("logo_sorbonne.svg")
 
 <ul>
 <ul>
-<li>Statistique et apprentissage</li>
 <li>Apprentissage en grande dimension</li>
 <li>Analyse statistique de graphes</li>
 </ul>
@@ -366,7 +364,6 @@ knitr::include_graphics("logo_sorbonne.svg")
 ---
 class: center, middle
 
-# Nestlé Research Center
 ```{r logonestler, fig.align="center", out.width="50%", echo=FALSE}
 knitr::include_graphics("logo_nestler.jpg")
 ```
@@ -473,6 +470,8 @@ ggplot(dfaa, aes(Entreprise, CA, fill = Pays)) +
   
   * Interaction avec des biologistes, nutritionistes, virologues, ...
   
+  * Peut-être un article
+  
   
 ---
 ## Influence du régime alimentaire
@@ -491,7 +490,6 @@ knitr::include_graphics("mixedplot.png")
 ---
 class: center, middle
 
-# Thèse CIFRE
 
 ```{r logocifre, fig.align="center", out.width="30%", echo=FALSE}
 knitr::include_graphics("logo_cifre.jpg")
@@ -500,16 +498,39 @@ knitr::include_graphics("logo_cifre.jpg")
 ---
 ## Le dispositif
 
+* Convention Individuelle de Formation par la Recherche
+
+
+```{r cifre, fig.align="center", out.width="80%", echo=FALSE}
+knitr::include_graphics("ANRT.png")
+``` 
+
+* Double encadrement et bi-culturalité
+
+* Pas de restriction sur le secteur d'acivité de l'entreprise
+
+* Dépot des dossiers toute l'année
 
 ---
 ## Quelques chiffres
+
+* Salaire moyen brut annuel de 29 000 € 
+
+* Taux de soutenance > 90 %
+
+* 48 % des doctorants ont un diplôme d'ingénieur
+
+* 1/3 des doctorants restent dans l'entreprise à la fin de la CIFRE
+
+<br>
+
+Plus d'information sur le <a href="http://www.anrt.asso.fr/fr/cifre-7843" target="_blank">site</a> du dispositif CIFRE.
 
 
 
 ---
 class: center, middle
 
-# Enterome, le retour
 ```{r logoenteromebis, fig.align="center", out.width="40%", echo=FALSE}
 knitr::include_graphics("logo_enterome.png")
 ```
@@ -557,7 +578,6 @@ knitr::include_graphics("logo_enterome.png")
 ---
 class: center, middle
 
-# LaMME
 
 ```{r logolamme, fig.align="center", out.width="30%", echo=FALSE}
 knitr::include_graphics("logo_lamme.svg")
@@ -588,15 +608,14 @@ knitr::include_graphics("ibgbi.jpg")
 ---
 class: center, middle
 
-# p-valeur
-```{r pval, fig.align="center", out.width="40%", echo=FALSE, fig.cap='From <a href="https://xkcd.com" target="_blank">xkcd</a>'}
-knitr::include_graphics("pvaluexkcd.jpg")
+```{r pval, fig.align="center", out.width="50%", echo=FALSE}
+knitr::include_graphics("pvalmeme.jpg")
 ```
 
 ---
 ## Définition et utilisation
 
-Soit $H_0$ une hypothèse nulle et $X$ une série d'observations.
+Soit $H_0$ une hypothèse nulle et $X$ une série d'observations. La p-valeur est
 
 $$p = \mathbb{P}\left(X\mid H_0\right).$$
 
@@ -615,7 +634,7 @@ Extension du raisonnement par l'absurde : on rejette $H_0$ dans le cas où les o
 
 --
 
-Sous l'hypothèse nulle, $p\sim\mathcal{U}\left([0,1]\right)$, donc avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte" (faux positif).
+Sous l'hypothèse nulle $p\sim\mathcal{U}\left([0,1]\right)$ donc, avec un seuil $\alpha = 0.05$, on a 5% de chance de faire une "fausse découverte" (faux positif). 
 
 
 <br>
