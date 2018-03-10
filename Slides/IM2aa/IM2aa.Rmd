@@ -516,12 +516,13 @@ knitr::include_graphics("mixedplot.png")
 
 * 4 langues officielles
 
+* Tri des déchets 
+
 * Expressions suisses
 
 * Demi-tarif / Abonnement général 
 
 * Spécialités culinaires
-
 
 
 ]
