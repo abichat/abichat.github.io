@@ -783,6 +783,35 @@ __Procédure__ :
 ]
 
 ---
+class: center, middle
+
+```{r msante, fig.align="center", out.width="80%", echo=FALSE}
+knitr::include_graphics("Visu_Mines_Sante.jpg")
+```
+
+---
+# Mines Santé
+
+* Club professionnel des alumnis des trois Écoles des Mines intéressés par le domaine de la Santé
+
+* Dispositifs médicaux, laboratoires pharmaceutiques, gestion hospitalière, biotechs, medtechs, e-santé, ...
+
+--
+
+<br>
+
+.center[
+__Soirée de lancement__
+
+La santé en 2030, quelles sont les innovations qui feront la santé de demain ? 
+
+Mardi 20 mars - 19h00-21h30
+
+Maison des Mines - Paris 5ème
+
+]
+
+---
 class: center, middle, inverse
 
 # Merci pour votre attention !
