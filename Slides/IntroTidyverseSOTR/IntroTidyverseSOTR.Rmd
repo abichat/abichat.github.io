@@ -1,0 +1,699 @@
+---
+title: "<br>Take care of your data"
+subtitle: "An introduction to the Tidyverse"
+author: "Antoine Bichat <br><br><br><br> State of the R - AgroParisTech <br> May 2, 2018"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: '%current% of %total%<span style="display:inline-block; width: 665px;"></span>State Of The R'
+    css: ["sotr.css", "default-fonts"]
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.align = "center", fig.retina = 2)
+```
+
+class: center, middle, inverse
+
+<br>
+# {magrittr}
+
+<img src="http://hexb.in/vector/pipe.svg", width=270> 
+
+---
+# Make Tom eat an apple
+
+* Everyday language
+
+> Tom eats an apple
+
+<br>
+
+Subject - Verb - Complement
+
+<br>
+
+
+--
+
+.pull-left[
+
+***
+
+<br>
+
+* Programming language
+
+> `eat(Tom, apple)`
+
+<br>
+
+Verb - Subject - Complement
+
+]
+
+---
+# Pipe  `%>%`
+
+```{r libmagrittr}
+library(magrittr)
+```
+
+* `x %>% f()` is equivalent to `f(x)`
+
+* `x %>% f(y)` is equivalent to `f(x, y)`
+
+--
+
+```{r nopipe}
+2^mean(log(seq(10), base = 2), na.rm = TRUE)
+```
+
+--
+
+```{r pipe}
+10 %>% 
+  seq() %>% 
+  log(base = 2) %>% 
+  mean(na.rm = TRUE) %>% 
+  {2^.}
+```
+
+--
+
+When you read code, `%>%` is pronounced "then" 
+
+
+--
+
+The keybord shorcut is ctrl/⌘ + ⇧ + M
+
+
+---
+# Reaffectation pipe  `%<>%`
+
+Usefull for updating an object
+
+
+```{r reaffpipe, warning=FALSE}
+library(ape)
+
+Tree <- 
+  "(A,B,(C,D));" %>% 
+  read.tree(text = .)
+
+is.rooted(Tree)
+
+Tree %<>% unroot()
+
+is.rooted(Tree)
+```
+
+
+
+
+
+---
+# T-Pipe  `%T>%`
+
+Usefull for side-effects, like plotting or printing
+
+
+```{r Tpipe, fig.height=3.5}
+iris %>% 
+  lm(data = ., Sepal.Length ~ Petal.Length) %T>% 
+  plot(1) %>% 
+  coefficients()
+```
+
+
+---
+
+class: center, middle, inverse
+
+<br>
+# {dplyr}
+
+<img src="http://hexb.in/vector/dplyr.svg", width=270> 
+
+---
+# {dplyr}
+
+```{r libdplyr, message=FALSE}
+library(dplyr)
+```
+
+{dplyr} is a package which allows you to solve the vast majority of your data-manipulation challenge:
+
+* create variables
+
+* pick variables
+
+* reorder observations
+
+* pick observations
+
+* create summaries
+
+* ...
+
+Functions in this package are verbs and work similarly.
+
+---
+# mtcars dataset
+```{r}
+DT::datatable(mtcars, class = "compact cell-border", 
+              options = list(pageLength = 8))
+```
+
+
+---
+# `filter()`
+
+```{r filter, warning=FALSE}
+mtcars %>% 
+  filter(cyl == 4) %>% 
+  head() %>% 
+  knitr::kable(format = "html")
+```
+
+---
+# `select()`
+
+```{r select, warning=FALSE}
+mtcars %>% 
+  select(mpg, wt, cyl) %>% 
+  head() %>% 
+  knitr::kable(format = "html")
+```
+
+---
+# `mutate()`
+```{r mutate, warning=FALSE}
+mtcars %>% 
+  mutate(cyl2 = 2 * cyl,
+         disp = disp * 0.0163871,
+         mpg = NULL) %>% 
+  head() %>% 
+  knitr::kable(format = "html")
+```
+
+---
+# `arrange()`
+```{r arrange, warning=FALSE}
+mtcars %>% 
+  arrange(desc(carb), mpg) %>% 
+  head() %>% 
+  knitr::kable(format = "html")
+```
+
+---
+# `pull()`
+```{r pull, warning=FALSE}
+mtcars %>% 
+  pull(qsec)
+```
+
+---
+# `summarise()`
+```{r summarise, warning=FALSE}
+mtcars %>% 
+  summarise(Mean_mpg = mean(mpg), 
+            Var_disp = var(disp)) %>% 
+  knitr::kable(format = "html")
+```
+
+---
+# `group_by()`
+```{r groupby, warning=FALSE}
+mtcars %>% 
+  group_by(cyl, carb) %>% 
+  summarise(Mean_mpg = mean(mpg), 
+            Var_disp = var(disp)) %>% 
+  knitr::kable(format = "html")
+```
+
+---
+# Programming with dplyr?
+
+```{r progdeplyr1}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(m = median(Sepal.Length))
+```
+
+--
+
+```{r progdplyr2, error=TRUE}
+median_by_group <- function(group, var){
+  iris %>%
+    group_by(group) %>%
+    summarise(m = median(var))
+}
+
+median_by_group(Species, Sepal.Length)
+```
+
+---
+# `enquo()` and `!!` 
+
+Keywords: Tidyeval & Non Standard Evaluation
+
+```{r progdplyr3}
+median_by_group <- function(group, var){
+  
+  group <- enquo(group)
+  var <- enquo(var)
+  
+  iris %>%
+    group_by(!!group) %>%
+    summarise(m = median(!!var))
+}
+
+median_by_group(Species, Sepal.Length)
+```
+
+---
+# And with strings?
+
+```{r progdplyr4}
+median_by_group <- function(group, var){
+  
+  group <- as.name(group)
+  var <- as.name(var)
+  
+  iris %>%
+    group_by(!!group) %>%
+    summarise(m = median(!!var))
+}
+
+median_by_group("Species", "Sepal.Length")
+```
+
+
+---
+class: center, middle, inverse
+
+<br>
+#{tidyr}
+<img src="http://hexb.in/vector/tidyr.svg", width=270> 
+
+
+
+---
+# {tidyr}
+```{r libtidyr, message=FALSE}
+library(tidyr)
+```
+
+{tidyr} is a package which helps you to transform messy datasets into tidy datasets.
+
+--
+
+<br>
+<br>
+
+There are three interrelated rules which make the dataset tidy:
+
+
+.full-width[
+  .content-box-sotr[
+
+1. Each variable must have its own column
+    
+2. Each observation must have its own row
+    
+3. Each value must have its own cell
+
+  ]
+]
+
+
+---
+# grades dataset
+
+```{r grades}
+grades <- tibble(
+  Name = c("Tommy", "Mary", "Gary", "Cathy"),
+  Sexage = c("m.15", "f.15", "m.16", "f.14"),
+  Test1 = c(10, 15, 16, 14),
+  Test2 = c(11, 13, 10, 12),
+  Test3 = c(12, 13, 17, 10))
+
+knitr::kable(grades, "html")
+```
+
+---
+# `separate()`
+
+```{r separate}
+grades %<>% separate(Sexage, into = c("Sex", "Age"))
+
+knitr::kable(grades, "html")
+```
+
+--
+
+The inverse of `separate()` is `unite()`
+
+---
+# `gather()`
+
+```{r gather}
+grades %<>% gather(Test1, Test2, Test3, key = Test, value = Grade)
+knitr::kable(head(grades, 9), "html")
+```
+
+--
+
+The inverse of `gather()` is `spread()`
+
+---
+# More efficient code: summarising
+
+```{r summarisetidy}
+grades %>% group_by(Name) %>% summarise(Mean = mean(Grade))
+grades %>% group_by(Test) %>% summarise(Mean = mean(Grade))
+```
+
+---
+# More efficient code: plotting
+
+```{r plottidy, fig.height=5}
+library(ggplot2)
+grades %>%
+  ggplot(aes(Test, Grade, color = Name)) +
+  geom_point() +
+  geom_line(aes(group = Name)) +
+  theme_bw()
+```
+
+
+---
+class: center, middle, inverse
+
+<br>
+# {tibble}
+
+<img src="http://hexb.in/vector/tibble.svg", width=270> 
+
+---
+# Classical data.frame
+
+```{r}
+swiss
+```
+
+---
+# Tibble
+
+```{r}
+library(tibble)
+swiss %>% as.tibble(rownames = "Province")
+```
+
+--
+
+.full-width[.content-box-sotr[Row names on a tibble are deprecated. They must be considered as variables.]]
+
+---
+# Column names
+
+```{r tibblenames}
+tibble(
+  x = 1:5, 
+  `2x` = 2 * (1:5), 
+  `Quelques lettres` = LETTERS[1:5],
+  `;-)` = c(2, 3, 5, 8, 13)
+)
+```
+
+
+---
+# Consistency in subsetting
+
+```{r consistencytbl1}
+df <- data.frame(x = 1:9, y = LETTERS[1:9])
+tbl <- tibble(x = 1:9, y = LETTERS[1:9])
+```
+
+--
+
+```{r consistencytbl2}
+class(df[, 1:2])
+class(tbl[, 1:2])
+```
+
+--
+
+```{r consistencytbl3}
+class(df[, 1])
+class(tbl[, 1])
+```
+
+
+---
+# List-column
+
+```{r listcolum1}
+starwars %>% select(name, height, mass, hair_color, films, vehicles)
+```
+
+---
+# List-column: put a vector in each case
+
+```{r listcolum2}
+starwars %>% pull(films) %>% head(4)
+```
+
+---
+# List-column: put what you want in each case
+```{r listcolumn3}
+iris %>% 
+  group_by(Species) %>% 
+  nest(.key = Data) %>% 
+  mutate(Model = purrr::map(Data,
+                            ~ lm(data = ., 
+                                 Sepal.Length ~ Petal.Length))) %>% 
+  mutate(Summary = purrr::map(Model, summary)) %>% 
+  mutate(`R squared` = purrr::map_dbl(Summary, ~ .$r.squared))
+```
+
+
+---
+class: center, middle, inverse
+
+<br>
+# {tidyverse}
+
+<img src="https://www.tidyverse.org/images/hex-tidyverse.png", width=270> 
+
+---
+```{r detach, echo = FALSE}
+detach("package:dplyr", unload=TRUE)
+detach("package:tidyr", unload=TRUE)
+detach("package:ggplot2", unload=TRUE)
+detach("package:fcuk", unload=TRUE)
+detach("package:tibble", unload=TRUE)
+```
+
+```{r libtidyverse}
+library(tidyverse)
+```
+
+--
+* {ggplot2}: build graph 
+
+* {readr}: read rectangular data
+
+* {purrr}: functionnal programming
+
+* {stringr}: manipulate strings
+
+* {forcats}: manipulate factors 
+
+--
+
+Imports `%>%` from {magrittr}
+
+---
+class: center, middle, inverse
+# Syracuse conjecture
+
+## Application exemple
+
+
+---
+
+# Definition 
+
+\begin{equation}
+\left\{
+  \begin{aligned}
+    u_0 & = N \in \mathbb{N}, \\
+    u_{n+1} & = \left\{
+                  \begin{aligned}
+                    \frac{u_n}{2} & \quad \text{ if } u_n\in 2\mathbb{N}, \\
+                    3u_n+1 & \quad \text{ else.}
+                  \end{aligned}
+                \right. 
+  \end{aligned}
+\right.
+\end{equation}
+
+--
+
+```{r functionsyracuse}
+syracuse <- function(x) {
+ c(x, if(x > 1) Recall(if (x %% 2) x * 3 + 1 else x / 2))
+}
+```
+
+--
+
+```{r exemplesyracuse}
+syracuse(6)
+Vectorize(syracuse)(7:8)
+```
+
+---
+# Creation of data
+
+
+```{r data_syracuse}
+data_syracuse <- 100 %>% 
+  seq(from = 1, to = .) %>% 
+  tibble(N = .) %>% 
+  mutate(Sequence = Vectorize(syracuse)(N))
+```
+--
+```{r show_syr_seq}
+data_syracuse
+```
+
+---
+
+```{r show_syr_seq2}
+data_syracuse %>% 
+  pull(Sequence) %>% 
+  head()
+```
+
+---
+
+```{r data_syracuse2}
+data_syracuse %<>% 
+  mutate(Length = map_dbl(Sequence, length),
+         Max = map_dbl(Sequence, max))
+```
+--
+```{r DTsyracuse}
+DT::datatable(data_syracuse, class = "compact cell-border", 
+              options = list(pageLength = 8), rownames = FALSE)
+```
+
+---
+# Shortest length?
+
+```{r sortestlength}
+data_syracuse %>% 
+  select(-Max) %>% 
+  filter(Length != log2(N) + 1) %>%
+  arrange(Length, desc(N)) %>% 
+  DT::datatable(class = "compact cell-border", 
+                options = list(pageLength = 6))
+```
+
+
+---
+# Plots
+
+```{r ggplotfunc1}
+theme_set(theme_bw())
+
+plot_syrac <- function(data, var){
+  
+  var <- enquo(var)
+  
+  ggplot(data) +
+    aes(x = N, y = !!var) +
+    geom_line()
+}
+```
+
+--
+
+Unfortunately, this syntax is not supported by {ggplot2} yet. It is still in developpement. 
+
+--
+
+But one can use the old syntax, which will be depreciated:
+
+```{r ggplotfunc2}
+
+plot_syrac <- function(data, var){
+    ggplot(data) +
+    aes_(x = ~N, y = substitute(var)) +
+    geom_line()
+}
+
+```
+
+---
+
+```{r plotssyrac, fig.width=11, fig.height=6, fig.align='center'}
+p1 <- plot_syrac(data_syracuse, Length)
+p2 <- plot_syrac(data_syracuse, log10(Max)) + 
+  ylab("log(Max)")
+
+cowplot::plot_grid(p1, p2)
+```
+
+---
+class: middle, center, inverse
+
+<br>
+# References
+
+`r icon::fa("book", size = 5)`
+
+---
+
+### General
+
+* <a href="http://r4ds.had.co.nz" target="_blank"><i>R for Data Science</i></a>, Garrett Grolemund & Hadley Wickham
+
+* <a href="https://www.tidyverse.org" target="_blank"><i>www.tidyverse.org</i></a>
+
+### Non-standard evaluation
+
+* <a href="https://thinkr.fr/tidyeval/" target="_blank"><i>Tidyeval</i></a>, ThinkR (in French)
+
+### For all your questions
+
+* <a href="https://stackoverflow.com/" target="_blank"><i>Stack Overflow</i></a>
+
+---
+class: center, middle, inverse
+
+<br>
+# Thanks for your attention!
+
+#### `r icon::fa("github", size = 1)` <a href="https://github.com/abichat" target="_blank">@abichat</a>
+<div style = "margin-top: -20px"></div>
+#### `r icon::fa("twitter", size = 1)` <a href="https://twitter.com/_abichat" target="_blank">@_abichat</a>
+<div style = "margin-top: -20px"></div>
+#### `r icon::fa("linkedin-square", size = 1)` <a href="https://www.linkedin.com/in/antoinebichat" target="_blank">antoinebichat</a>
+<div style = "margin-top: -20px"></div>
+#### `r icon::fa("link", size = 1)` <a href="https://abichat.github.io" target="_blank">abichat.github.io</a>
+<div style = "margin-top: -20px"></div>
+####`r icon::fa("envelope", size = 1)` <a href="mailto:antoine.bichat@mines-nancy.org?subject=Science%20Communication%20with%20R">antoine.bichat@mines-nancy.org</a>
+
+
+.footnote[Slides created via the R package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]
+
