@@ -71,14 +71,14 @@ library(magrittr)
 --
 
 ```{r nopipe}
-2^mean(log(seq(10), base = 2), na.rm = TRUE)
+2^mean(log(seq_len(10), base = 2), na.rm = TRUE)
 ```
 
 --
 
 ```{r pipe}
 10 %>% 
-  seq() %>% 
+  seq_len() %>% 
   log(base = 2) %>% 
   mean(na.rm = TRUE) %>% 
   {2^.}
@@ -91,20 +91,21 @@ When you read code, `%>%` is pronounced "then"
 
 --
 
-The keybord shorcut is ctrl/⌘ + ⇧ + M
+The keybord shortcut for `%>%` is Ctrl/⌘ + ⇧ + M
 
 
 ---
-# Reaffectation pipe  `%<>%`
+# Reassignment pipe  `%<>%`
 
-Usefull for updating an object
+* `x %<>% f()` is equivalent to `x <- f(x)`
 
+--
 
 ```{r reaffpipe, warning=FALSE}
 library(ape)
 
 Tree <- 
-  "(A,B,(C,D));" %>% 
+  "((A,B),(C,D));" %>% 
   read.tree(text = .)
 
 is.rooted(Tree)
@@ -121,8 +122,9 @@ is.rooted(Tree)
 ---
 # T-Pipe  `%T>%`
 
-Usefull for side-effects, like plotting or printing
+* `x %T>% f() %>% g()` is equivalent to `f(x); g(x)` when f is a side-effect function
 
+--
 
 ```{r Tpipe, fig.height=3.5}
 iris %>% 
@@ -175,40 +177,68 @@ DT::datatable(mtcars, class = "compact cell-border",
 ---
 # `filter()`
 
-```{r filter, warning=FALSE}
+```{r filter, warning=FALSE, eval=FALSE}
+mtcars %>% 
+  filter(cyl == 4) 
+```
+```{r filterkable, warning=FALSE, echo=FALSE}
 mtcars %>% 
   filter(cyl == 4) %>% 
-  head() %>% 
+  # head() %>% 
   knitr::kable(format = "html")
 ```
 
 ---
 # `select()`
 
-```{r select, warning=FALSE}
+```{r select, warning=FALSE, eval=FALSE}
+mtcars %>% 
+  select(mpg, wt, cyl)
+```
+```{r selectkable, warning=FALSE, echo=FALSE}
 mtcars %>% 
   select(mpg, wt, cyl) %>% 
-  head() %>% 
+  head(9) %>%
   knitr::kable(format = "html")
 ```
+
+--
+
+See also `select_if()`
 
 ---
 # `mutate()`
-```{r mutate, warning=FALSE}
+```{r mutate, warning=FALSE, eval=FALSE}
 mtcars %>% 
   mutate(cyl2 = 2 * cyl,
+         cyl4 = 2 * cyl2,
          disp = disp * 0.0163871,
-         mpg = NULL) %>% 
-  head() %>% 
+         drat = NULL)
+```
+```{r mutatekable, warning=FALSE, echo=FALSE}
+mtcars %>% 
+  mutate(cyl2 = 2 * cyl,
+         cyl4 = 2 * cyl2,
+         disp = disp * 0.0163871,
+         drat = NULL) %>% 
+  head(7) %>% 
   knitr::kable(format = "html")
 ```
 
+--
+
+See also `mutate_if()`
+
 ---
 # `arrange()`
-```{r arrange, warning=FALSE}
+```{r arrange, warning=FALSE, eval=FALSE}
+mtcars %>% 
+  arrange(desc(carb), mpg)
+```
+```{r arrangekable, warning=FALSE, echo=FALSE}
 mtcars %>% 
   arrange(desc(carb), mpg) %>% 
-  head() %>% 
+  head(11) %>% 
   knitr::kable(format = "html")
 ```
 
@@ -221,7 +251,12 @@ mtcars %>%
 
 ---
 # `summarise()`
-```{r summarise, warning=FALSE}
+```{r summarise, warning=FALSE, eval=FALSE}
+mtcars %>% 
+  summarise(Mean_mpg = mean(mpg), 
+            Var_disp = var(disp))
+```
+```{r summarisekable, warning=FALSE, echo=FALSE}
 mtcars %>% 
   summarise(Mean_mpg = mean(mpg), 
             Var_disp = var(disp)) %>% 
@@ -230,10 +265,18 @@ mtcars %>%
 
 ---
 # `group_by()`
-```{r groupby, warning=FALSE}
+```{r groupby, warning=FALSE, eval=FALSE}
 mtcars %>% 
   group_by(cyl, carb) %>% 
-  summarise(Mean_mpg = mean(mpg), 
+  summarise(Count = n(), 
+            Mean_mpg = mean(mpg), 
+            Var_disp = var(disp))
+```
+```{r groupbykable, warning=FALSE, echo=FALSE}
+mtcars %>% 
+  group_by(cyl, carb) %>% 
+  summarise(Count = n(), 
+            Mean_mpg = mean(mpg), 
             Var_disp = var(disp)) %>% 
   knitr::kable(format = "html")
 ```
@@ -318,7 +361,7 @@ library(tidyr)
 <br>
 <br>
 
-There are three interrelated rules which make the dataset tidy:
+There are three interrelated rules which make your dataset tidy:
 
 
 .full-width[
@@ -344,16 +387,22 @@ grades <- tibble(
   Test1 = c(10, 15, 16, 14),
   Test2 = c(11, 13, 10, 12),
   Test3 = c(12, 13, 17, 10))
+```
 
+```{r, echo=FALSE}
 knitr::kable(grades, "html")
 ```
+
 
 ---
 # `separate()`
 
 ```{r separate}
-grades %<>% separate(Sexage, into = c("Sex", "Age"))
-
+grades <- 
+  grades %>%
+  separate(Sexage, into = c("Sex", "Age"))
+```
+```{r, echo=FALSE}
 knitr::kable(grades, "html")
 ```
 
@@ -365,8 +414,13 @@ The inverse of `separate()` is `unite()`
 # `gather()`
 
 ```{r gather}
-grades %<>% gather(Test1, Test2, Test3, key = Test, value = Grade)
-knitr::kable(head(grades, 9), "html")
+grades <- 
+  grades %>%
+  gather(Test1, Test2, Test3, key = Test, value = Grade)
+```
+
+```{r, echo=FALSE}
+knitr::kable(head(grades, 8), "html")
 ```
 
 --
@@ -414,12 +468,12 @@ swiss
 
 ```{r}
 library(tibble)
-swiss %>% as.tibble(rownames = "Province")
+swiss %>% as_tibble(rownames = "Province")
 ```
 
 --
 
-.full-width[.content-box-sotr[Row names on a tibble are deprecated. They must be considered as variables.]]
+.full-width[.content-box-sotr[Row names are variables so they must have their own column.]]
 
 ---
 # Column names
@@ -438,8 +492,8 @@ tibble(
 # Consistency in subsetting
 
 ```{r consistencytbl1}
-df <- data.frame(x = 1:9, y = LETTERS[1:9])
-tbl <- tibble(x = 1:9, y = LETTERS[1:9])
+df <- data.frame(x = 1:9, y = letters[1:9])
+tbl <- tibble(x = 1:9, y = letters[1:9])
 ```
 
 --
@@ -525,7 +579,7 @@ Imports `%>%` from {magrittr}
 class: center, middle, inverse
 # Syracuse conjecture
 
-## Application exemple
+## Application example
 
 
 ---
@@ -558,7 +612,7 @@ syracuse <- function(x) {
 
 ```{r exemplesyracuse}
 syracuse(6)
-Vectorize(syracuse)(7:8)
+map(7:8, syracuse)
 ```
 
 ---
@@ -566,13 +620,14 @@ Vectorize(syracuse)(7:8)
 
 
 ```{r data_syracuse}
-data_syracuse <- 100 %>% 
-  seq(from = 1, to = .) %>% 
+data_syracuse <- 
+  100 %>% 
+  seq_len() %>% 
   tibble(N = .) %>% 
-  mutate(Sequence = Vectorize(syracuse)(N))
+  mutate(Sequence = map(N, syracuse))
 ```
 --
-```{r show_syr_seq}
+```{r show_syr_seq, echo=FALSE}
 data_syracuse
 ```
 
@@ -587,28 +642,37 @@ data_syracuse %>%
 ---
 
 ```{r data_syracuse2}
-data_syracuse %<>% 
-  mutate(Length = map_dbl(Sequence, length),
+data_syracuse <-
+  data_syracuse %>% 
+  mutate(Length = map_int(Sequence, length),
          Max = map_dbl(Sequence, max))
 ```
 --
-```{r DTsyracuse}
+```{r DTsyracuse, echo=FALSE}
 DT::datatable(data_syracuse, class = "compact cell-border", 
-              options = list(pageLength = 8), rownames = FALSE)
+              options = list(pageLength = 10), rownames = FALSE)
 ```
 
 ---
 # Shortest length?
 
-```{r sortestlength}
+```{r sortestlength, eval=FALSE}
+data_syracuse %>% 
+  select(-Max) %>% 
+  filter(Length != log2(N) + 1) %>%
+  arrange(Length, desc(N))
+```
+
+--
+
+```{r sortestlengthprint, echo=FALSE}
 data_syracuse %>% 
   select(-Max) %>% 
   filter(Length != log2(N) + 1) %>%
   arrange(Length, desc(N)) %>% 
   DT::datatable(class = "compact cell-border", 
-                options = list(pageLength = 6))
+                options = list(pageLength = 7))
 ```
-
 
 ---
 # Plots
@@ -646,10 +710,9 @@ plot_syrac <- function(data, var){
 
 ---
 
-```{r plotssyrac, fig.width=11, fig.height=6, fig.align='center'}
+```{r plotssyrac, fig.width=11, fig.height=6.5, fig.align='center'}
 p1 <- plot_syrac(data_syracuse, Length)
-p2 <- plot_syrac(data_syracuse, log10(Max)) + 
-  ylab("log(Max)")
+p2 <- plot_syrac(data_syracuse, log10(Max)) + ylab("log(Max)")
 
 cowplot::plot_grid(p1, p2)
 ```
