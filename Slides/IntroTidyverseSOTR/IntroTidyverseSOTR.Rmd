@@ -1,6 +1,6 @@
 ---
-title: "<br>Take care of your data"
-subtitle: "An introduction to the Tidyverse"
+title: "<br>Introduction to the Tidyverse"
+subtitle: "How to take care of your data"
 author: "Antoine Bichat <br><br><br><br> State of the R - AgroParisTech <br> May 2, 2018"
 output:
   xaringan::moon_reader:
@@ -386,7 +386,8 @@ grades <- tibble(
   Sexage = c("m.15", "f.15", "m.16", "f.14"),
   Test1 = c(10, 15, 16, 14),
   Test2 = c(11, 13, 10, 12),
-  Test3 = c(12, 13, 17, 10))
+  Test3 = c(12, 13, 17, 10)
+  )
 ```
 
 ```{r, echo=FALSE}
@@ -473,7 +474,7 @@ swiss %>% as_tibble(rownames = "Province")
 
 --
 
-.full-width[.content-box-sotr[Row names are variables so they must have their own column.]]
+.full-width[.content-box-sotr[Row names are variables so they must have their own column. `rownames_to_column()` can help you.]]
 
 ---
 # Column names
@@ -482,8 +483,8 @@ swiss %>% as_tibble(rownames = "Province")
 tibble(
   x = 1:5, 
   `2x` = 2 * (1:5), 
-  `Quelques lettres` = LETTERS[1:5],
-  `;-)` = c(2, 3, 5, 8, 13)
+  `Some letters` = letters[1:5],
+  `;-)` = c(TRUE, FALSE, FALSE, TRUE, TRUE)
 )
 ```
 
@@ -492,8 +493,8 @@ tibble(
 # Consistency in subsetting
 
 ```{r consistencytbl1}
-df <- data.frame(x = 1:9, y = letters[1:9])
-tbl <- tibble(x = 1:9, y = letters[1:9])
+df <- data.frame(x = 1:9, y = LETTERS[1:9])
+tbl <- tibble(x = 1:9, y = LETTERS[1:9])
 ```
 
 --
@@ -626,18 +627,14 @@ data_syracuse <-
   tibble(N = .) %>% 
   mutate(Sequence = map(N, syracuse))
 ```
+
 --
+
 ```{r show_syr_seq, echo=FALSE}
-data_syracuse
+DT::datatable(data_syracuse, class = "compact cell-border", 
+              options = list(pageLength = 7), rownames = FALSE)
 ```
 
----
-
-```{r show_syr_seq2}
-data_syracuse %>% 
-  pull(Sequence) %>% 
-  head()
-```
 
 ---
 
