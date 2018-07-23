@@ -3,8 +3,6 @@
 <link rel="icon" type="image/png" href="/img/favicon.ico">
 </head>
 
-# Welcome to my page 
-
 ```markdown
 Comming soon
 ```
