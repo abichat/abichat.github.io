@@ -45,6 +45,19 @@ Comming soon
 ---
 <div style = "margin-top: -30px"></div>
 
+# Packages
+
+<div style = "margin-top: -20px"></div>
+
+## rcppclick
+
+<a href="https://github.com/abichat/rcppclick" target="_blank">rcppclick</a> provides addins to make it easier to write C++ scripts in RStudio.
+
+<br>
+
+---
+<div style = "margin-top: -30px"></div>
+
 # Miscellaneous
 
 <div style = "margin-top: -20px"></div>
