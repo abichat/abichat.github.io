@@ -51,7 +51,7 @@ Comming soon
 
 ## rcppclick
 
-<a href="https://github.com/abichat/rcppclick" target="_blank">rcppclick</a> provides addins to make it easier to write C++ scripts in RStudio.
+<a href="https://github.com/abichat/rcppclick" target="_blank">rcppclick</a> provides addins to make it easier to write C++ scripts in RStudio. <img src="img/logo_rcppclick.png" align="right" height=140/>
 
 <br>
 
