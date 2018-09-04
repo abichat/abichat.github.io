@@ -49,9 +49,9 @@ Comming soon
 
 <div style = "margin-top: -20px"></div>
 
-## rcppclick
+## rcppclick <img src="https://github.com/abichat/rcppclick/blob/master/man/figures/logo.png?raw=true" align="right" height=140/>
 
-<a href="https://github.com/abichat/rcppclick" target="_blank">rcppclick</a> provides addins to make it easier to write C++ scripts in RStudio. <img src="img/logo_rcppclick.png" align="right" height=140/>
+<a href="https://github.com/abichat/rcppclick" target="_blank">rcppclick</a> provides addins to make it easier to write C++ scripts in RStudio. 
 
 <br>
 
