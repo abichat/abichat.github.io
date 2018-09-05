@@ -49,7 +49,7 @@ Comming soon
 
 <div style = "margin-top: -20px"></div>
 
-## rcppclick <img src="https://github.com/abichat/rcppclick/blob/master/man/figures/logo.png?raw=true" align="right" height=140/>
+## rcppclick <img src="https://github.com/abichat/rcppclick/blob/master/man/figures/logo.png?raw=true" align="right" height=100/>
 
 <a href="https://github.com/abichat/rcppclick" target="_blank">rcppclick</a> provides addins to make it easier to write C++ scripts in RStudio. 
 
@@ -65,6 +65,17 @@ Comming soon
 ## Simulation of Brownian Motion
 
 This <a href="https://abichat.shinyapps.io/BrownianMotion/" target="_blank">shiny app</a> simulates a Brownian Motion.
+
+<br>
+
+---
+<div style = "margin-top: -30px"></div>
+
+<p align="center">
+  <a href="https://xkcd.com" target="_blank">  
+    <img src="https://imgs.xkcd.com/comics/frequentists_vs_bayesians.png" alt="Frequentists vs bayesians XKCD">
+  </a>
+</p>
 
 <br>
 
