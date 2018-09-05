@@ -45,6 +45,19 @@ Comming soon
 ---
 <div style = "margin-top: -30px"></div>
 
+# Teaching
+
+<div style = "margin-top: -20px"></div>
+
+## Statistique 2A AgroParisTech
+
+* 
+
+<br>
+
+---
+<div style = "margin-top: -30px"></div>
+
 # Packages
 
 <div style = "margin-top: -20px"></div>
@@ -69,7 +82,6 @@ This <a href="https://abichat.shinyapps.io/BrownianMotion/" target="_blank">shin
 <br>
 
 ---
-<div style = "margin-top: -30px"></div>
 
 <p align="center">
   <a href="https://xkcd.com" target="_blank">  
