@@ -1,0 +1,203 @@
+---
+title: "Bases du modèle linéaire"
+subtitle: "Chapitre I - Régression linéaire simple"
+author: "Antoine Bichat - Émilie Lebarbier<br>AgroParisTech"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    css: ["default-agro.css", "default-fonts"]
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.retina = 2, comment = NA)
+```
+
+
+# Chargement des données
+
+```{r chargement}
+chenilles <- read.table("chenilles.txt", sep = "", header = TRUE)
+```
+
+--
+
+```{r dim}
+dim(chenilles)
+```
+
+--
+
+```{r head}
+head(chenilles)
+```
+
+
+---
+# Analyse descriptive de `NbNids`, ...
+
+.pull-left[
+```{r summary_nids}
+range(chenilles$NbNids)
+mean(chenilles$NbNids)
+median(chenilles$NbNids)
+sd(chenilles$NbNids)
+```
+]
+
+--
+
+.pull-right[
+```{r hist_nids}
+hist(chenilles$NbNids)
+```
+]
+
+---
+# ... de `LogNids`, ...
+
+.pull-left[
+```{r summary_lognids}
+range(chenilles$LogNids)
+mean(chenilles$LogNids)
+median(chenilles$LogNids)
+sd(chenilles$LogNids)
+```
+]
+
+--
+
+.pull-right[
+```{r hist_lognids}
+hist(chenilles$LogNids)
+```
+]
+
+---
+# ... et de `NbStrat`, mais avec le {tidyverse}
+
+```{r tidyverse, message=FALSE}
+library(tidyverse)
+summarise(chenilles, min = min(NbStrat), max = max(NbStrat), 
+          mean = mean(NbStrat), med = median(NbStrat), sd = sd(NbStrat))
+```
+
+--
+
+```{r ggplot, fig.height=4}
+ggplot(chenilles) +
+  aes(x = NbStrat) +
+  geom_histogram(fill = "grey80", col = "black", bins = 15)
+```
+
+
+---
+# Nuages de points
+
+.pull-left[
+```{r scaterplot_1}
+plot(chenilles$NbStrat, 
+     chenilles$NbNids)
+```
+]
+
+--
+
+.pull-right[
+```{r scaterplot_2}
+ggplot(chenilles) +
+  aes(x = NbStrat, y = LogNids) +
+  geom_point()
+```
+]
+
+---
+# Régression linéaire simple
+
+```{r}
+reg <- lm(NbNids ~ NbStrat, data = chenilles)
+reg
+```
+
+
+---
+# Graphes de diagnostic
+
+```{r lmsimpleplots, fig.height=6.5}
+par(mfrow = c(2, 2))
+plot(reg)
+```
+
+
+---
+# Transformation log
+
+```{r lmlog, fig.height=6.5}
+reg_log <- lm(LogNids ~ NbStrat, data = chenilles)
+par(mfrow = c(2, 2))
+plot(reg_log)
+```
+
+---
+
+# Normalité des résidus
+
+```{r}
+res <- residuals(reg_log)
+shapiro.test(res)  # Teste la normalité
+ks.test(res, "pnorm",  # Teste l'adéquation à une loi
+        mean = mean(res), sd = sd(res)) 
+```
+
+---
+
+# Table d'analyse de la variance
+
+```{r tabanova}
+anova(reg_log)
+```
+
+---
+# Résultats de l'analyse
+
+```{r sumarylog}
+summary(reg_log)
+```
+
+---
+# Extraction des statistiques importantes
+
+```{r stats}
+S <- summary(reg_log)
+S$coefficients
+S$r.squared
+S$adj.r.squared
+pf(S$fstatistic[1], S$fstatistic[2], S$fstatistic[3], 
+   lower.tail = FALSE) 
+```
+
+---
+# La même, mais avec {broom}
+
+```{r broom, message=FALSE}
+library(broom)
+tidy(reg_log)
+```
+```{r eval=FALSE}
+glance(reg_log)
+```
+```{r echo=FALSE}
+glance(reg_log) %>% rownames_to_column() %>% select(-rowname)
+```
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]

@@ -49,9 +49,9 @@ Comming soon
 
 <div style = "margin-top: -20px"></div>
 
-## Statistique 2A AgroParisTech
+## Bases du modèle linéaire - AgroParisTech
 
-* 
+<a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap1.html#1" target="_blank">Chapitre I : Regression linéaire simple</a>.
 
 <br>
 
