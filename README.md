@@ -51,7 +51,7 @@ Comming soon
 
 ## Bases du modèle linéaire - AgroParisTech
 
-<a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap1.html#1" target="_blank">Chapitre I : Regression linéaire simple</a>.
+Exemples de cours : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap1.html#1" target="_blank">Regression linéaire simple</a>.
 
 <br>
 
