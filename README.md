@@ -51,7 +51,7 @@ Comming soon
 
 ## Bases du modèle linéaire - AgroParisTech
 
-Exemples de cours : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap1.html#1" target="_blank">Regression linéaire simple</a>.
+Exemples de cours : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap1.html#1" target="_blank">Regression linéaire simple</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap2.html#1" target="_blank">Regression linéaire multiple</a>.
 
 <br>
 
@@ -62,7 +62,7 @@ Exemples de cours : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleL
 
 <div style = "margin-top: -20px"></div>
 
-## rcppclick <img src="https://github.com/abichat/rcppclick/blob/master/man/figures/logo.png?raw=true" align="right" height=100/>
+## rcppclick <img src="https://github.com/abichat/rcppclick/blob/master/man/figures/logo.png?raw=true" align="right" height=120/>
 
 <a href="https://github.com/abichat/rcppclick" target="_blank">rcppclick</a> provides addins to make it easier to write C++ scripts in RStudio. 
 

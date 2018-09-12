@@ -1,0 +1,158 @@
+---
+title: "Bases du modèle linéaire"
+subtitle: "Chapitre II - Régression linéaire multiple"
+author: "Antoine Bichat - Émilie Lebarbier<br>AgroParisTech"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    css: ["default-agro.css", "default-fonts"]
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.retina = 2, comment = NA)
+```
+
+# Chargement des données
+
+```{r chargement}
+chenilles <- read.table("chenilles.txt", sep = "", header = TRUE)
+```
+
+
+
+---
+
+# Statistiques descriptives
+
+```{r summary}
+summary(chenilles)
+```
+
+---
+
+# Nuages de points
+
+```{r plotall, fig.width = 9, fig.height=7}
+plot(chenilles)
+```
+
+
+---
+# Corrélation
+
+```{r cor}
+cor(chenilles)
+```
+
+---
+# Corrélation partielle
+
+```{r pcor, message=FALSE}
+library(ppcor)
+pcor(chenilles)$estimate
+```
+
+---
+# Facteur confondant
+
+```{r}
+var <- c("NbNids", "NbStrat", "Densite")
+cor(chenilles)[var, var]
+```
+--
+```{r}
+pcor(chenilles)$estimate[var, var]
+```
+
+---
+# Regression linéaire multiple
+
+```{r}
+modele_log <- lm(log(NbNids) ~ Altitude + Pente + NbPins + 
+                   Hauteur + Diametre + Densite + Orient + 
+                   HautMax + NbStrat + Melange, data = chenilles)
+modele_log
+```
+
+---
+# Graphes de diagnostic
+```{r diag, fig.height=6.5}
+par(mfrow=c(2,2))
+plot(modele_log)
+```
+
+---
+
+```{r}
+summary(modele_log) # Ne s'affiche pas entièrement ici
+```
+
+---
+# Modèle nul
+
+```{r}
+modele_log_0 <- lm(log(NbNids) ~ 1, data = chenilles)
+anova(modele_log_0, modele_log)
+```
+
+---
+# Anova de type 1
+
+```{r anova1}
+anova(modele_log)
+```
+
+---
+# Anova de type 2
+
+```{r anova2, message=FALSE}
+library(car)
+Anova(modele_log)
+```
+
+
+---
+# Stepwise selection
+
+```{r}
+modele_log_stepwise <- 
+  step(modele_log_0, data = chenilles,
+       scope =~ Altitude + Pente + NbPins + 
+                   Hauteur + Diametre + Densite + 
+                   Orient + HautMax + NbStrat + Melange)
+```
+
+---
+# Graphes de diagnostic
+```{r diaglog, fig.height=6.5}
+par(mfrow=c(2,2))
+plot(modele_log_stepwise)
+```
+
+---
+# Résultat de l'analyse avec {broom}
+```{r broom, message=FALSE}
+library(broom)
+tidy(modele_log_stepwise)
+```
+```{r eval=FALSE}
+glance(modele_log_stepwise)
+```
+```{r echo=FALSE, message=FALSE}
+library(tidyverse)
+glance(modele_log_stepwise) %>% rownames_to_column() %>% select(-rowname)
+```
+
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]
