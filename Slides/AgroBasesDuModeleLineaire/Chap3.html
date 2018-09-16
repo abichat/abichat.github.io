@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Bases du modèle linéaire</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Antoine Bichat - Émilie Lebarbier AgroParisTech" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="default-agro.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Bases du modèle linéaire
+## Chapitre III - ANOVA à un facteur
+### Antoine Bichat - Émilie Lebarbier<br>AgroParisTech
+
+---
+
+
+
+
+# Chargement des données
+
+
+```r
+arbres &lt;- read.table("arbres.txt", header = FALSE, sep = "")
+colnames(arbres) &lt;- c("Diametre", "Statut")
+dim(arbres)
+```
+
+```
+[1] 104   2
+```
+
+```r
+arbres
+```
+
+```
+    Diametre   Statut
+1        8.0 codomina
+2       15.0 codomina
+3       22.0 codomina
+4       20.0 codomina
+5       17.0 codomina
+6       21.0 codomina
+7       45.0 codomina
+8       31.0 codomina
+9        5.0 codomina
+10      50.0 codomina
+11      32.0 codomina
+12      29.0 codomina
+13      52.0 codomina
+14      39.0 codomina
+15      16.0 codomina
+16      55.0 codomina
+17      52.0 codomina
+18       8.0 codomina
+19      41.0 codomina
+20      54.0 codomina
+21      42.0 codomina
+22      13.0 codomina
+23      12.5 codomina
+24      16.0 codomina
+25      35.0 codomina
+26      11.0 dominant
+27      14.0 dominant
+28      18.0 dominant
+29      25.0 dominant
+30      20.0 dominant
+31      16.0 dominant
+32      25.0 dominant
+33      72.0 dominant
+34      41.0 dominant
+35      45.0 dominant
+36      53.0 dominant
+37      30.0 dominant
+38      52.0 dominant
+39      47.0 dominant
+40      58.0 dominant
+41      22.0   domine
+42      23.0   domine
+43      16.0   domine
+44      17.0   domine
+45       9.0   domine
+46       9.0   domine
+47      16.0   domine
+48      16.0   domine
+49      17.0   domine
+50      15.0   domine
+51      13.0   domine
+52      15.0   domine
+53      13.0   domine
+54      19.0   domine
+55      13.0   domine
+56      10.0   domine
+57      32.0   domine
+58      29.0   domine
+59      37.0   domine
+60      30.0   domine
+61      56.0   domine
+62      30.0   domine
+63      41.0   domine
+64      32.0   domine
+65      40.0   domine
+66      39.0   domine
+67      40.0   domine
+68      41.0   domine
+69      48.0   domine
+70      38.0   domine
+71      37.0   domine
+72      48.0   domine
+73      40.0   domine
+74      35.0   domine
+75      26.0   domine
+76      35.0   domine
+77      35.0   domine
+78      31.0   domine
+79      36.0   domine
+80      30.0   domine
+81      24.0   domine
+82      10.0   domine
+83       8.0   domine
+84      40.0   domine
+85      40.0   domine
+86      15.0   domine
+87      13.0   domine
+88      37.0   domine
+89      46.0   domine
+90      37.0   domine
+91      30.0   domine
+92      40.0   domine
+93      40.0   domine
+94      46.0   domine
+95      40.0   domine
+96      28.0   domine
+97      41.0   domine
+98      48.0   domine
+99      32.0   domine
+100     16.0   domine
+101     10.0   domine
+102     52.0   domine
+103      9.0   domine
+104      8.0   domine
+```
+
+---
+# Statistiques descriptives
+
+
+```r
+table(arbres$Statut)
+```
+
+```
+
+codomina dominant   domine 
+      25       15       64 
+```
+
+```r
+mean(arbres$Diametre)
+```
+
+```
+[1] 29.77404
+```
+
+```r
+sd(arbres$Diametre)
+```
+
+```
+[1] 14.84383
+```
+
+---
+# Par statut
+
+
+```r
+by(arbres$Diametre, arbres$Statut, mean)
+```
+
+```
+arbres$Statut: codomina
+[1] 29.22
+-------------------------------------------------------- 
+arbres$Statut: dominant
+[1] 35.13333
+-------------------------------------------------------- 
+arbres$Statut: domine
+[1] 28.73438
+```
+
+```r
+by(arbres$Diametre, arbres$Statut, sd)
+```
+
+```
+arbres$Statut: codomina
+[1] 16.29806
+-------------------------------------------------------- 
+arbres$Statut: dominant
+[1] 18.72304
+-------------------------------------------------------- 
+arbres$Statut: domine
+[1] 13.15626
+```
+
+
+---
+# Boîtes à moustache
+
+
+```r
+boxplot(arbres$Diametre ~ arbres$Statut)
+```
+
+&lt;img src="Chap3_files/figure-html/unnamed-chunk-4-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+# Statistiques descriptives avec le {tidyverse}
+
+
+```r
+library(tidyverse)
+arbres %&gt;% 
+  summarise(N = n(), Mean = mean(Diametre), Var = sd(Diametre)^2,
+            Min = min(Diametre), Max = max(Diametre))
+```
+
+```
+    N     Mean      Var Min Max
+1 104 29.77404 220.3392   5  72
+```
+
+--
+
+
+
+```r
+arbres %&gt;% 
+  group_by(Statut) %&gt;% 
+  summarise(N = n(), Mean = mean(Diametre), Var = sd(Diametre)^2,
+            Min = min(Diametre), Max = max(Diametre))
+```
+
+```
+# A tibble: 3 x 6
+  Statut       N  Mean   Var   Min   Max
+  &lt;fct&gt;    &lt;int&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1 codomina    25  29.2  266.     5    55
+2 dominant    15  35.1  351.    11    72
+3 domine      64  28.7  173.     8    56
+```
+
+---
+# Boîtes à moustache avec {ggplot2}
+
+
+```r
+# library(ggplot2) # Déjà chargé avec {tidyverse}
+ggplot(arbres) +
+  aes(x = Statut, y = Diametre, fill = Statut) +
+  geom_boxplot()
+```
+
+&lt;img src="Chap3_files/figure-html/ggplot-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+ggplot(arbres) +
+  aes(x = Statut, y = Diametre, fill = Statut) +
+  geom_violin() +
+  geom_boxplot(notch = TRUE, alpha = 0) +
+  geom_jitter() +
+  theme(legend.position = "none")
+```
+
+&lt;img src="Chap3_files/figure-html/ggplot+-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+# Analyse de la variance
+
+
+```r
+(arbres_lm &lt;- lm(Diametre ~ Statut, data = arbres))
+```
+
+```
+
+Call:
+lm(formula = Diametre ~ Statut, data = arbres)
+
+Coefficients:
+   (Intercept)  Statutdominant    Statutdomine  
+       29.2200          5.9133         -0.4856  
+```
+
+
+---
+# Graphes de diagnostic et tests
+
+```r
+par(mfrow = c(2, 2))
+plot(arbres_lm)
+```
+
+&lt;img src="Chap3_files/figure-html/diag-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+anova(lm(Diametre ~ 1, data = arbres), arbres_lm)
+```
+
+```
+Analysis of Variance Table
+
+Model 1: Diametre ~ 1
+Model 2: Diametre ~ Statut
+  Res.Df   RSS Df Sum of Sq      F Pr(&gt;F)
+1    103 22695                           
+2    101 22187  2    507.68 1.1555  0.319
+```
+
+--
+
+
+```r
+anova(arbres_lm)
+```
+
+```
+Analysis of Variance Table
+
+Response: Diametre
+           Df  Sum Sq Mean Sq F value Pr(&gt;F)
+Statut      2   507.7  253.84  1.1555  0.319
+Residuals 101 22187.3  219.68               
+```
+
+--
+
+
+```r
+car::Anova(arbres_lm)
+```
+
+```
+Anova Table (Type II tests)
+
+Response: Diametre
+           Sum Sq  Df F value Pr(&gt;F)
+Statut      507.7   2  1.1555  0.319
+Residuals 22187.3 101               
+```
+
+
+---
+# Résultats
+
+
+```r
+summary(arbres_lm)
+```
+
+```
+
+Call:
+lm(formula = Diametre ~ Statut, data = arbres)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-24.220 -13.349   1.266  11.266  36.867 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     29.2200     2.9643   9.857   &lt;2e-16 ***
+Statutdominant   5.9133     4.8407   1.222    0.225    
+Statutdomine    -0.4856     3.4956  -0.139    0.890    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 14.82 on 101 degrees of freedom
+Multiple R-squared:  0.02237,	Adjusted R-squared:  0.003011 
+F-statistic: 1.156 on 2 and 101 DF,  p-value: 0.319
+```
+
+---
+# Modèle régulier 
+
+
+```r
+summary(lm(Diametre ~ Statut - 1, data = arbres))
+```
+
+```
+
+Call:
+lm(formula = Diametre ~ Statut - 1, data = arbres)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-24.220 -13.349   1.266  11.266  36.867 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+Statutcodomina   29.220      2.964   9.857  &lt; 2e-16 ***
+Statutdominant   35.133      3.827   9.181 5.72e-15 ***
+Statutdomine     28.734      1.853  15.510  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 14.82 on 101 degrees of freedom
+Multiple R-squared:  0.8069,	Adjusted R-squared:  0.8011 
+F-statistic: 140.7 on 3 and 101 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+# Comparaison des groupes de statut
+
+
+```r
+pairwise.t.test(arbres$Diametre, arbres$Statut, p.adjust.method = "none")
+```
+
+```
+
+	Pairwise comparisons using t tests with pooled SD 
+
+data:  arbres$Diametre and arbres$Statut 
+
+         codomina dominant
+dominant 0.22     -       
+domine   0.89     0.14    
+
+P value adjustment method: none 
+```
+
+--
+
+
+```r
+pairwise.t.test(arbres$Diametre, arbres$Statut, 
+                p.adjust.method = "bonferroni")
+```
+
+```
+
+	Pairwise comparisons using t tests with pooled SD 
+
+data:  arbres$Diametre and arbres$Statut 
+
+         codomina dominant
+dominant 0.67     -       
+domine   1.00     0.41    
+
+P value adjustment method: bonferroni 
+```
+
+
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package &lt;b&gt;&lt;a href="https://github.com/yihui/xaringan" target="_blank"&gt;xaringan&lt;/a&gt;&lt;/b&gt;.]
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://cdn.bootcss.com/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

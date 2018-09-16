@@ -1,0 +1,165 @@
+---
+title: "Bases du modèle linéaire"
+subtitle: "Chapitre III - ANOVA à un facteur"
+author: "Antoine Bichat - Émilie Lebarbier<br>AgroParisTech"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    css: ["default-agro.css", "default-fonts"]
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.retina = 2, comment = NA)
+```
+
+# Chargement des données
+
+```{r}
+arbres <- read.table("arbres.txt", header = FALSE, sep = "")
+colnames(arbres) <- c("Diametre", "Statut")
+dim(arbres)
+arbres
+```
+
+---
+# Statistiques descriptives
+
+```{r}
+table(arbres$Statut)
+mean(arbres$Diametre)
+sd(arbres$Diametre)
+```
+
+---
+# Par statut
+
+```{r}
+by(arbres$Diametre, arbres$Statut, mean)
+by(arbres$Diametre, arbres$Statut, sd)
+```
+
+
+---
+# Boîtes à moustache
+
+```{r}
+boxplot(arbres$Diametre ~ arbres$Statut)
+```
+
+---
+# Statistiques descriptives avec le {tidyverse}
+
+```{r tidy, message=FALSE}
+library(tidyverse)
+arbres %>% 
+  summarise(N = n(), Mean = mean(Diametre), Var = sd(Diametre)^2,
+            Min = min(Diametre), Max = max(Diametre))
+```
+
+--
+
+
+```{r}
+arbres %>% 
+  group_by(Statut) %>% 
+  summarise(N = n(), Mean = mean(Diametre), Var = sd(Diametre)^2,
+            Min = min(Diametre), Max = max(Diametre))
+```
+
+---
+# Boîtes à moustache avec {ggplot2}
+
+```{r ggplot, fig.height=6, fig.width=7}
+# library(ggplot2) # Déjà chargé avec {tidyverse}
+ggplot(arbres) +
+  aes(x = Statut, y = Diametre, fill = Statut) +
+  geom_boxplot()
+```
+
+---
+
+```{r ggplot+, message=FALSE, fig.height=6, fig.width=7}
+ggplot(arbres) +
+  aes(x = Statut, y = Diametre, fill = Statut) +
+  geom_violin() +
+  geom_boxplot(notch = TRUE, alpha = 0) +
+  geom_jitter() +
+  theme(legend.position = "none")
+```
+
+---
+# Analyse de la variance
+
+```{r}
+(arbres_lm <- lm(Diametre ~ Statut, data = arbres))
+```
+
+
+---
+# Graphes de diagnostic et tests
+```{r diag, fig.height=6.5}
+par(mfrow = c(2, 2))
+plot(arbres_lm)
+```
+
+---
+
+```{r test}
+anova(lm(Diametre ~ 1, data = arbres), arbres_lm)
+```
+
+--
+
+```{r}
+anova(arbres_lm)
+```
+
+--
+
+```{r}
+car::Anova(arbres_lm)
+```
+
+
+---
+# Résultats
+
+```{r}
+summary(arbres_lm)
+```
+
+---
+# Modèle régulier 
+
+```{r}
+summary(lm(Diametre ~ Statut - 1, data = arbres))
+```
+
+---
+# Comparaison des groupes de statut
+
+```{r}
+pairwise.t.test(arbres$Diametre, arbres$Statut, p.adjust.method = "none")
+```
+
+--
+
+```{r}
+pairwise.t.test(arbres$Diametre, arbres$Statut, 
+                p.adjust.method = "bonferroni")
+```
+
+
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]
