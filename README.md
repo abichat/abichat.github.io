@@ -4,9 +4,11 @@
 </head>
 
 <div align="justify">
-<img src="https://github.com/abichat/abichat.github.io/blob/master/img/pp.png?raw=true" align="left" height=140/> 
+<img src="https://github.com/abichat/abichat.github.io/blob/master/img/pp.png?raw=true" align="left" height=140 hspace=10 vspace = 10/> 
 I'm a PhD Student in statistics under the supervisation of <a href="http://www.math-evry.cnrs.fr/members/Cambroise/welcome" target="_blank">Christophe Ambroise</a>, <a href="http://mig.jouy.inra.fr/?q=fr/mariadassou" target="_blank">Mahendra Mariadassou</a> and Jonathan Plassais at the <a href="http://www.math-evry.cnrs.fr/doku.php" target="_blank">Laboratoire de Mathématiques et Modélisation d'Évry (LaMME)</a> and the pharmaceutical company <a href="http://www.enterome.com" target="_blank">Enterome</a>. My work consists in discovering multi-scale metagenomic signatures through hierarchical organization of species.
 </div>
+
+<br>
 
 ```markdown
 Comming soon
