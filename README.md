@@ -5,7 +5,7 @@
 
 <div align="justify">
 <img src="https://github.com/abichat/abichat.github.io/blob/master/img/pp.png?raw=true" align="left" height=170 hspace=10 vspace = 10/> 
-&emsp; I'm a PhD Student in statistics under the supervisation of <a href="http://www.math-evry.cnrs.fr/members/Cambroise/welcome" target="_blank">Christophe Ambroise</a>, <a href="http://mig.jouy.inra.fr/?q=fr/mariadassou" target="_blank">Mahendra Mariadassou</a> and Jonathan Plassais at the <a href="http://www.math-evry.cnrs.fr/doku.php" target="_blank">Laboratoire de Mathématiques et Modélisation d'Évry (LaMME)</a> and the pharmaceutical company <a href="http://www.enterome.com" target="_blank">Enterome</a>. My work consists in discovering multi-scale metagenomic signatures through hierarchical organization of species. <br>
+&emsp; I'm a PhD Student in statistics under the supervisation of <a href="http://www.math-evry.cnrs.fr/members/Cambroise/welcome" target="_blank">Christophe Ambroise</a>, <a href="https://mahendra-mariadassou.github.io" target="_blank">Mahendra Mariadassou</a> and Jonathan Plassais at the <a href="http://www.math-evry.cnrs.fr/doku.php" target="_blank">Laboratoire de Mathématiques et Modélisation d'Évry (LaMME)</a> and the pharmaceutical company <a href="http://www.enterome.com" target="_blank">Enterome</a>. My work consists in discovering multi-scale metagenomic signatures through hierarchical organization of species. <br>
 &emsp; I studied mathematical engineering at <a href="https://mines-nancy.univ-lorraine.fr" target="_blank">Mines Nancy</a> and biomathematics at <a href="https://www.sorbonne-universite.fr" target="_blank">Sorbonne Université</a>.
 </div>
 
