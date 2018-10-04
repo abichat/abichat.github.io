@@ -1,0 +1,222 @@
+---
+title: "Bases du modèle linéaire"
+subtitle: "Chapitre IV - ANOVA à deux facteurs"
+author: "Antoine Bichat - Émilie Lebarbier<br>AgroParisTech"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    css: ["default-agro.css", "default-fonts"]
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.retina = 2, comment = NA)
+```
+
+# Chargement des données
+
+```{r data}
+colza <- read.table("Colza.txt", header = T)
+str(colza)
+```
+
+--
+
+# Transformation en facteur
+
+```{r}
+colza$Fertilisation <- as.factor(colza$Fertilisation)
+str(colza)
+```
+
+
+---
+
+# Tables
+
+```{r}
+table(colza$Fertilisation)
+table(colza$Rotation)
+table(colza$Fertilisation, colza$Rotation)
+```
+
+---
+# Description des données 
+
+```{r}
+summary(colza$PdsGrains)
+sd(colza$PdsGrains)
+by(colza$PdsGrains, colza$Fertilisation, mean)
+by(colza$PdsGrains, colza$Rotation, mean)
+```
+
+---
+# Description des données avec {tidyverse}
+
+```{r tidy, message=FALSE}
+library(tidyverse)
+
+colza %>% 
+  group_by(Fertilisation, Rotation) %>% 
+  summarise(N = n(), Mean = mean(PdsGrains), 
+            Min = min(PdsGrains), Median = median(PdsGrains), 
+            Max = max(PdsGrains), Var = sd(PdsGrains)^2) %>% 
+  arrange(Mean)
+```
+
+---
+# Boxplots
+```{r fig.height=6}
+boxplot(colza$PdsGrains ~ colza$Fertilisation * colza$Rotation,
+        xlab = "Traitement", ylab = "Poids des grains")
+```
+
+
+---
+# Graphes d'interaction
+
+.pull-left[
+```{r fig.height=6.5}
+interaction.plot(colza$Rotation, 
+                 colza$Fertilisation,
+                 colza$PdsGrains,
+                 fixed = TRUE, 
+                 col = 2:3, 
+                 leg.bty = "o")
+```
+]
+
+--
+
+
+.pull-right[
+```{r fig.height=6.5}
+interaction.plot(colza$Fertilisation, 
+                 colza$Rotation,
+                 colza$PdsGrains,
+                 fixed = TRUE, 
+                 col = 2:4, 
+                 leg.bty = "o")
+```
+]
+
+---
+# Graphes avec {ggplot2}
+
+```{r fig.height=6}
+ggplot(colza) +
+  aes(x = Fertilisation, y = PdsGrains, fill = Rotation) +
+  geom_boxplot() +
+  theme_minimal() + labs(y = "Poids des grains")
+```
+
+---
+```{r, fig.height=5.5, fig.width=7}
+colza %>% 
+  group_by(Rotation, Fertilisation) %>% 
+  summarise(Mean = mean(PdsGrains)) %>% 
+  ggplot() +
+  aes(x = Rotation, y = Mean, group = Fertilisation, 
+      color = Fertilisation, linetype = Fertilisation) +
+  geom_line(size = 2) +
+  theme_minimal() + labs(y = "Poids moyen des grains")
+```
+
+---
+# Modèle à deux facteurs avec interaction
+
+```{r}
+mod_2F_I <- lm(PdsGrains ~ Fertilisation * Rotation, data = colza)
+mod_2F_I
+```
+
+---
+# Graphes de diagnostic
+
+```{r diag, fig.height=6.5}
+par(mfrow = c(2, 2))
+plot(mod_2F_I)
+```
+
+---
+# Test du modèle
+
+```{r}
+mod_0 <- lm(PdsGrains ~ 1, data = colza)
+anova(mod_0, mod_2F_I)
+```
+
+---
+# Test des facteurs
+```{r}
+anova(mod_2F_I)
+```
+
+--
+
+```{r}
+car::Anova(mod_2F_I)
+```
+
+---
+# Coefficients
+
+```{r}
+summary(mod_2F_I)
+```
+
+
+---
+# Modèle à deux facteurs sans interaction
+
+```{r}
+mod_2F <- lm(PdsGrains ~ Fertilisation + Rotation, data = colza)
+mod_2F
+```
+
+---
+# Graphes de diagnostic
+
+```{r diag2, fig.height=6.5}
+par(mfrow = c(2, 2))
+plot(mod_2F)
+```
+
+---
+# Test des facteurs
+```{r}
+anova(mod_2F)
+```
+
+--
+
+```{r}
+car::Anova(mod_2F)
+```
+
+---
+# Coefficients
+
+```{r}
+summary(mod_2F)
+```
+
+---
+# Comparaison des moyennes
+
+```{r}
+lsmeans::lsmeans(mod_2F, pairwise ~ Rotation, adjust = "bonferroni")
+```
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+
+.footnote[Slides créées avec le package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]
