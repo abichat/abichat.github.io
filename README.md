@@ -63,6 +63,8 @@ Exemples de cours : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleL
 
 <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/ChoixProjet2A.html" target="_blank">Choix des projets</a>.
 
+Références extérieures : <a href="https://youtu.be/aOX0pIwBCvw" target="_blank">facteurs de confusion</a>, <a href="https://youtu.be/xVIt51ybvu0" target="_blank">p-valeur</a>.
+
 <br>
 
 ---
