@@ -59,7 +59,7 @@ Comming soon
 
 ## Bases du modèle linéaire - AgroParisTech
 
-Exemples de cours : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap1.html#1" target="_blank">Regression linéaire simple</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap2.html#1" target="_blank">Regression linéaire multiple</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap3.html#1" target="_blank">ANOVA à un facteur</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap4.html#1" target="_blank">ANOVA à deux facteurs, cas équilibré</a>.
+Exemples de cours : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap1.html#1" target="_blank">Regression linéaire simple</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap2.html#1" target="_blank">Regression linéaire multiple</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap3.html#1" target="_blank">ANOVA à un facteur</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap4.html#1" target="_blank">ANOVA à deux facteurs, cas équilibré</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap5.html#1" target="_blank">ANOVA à deux facteurs, cas BIE</a>.
 
 <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/ChoixProjet2A.html" target="_blank">Choix des projets</a>.
 
