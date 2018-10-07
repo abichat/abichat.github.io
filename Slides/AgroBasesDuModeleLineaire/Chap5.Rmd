@@ -1,0 +1,156 @@
+---
+title: "Bases du modèle linéaire"
+subtitle: "Chapitre V - ANOVA à deux facteurs BIE"
+author: "Antoine Bichat - Émilie Lebarbier<br>AgroParisTech"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    css: ["default-agro.css", "default-fonts"]
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.retina = 2, comment = NA)
+```
+
+# Chargement des données
+
+```{r data}
+champagnes <- read.table('champagnes.txt', header = T)
+str(champagnes)
+```
+
+--
+
+# Transformation en facteur
+
+```{r}
+champagnes$Juge <- as.factor(champagnes$Juge)
+str(champagnes)
+```
+
+---
+# Tables
+
+```{r}
+table(champagnes$Juge)
+table(champagnes$Champagne)
+table(champagnes$Juge, champagnes$Champagne)
+```
+
+---
+# Note par champagne
+
+```{r}
+by(champagnes$Note, champagnes$Champagne, mean)
+```
+
+---
+# Avec le tidyverse
+
+```{r message=FALSE}
+library(tidyverse)
+champagnes %>% 
+  group_by(Champagne) %>% 
+  summarise(Moyenne = mean(Note), Min = min(Note), 
+            Median = median(Note), Max = max(Note)) %>% 
+  arrange(desc(Moyenne))
+```
+
+---
+# Note par juge
+
+```{r fig.width=9, fig.height=5.5}
+ggplot(champagnes) +
+  aes(x = Juge, y = Note, color = Juge) +
+  geom_label(aes(label = Champagne), size = 5) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+---
+# Modèle d'ANOVA à deux facteurs sans intercation
+
+```{r}
+modele <- lm(Note ~ Champagne + Juge, data = champagnes)
+modele
+```
+
+---
+# Graphes de diagnostic
+
+```{r diag, fig.height=6.5}
+par(mfrow = c(2, 2))
+plot(modele)
+```
+
+---
+# Test du modèle
+
+```{r}
+modele_0 <- lm(Note ~ 1, data = champagnes)
+anova(modele_0, modele)
+```
+
+---
+# Test des facteurs
+```{r}
+anova(modele)
+```
+
+--
+
+```{r}
+car::Anova(modele)
+```
+
+---
+# Coefficients
+
+```{r}
+summary(modele)
+```
+
+---
+# Moyennes ajustées des champagnes 
+
+```{r}
+lsmeans <- lsmeans::lsmeans(modele, pairwise ~ Champagne, 
+                            adjust = "bonferroni")
+lsmeans$lsmeans
+```
+
+---
+# Comparaison des champagnes 
+
+```{r}
+lsmeans$contrasts
+```
+
+---
+# Avec {broom}
+
+```{r}
+library(broom)
+lsmeans$lsmeans %>% tidy() %>% arrange(desc(estimate))
+```
+
+--
+
+```{r}
+lsmeans$contrasts %>% tidy() %>% filter(p.value < 0.05)
+```
+
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]
