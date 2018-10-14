@@ -1,0 +1,363 @@
+---
+title: "TD2 <br> Regression linéaire simple, multiple et analyse de la variance"
+author: "Antoine Bichat - Émilie Lebarbier"
+output: 
+  html_document:
+   toc: true
+   toc_float: true
+   number_sections: false
+   highlight: tango
+  pdf_document: default
+# bibliography: bib.bib
+---
+
+<style>
+#TOC {
+  background: url("logo_agro.png");
+  background-size: contain;
+  padding-top: 90px !important;
+  background-repeat: no-repeat;
+}
+</style>
+
+<script>
+    $(document).ready(function() {
+      $items = $('div#TOC li');
+      $items.each(function(idx) {
+        num_ul = $(this).parentsUntil('#TOC').length;
+        $(this).css({'text-indent': num_ul * 10, 'padding-left': 10});
+      });
+
+    });
+</script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", 
+                      out.width = "100%")
+```
+
+# Préliminaires
+
+## Librairies
+
+```{r packages, message=FALSE}
+library(ppcor)
+library(car)
+library(tidyverse)
+# library(ggplot2) # déjà chargé avec tidyverse
+```
+
+
+
+## Chargement des données
+
+```{r}
+myData <- read.table(file = "bats.csv", sep = ";", skip= 3, header = TRUE)
+str(myData)
+```
+
+`Diet` est ici un entier, on va donc changer sa classe en facteur car cette variable est en réalité catégorielle.
+
+```{r}
+myData$Diet <- as.factor(myData$Diet)
+# ou de manière équivalente
+# myData <- mutate(myData, Diet = as.factor(Diet))
+```
+
+
+# Étude du lien entre le poids du cerveau et la masse corporelle
+
+## Sélection des phytophages
+
+Les phytophages correspondent à la diète $1$.
+
+```{r}
+phyto <- myData[myData$Diet == 1, ]
+# ou de manière équivalente
+# phyto <- filter(myData, Diet == 1)
+```
+
+```{r}
+head(phyto)
+tail(phyto)
+```
+
+## Nuage de points
+
+```{r}
+ggplot(phyto) +
+   aes(x = BOW, y = BRW, color = Clade) +
+   geom_point() +
+   theme_minimal() +
+   labs(x = "Masse totale du cerveau", y = "Masse corporelle")
+```
+
+## Régression linéaire simple
+
+### Modèle
+
+On cherche à modéliser la masse du cerveau en fonction de la masse corporelle. Le modèle mathématique associé est donc 
+
+$$Y_i = a + b x_i + E_i,$$
+
+où 
+
+* $Y_i$ est la masse du cerveau de l'individu $i$,
+* $x_i$ est la masse corporelle de l'individu $i$,
+* $\left\{E_i\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq n = 29$.
+
+```{r}
+reg1 <- lm(BRW ~ BOW, data = phyto)
+reg1
+```
+
+### Graphes de diagnostic
+
+```{r}
+par(mfrow = c(2, 2)) 
+plot(reg1)
+```
+
+On observe que le point 7 est atypique avec une distance de Cook supérieure à 1. En vérifiant avec `cooks.distance(reg1)`, on s'aperçoit qu'elle vaut `r round(cooks.distance(reg1)[7], 2)`. On décide donc de la retirer des observations.
+
+### Nouveau modèle
+
+```{r}
+phyto_sub <- phyto[-7, ]
+reg2 <- lm(BRW ~ BOW, data = phyto_sub)
+par(mfrow = c(2, 2)) 
+plot(reg2)
+```
+
+Les graphes sont nettement plus proches de ce que l'on peut attendre lorsqu'on a des hypothèses respectées. Notons toutefois qu'on observe une tendance dans la moyenne (premier graphe) et une tendance dans la variance (troisième graphe) pour les petites valeurs ajustées. La normalité est validée et le point 6 est atypique mais nous allons le garder pour la suite de l'analyse.
+
+### Test du modèle
+
+```{r}
+reg2_0 <- lm(BRW ~ 1, data = phyto_sub)
+anova(reg2_0, reg2)
+```
+
+On effectue le test $H_0 = \{b = 0\}$ contre $H_1 = \{b \neq 0\}$. La statistique de test est $F_{obs}= 1146.5$ et on a $p<0.05$. On peut donc rejeter l'hypothèse nulle : notre modèle est significatif.
+
+On note par ailleurs que 
+
+* la somme des carrés totale vaut $23562448$ sur $27$ degrés de liberté,
+* la somme des carrés résiduelle vaut $522490$ sur $26$ degrés de liberté,
+* la somme des carrés due au modèle vaut $23039958$ sur $1$ degré de liberté.
+
+### Estimation des coefficients et du $R^2$
+
+```{r}
+summary(reg2)
+```
+
+L'ordonnée à l'origine vaut $346.5452$ et la pente $14.5099>0$ donc plus la masse corporelle augmente, plus la masse totale du cerveau augmente.
+
+On note que le coefficient de determination $R^2$ vaut $0.9778$ donc le modèle a un fort pouvoir prédictif.
+
+
+# Influence de chaque partie du cerveau
+
+## Corrélation entre les variables numériques
+
+
+
+```{r}
+phytoNum <- phyto[, 4:8]
+# ou de manière équivalente
+# phytoNum <- select(phyto, BOW, BRW, AUD, MOB, HIP)
+# ou de manière équivalente
+# phytoNum <- select_if(phyto, is.numeric)
+```
+
+```{r}
+plot(phytoNum)
+```
+
+
+```{r}
+mat_cor <- cor(phytoNum)
+mat_cor
+mat_pcor <- pcor(phytoNum)
+mat_pcor$estimate
+```
+
+On note que dans la corrélation entre `MOB` et `BRW` est positive alors que `MOB` est négativement associée à `BRW` dans une corrélation partielle (quand on prend en compte l'effet des autres variables).
+
+## Regression linéaire multiple
+
+### Modèle
+
+
+On cherche à modéliser la masse du cerveau en fonction d'autres variables quantitatives Le modèle mathématique associé est donc 
+
+$$Y_i = \beta_0 + \beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_3 x_{i,3} + E_i,$$
+
+où 
+
+* $Y_i$ est la masse du cerveau de l'individu $i$,
+* $x_{i,1}$ est le volume de la partie auditive de l'individu $i$,
+* $x_{i,2}$ est le volume de la zone olfactive de l'individu $i$,
+* $x_{i,3}$ est le volume de l’hippocampe de l'individu $i$,
+* $\left\{E_i\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq n = 29$.
+
+```{r}
+reg3 <- lm(BRW ~ AUD + MOB + HIP, data = phytoNum)
+```
+
+### Graphes de diagnostic
+
+```{r}
+par(mfrow = c(2, 2)) 
+plot(reg3)
+```
+
+* On observe une tendance dans la moyenne.
+* On valide la normalité.
+   * De plus, on ne peut pas rejeter l'hypothèse nulle du test de Shapiro `shapiro.test(reg3$residuals)`.
+* On observe une tendance dans la variance.
+* Le point $7$ est atypique.
+
+### Test du modèle
+
+
+```{r}
+reg3_0 <- lm(BRW ~ 1, data = phytoNum) # et pas phyto_sub !
+anova(reg3_0, reg3)
+```
+
+On effectue le test $H_0 = \{\forall i\geq1, \beta_i = 0\}$ contre $H_1 = \{\exists i\geq1, \beta_i \neq 0\}$. La statistique de test est $F_{obs}= 91.424$ et on a $p<0.05$. On peut donc rejeter l'hypothèse nulle : notre modèle est significatif et au moins une des variables a de l'influence.
+
+On note par ailleurs que 
+
+* la somme des carrés totale vaut $85142218$ sur $28$ degrés de liberté,
+* la somme des carrés résiduelle vaut $7112426$ sur $25$ degrés de liberté,
+* la somme des carrés due au modèle vaut $78029792$ sur $3$ degrés de liberté.
+
+### Test des différentes variables
+
+```{r}
+anova(reg3)
+```
+
+* `AUD` apporte de l'information de manière significative sur `BRW`,
+* `MOB` apporte de l'information de manière significative en plus de `AUD` sur `BRW`,
+* `HIP` apporte de l'information de manière significative en plus de `AUD` et `MOB` sur `BRW`.
+
+```{r}
+Anova(reg3)
+```
+
+* `AUD` apporte de l'information de manière significative en plus de `MOB` et `HIP` sur `BRW`,
+* `MOB` apporte de l'information de manière significative en plus de `AUD` et `HIP` sur `BRW`,
+* `HIP` apporte de l'information de manière significative en plus de `AUD` et `MOB` sur `BRW`.
+
+
+```{r}
+summary(reg3)
+```
+
+Les p-valeurs de cette table sont les mêmes que celles de l'instruction `Anova()` (type II).
+
+Le coeffidient associé à `AUD` est $`r round(summary(reg3)$coeff[2,1], 3)`>0$, celui de `MOB` est $`r round(summary(reg3)$coeff[3,1], 3)`<0$ et celui de `HIP` est $`r round(summary(reg3)$coeff[4,1], 3)`>0$.
+
+`MOB` est négativement associé à `BRW`, ce qui est logique car le coefficient de corrélation partiel obtenu plus tôt l'était aussi. 
+
+### Selection _forward_
+
+```{r}
+step(reg3_0, scope = BRW ~ AUD + MOB + HIP, direction = "forward")
+```
+
+Le modèle selectionné est le modèle complet. 
+
+### Selection _stepwise_
+
+```{r}
+step(reg3_0, scope = BRW ~ AUD + MOB + HIP, direction = "both")
+```
+
+
+Le modèle selectionné est le modèle complet. 
+
+# Étude du volume de la partie auditive
+
+## Dispositif
+
+```{r}
+table(myData$Diet)
+```
+
+On a peu d'observaton pour les diètes $2$ et $4$ : l'estimation des moyennes correspondantes sera peu précise. 
+
+
+## Analyse graphique
+
+
+```{r}
+ggplot(myData) +
+   aes(x = Diet, y = AUD) +
+   geom_violin(aes(fill = Diet)) +
+   geom_boxplot(alpha = 0) +
+   geom_point() +
+   theme_minimal() +
+   theme(legend.position = "none") +
+   labs(x = "Régime alimentaire", y = "Volume de la partie auditive")
+```
+
+## Analyse de la variance à un facteur
+
+### Modèle
+
+On cherche à modéliser le volume de la partie auditive en fonction régime alimentaire, une variable qualitative. Le modèle mathématique associé est donc 
+
+$$Y_{i,k} = \mu + \alpha_i + E_{i,k},$$
+où 
+
+* $Y_{i,k}$ est le volume de la partie auditive du $k^{\text{ème}}$ individu de la $i^{\text{ème}}$ diète,
+* $\alpha_{i}$ est l'effet spécifique de la diète $i$,
+* $\left\{E_{i,k}\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq I = 4$,
+* $1 \leq k \leq n_i$, 
+* $n_1 = 29$, $n_2 = 5$, $n_3 = 27$, $n_4 = 2$. 
+
+Avant de faire la regression linéaire, on vérifie la classe de la varibale `Diet`. C'est bien un facteur (on l'a modifié au début), on peut faire l'analyse.
+
+```{r}
+class(myData$Diet)
+reg4 <- lm(AUD ~ Diet, data = myData)
+reg4
+```
+
+### Graphes de diagnostic
+
+```{r}
+par(mfrow = c(2, 2)) 
+plot(reg4)
+```
+
+On valide toutes les hypothèses.
+
+### Test du modèle
+
+```{r}
+reg4_0 <- lm(AUD ~ 1, data = myData)
+anova(reg4_0, reg4)
+```
+
+On effectue le test $H_0 = \{\alpha_1 = \alpha_2 = \alpha_3 = \alpha_4 = 0\}$ contre $H_1 = \{\exists i, \alpha_i \neq 0\}$. La statistique de test est $F_{obs}= 0.9293$ et on a $p>0.05$. On ne peut donc pas rejeter l'hypothèse nulle : notre modèle n'est pas significatif.
+
+### Prise en compte de l'évolution
+
+On peut effectuer une analyse de la variance à un facteur pour modéliser le volume de la partie auditive en fonction de la variable `Clade`.
+
+```{r}
+summary(lm(AUD ~ Clade, data = myData))
+```
+
+La p-valeur associée à cette modélisation est $p=0.1971>0.05$ donc le modèle n'est pas significatif.
+
+<hr>
