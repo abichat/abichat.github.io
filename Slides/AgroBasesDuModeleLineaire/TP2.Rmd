@@ -130,7 +130,9 @@ par(mfrow = c(2, 2))
 plot(reg2)
 ```
 
-Les graphes sont nettement plus proches de ce que l'on peut attendre lorsqu'on a des hypothèses respectées. Notons toutefois qu'on observe une tendance dans la moyenne (premier graphe) et une tendance dans la variance (troisième graphe) pour les petites valeurs ajustées. La normalité est validée et le point 6 est atypique mais nous allons le garder pour la suite de l'analyse.
+Les graphes sont nettement plus proches de ce que l'on peut attendre lorsqu'on a des hypothèses respectées. Notons toutefois qu'on observe une tendance dans la moyenne (premier graphe) et une tendance dans la variance (troisième graphe) pour les petites valeurs ajustées. La normalité est validée et le point $6$ est atypique mais nous allons le garder pour la suite de l'analyse.
+
+Dans une analyse réelle qui sort du cadre formel de ce TP, on retirerait itérativement les points atypiques, à commencer par le point $6$.
 
 ### Test du modèle
 
@@ -178,10 +180,8 @@ plot(phytoNum)
 
 
 ```{r}
-mat_cor <- cor(phytoNum)
-mat_cor
-mat_pcor <- pcor(phytoNum)
-mat_pcor$estimate
+cor(phytoNum)
+pcor(phytoNum)$estimate
 ```
 
 On note que dans la corrélation entre `MOB` et `BRW` est positive alors que `MOB` est négativement associée à `BRW` dans une corrélation partielle (quand on prend en compte l'effet des autres variables).
@@ -251,9 +251,9 @@ anova(reg3)
 Anova(reg3)
 ```
 
-* `AUD` apporte de l'information de manière significative en plus de `MOB` et `HIP` sur `BRW`,
-* `MOB` apporte de l'information de manière significative en plus de `AUD` et `HIP` sur `BRW`,
-* `HIP` apporte de l'information de manière significative en plus de `AUD` et `MOB` sur `BRW`.
+* l'effet marginal de `AUD` (en plus de `MOB` et `HIP`) sur `BRW` est significatif,
+* l'effet marginal de `MOB` (en plus de `AUD` et `HIP`) sur `BRW` est significatif,
+* l'effet marginal de `HIP` (en plus de `AUD` et `MOB`) sur `BRW` est significatif.
 
 
 ```{r}
