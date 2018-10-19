@@ -1,0 +1,195 @@
+---
+title: "Bases du modèle linéaire"
+subtitle: "Chapitre VI - Analyse en composantes principales"
+author: "Antoine Bichat - Émilie Lebarbier<br>AgroParisTech"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    css: ["default-agro.css", "default-fonts"]
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.retina = 2, comment = NA)
+```
+
+# Chargement des données
+
+```{r}
+budget <- read.table("Etat.don", row.names = 1, sep = "")
+colnames(budget) <- c("PVP", "AGR", "CMI", "TRA", "LOG", 
+                      "EDU", "ACS", "ANC", "DEF", "DET", "DIV")
+head(budget)
+str(budget)
+```
+
+---
+# Étude descriptive simple
+
+```{r}
+Moyenne <- apply(budget, 2, mean)
+EcartType <- apply(budget, 2, sd)
+data.frame(Moyenne, EcartType)
+```
+
+---
+# Corrélations
+
+```{r}
+cor(budget)
+```
+
+
+---
+
+# Analyse descriptive _tidy_
+
+```{r message=FALSE}
+library(tidyverse)
+budget_tidy <- budget %>% 
+  rownames_to_column(var = "Année") %>% 
+  mutate(Année = as.numeric(Année)) %>% 
+  gather(key = "Poste", value = "Pourcentage", -Année)
+budget_tidy
+```
+
+---
+```{r}
+budget_tidy %>% 
+  group_by(Poste) %>% 
+  summarise(Min = min(Pourcentage), Moyenne = mean(Pourcentage), 
+            Max = max(Pourcentage), `Écart-type` = sd(Pourcentage))
+```
+
+---
+
+```{r}
+budget_tidy %>% 
+  group_by(Année) %>% 
+  summarise(Total = sum(Pourcentage))
+```
+
+---
+# Boîtes à moustaches
+
+
+```{r boxplot, fig.width=10, fig.height=5}
+ggplot(budget_tidy) +
+  aes(x = Poste, y = Pourcentage, fill = Poste) +
+  geom_boxplot() +
+  scale_fill_viridis_d() +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+---
+# Série temporelle
+
+```{r textplot, fig.width=10, fig.height=5}
+ggplot(budget_tidy) +
+  aes(x = Année, y = Pourcentage, color = Poste) +
+  geom_line(aes(linetype = Poste, group = Poste)) +
+  scale_color_viridis_d() +
+  scale_x_continuous(breaks = seq(1870, 1975, 5)) +
+  theme_minimal()
+```
+
+
+
+---
+# Analyse en composantes principales
+
+```{r acp, fig.width=11, fig.height=6}
+library(FactoMineR)
+par(mfrow = c(1, 2))
+res_acp <- PCA(budget, scale.unit = TRUE, ncp = 11)
+```
+
+---
+# Valeurs propres
+
+```{r}
+round(res_acp$eig, 4)
+```
+
+---
+# Scree plot
+
+```{r screeplot, fig.height=7, fig.width=10}
+barplot(res_acp$eig[, 1])
+```
+
+---
+# Coordonnées des anciennes variables
+```{r}
+res_acp$var$coord[, 1:3]
+```
+
+---
+# Contributions des anciennes variables
+
+```{r}
+res_acp$var$contrib[, 1:3]
+colSums(res_acp$var$contrib[, 1:3])
+```
+
+
+---
+# Matrice des vecteurs propres
+
+```{r}
+sqrt(res_acp$var$contrib / 100)[, 1:3] * sign(res_acp$var$coord)[, 1:3]
+```
+
+
+---
+# Nouvelles coordonnées des individus
+
+```{r}
+res_acp$ind$coord[, 1:5]
+```
+
+---
+# Qualité de la resprésentation des individus
+
+```{r}
+res_acp$ind$cos2[, 1:5]
+```
+
+---
+# Contributions des individus
+
+```{r}
+res_acp$ind$contrib[, 1:5]
+```
+
+---
+# Cercle des corrélations
+
+```{r cercle, fig.width=11, fig.height=6}
+par(mfrow = c(1, 2))
+plot.PCA(res_acp, choix="var")
+plot.PCA(res_acp, choix="var", axes = c(1, 3))
+```
+
+---
+# Projection des individus
+
+```{r proj, fig.width=11, fig.height=6}
+par(mfrow = c(1, 2))
+plot.PCA(res_acp, choix = "ind")
+plot.PCA(res_acp, choix = "ind", axes = c(1, 3))
+```
+
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]
