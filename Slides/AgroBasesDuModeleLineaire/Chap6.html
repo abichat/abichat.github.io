@@ -600,30 +600,6 @@ Dim.1 Dim.2 Dim.3
 
 
 ---
-# Matrice des vecteurs propres
-
-
-```r
-sqrt(res_acp$var$contrib / 100)[, 1:3] * sign(res_acp$var$coord)[, 1:3]
-```
-
-```
-          Dim.1        Dim.2      Dim.3
-PVP -0.07771782  0.516585460  0.3009164
-AGR  0.36702717  0.003810703  0.3228306
-CMI  0.37359157  0.238302796 -0.1246406
-TRA -0.06141975  0.440473690 -0.3307232
-LOG  0.32362277  0.277748640 -0.3388805
-EDU  0.35283201 -0.095636762  0.3740061
-ACS  0.41851245 -0.070419631  0.1464745
-ANC  0.12956875 -0.563764700 -0.3301972
-DEF -0.27454545  0.151074097 -0.2284931
-DET -0.39862460 -0.210435649  0.1411755
-DIV -0.24590306  0.078312469  0.4721985
-```
-
-
----
 # Nouvelles coordonnées des individus
 
 
@@ -737,8 +713,8 @@ res_acp$ind$contrib[, 1:5]
 
 ```r
 par(mfrow = c(1, 2))
-plot.PCA(res_acp, choix="var")
-plot.PCA(res_acp, choix="var", axes = c(1, 3))
+plot.PCA(res_acp, choix = "var")
+plot.PCA(res_acp, choix = "var", axes = c(1, 3))
 ```
 
 &lt;img src="Chap6_files/figure-html/cercle-1.png" width="792" style="display: block; margin: auto;" /&gt;
