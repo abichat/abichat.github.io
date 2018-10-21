@@ -1,0 +1,281 @@
+---
+title: "Bases du modèle linéaire"
+subtitle: "Chapitre VII - Analyse de la covariance"
+author: "Antoine Bichat - Émilie Lebarbier<br>AgroParisTech"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+    css: ["default-agro.css", "default-fonts"]
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.retina = 2, comment = NA)
+```
+
+# Chargement des données
+
+```{r}
+df_pins <- read.table('PINS.DON', 
+                      col.names = c("variete", "diametre", "hauteur"))
+str(df_pins)
+summary(df_pins)
+```
+
+---
+# Analyse descriptive
+```{r}
+by(df_pins[, 2:3], df_pins$variete, summary)
+```
+
+---
+
+```{r message=FALSE}
+library(tidyverse)
+df_pins %>% 
+  group_by(variete) %>% 
+  summarise(Effectif = n(), 
+            `Diamètre moyen` = mean(diametre), 
+            `Hauteur moyenne` = mean(hauteur),
+            Corrélation = cor(diametre, hauteur))
+```
+
+
+---
+# Nuage de points
+
+```{r nuage, fig.width=9, fig.height=5.5}
+tp <- rep(0, nrow(df_pins)) 
+tp[df_pins$variete == "jaune"] <- 9
+
+plot(hauteur ~ diametre, data = df_pins, pch = 8 + tp)
+legend("bottomright", legend = c("blanc", "jaune"), pch = c(8, 17))
+```
+
+---
+
+```{r gg, fig.width=9, fig.height=6}
+theme_set(theme_minimal())
+ggplot(df_pins) +
+  aes(x = diametre, y = hauteur, color = variete, shape = variete) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Diamètre", y = "Hauteur", color = "Variété", shape = "Variété")
+```
+
+---
+# Régression linéaire simple
+
+```{r}
+reglin <- lm(hauteur ~ diametre, data = df_pins)
+summary(reglin)
+```
+
+---
+### {broom} et la fonction augment()
+
+```{r}
+library(broom)
+augment(reglin, df_pins)
+```
+
+
+---
+
+```{r, fig.width=9, fig.height=6}
+augment(reglin, df_pins) %>% 
+  ggplot() +
+  aes(x = .fitted, y = .resid, color = variete, shape = variete) +
+  geom_point(size = 3) +
+  geom_hline(yintercept = 0) +
+  labs(x = "Hauteur prédite", y = "Résidus", color = "Variété", shape = "Variété")
+```
+
+---
+# Régressions séparées
+
+```{r}
+df_2reg <-
+  df_pins %>% 
+  group_by(variete) %>% 
+  nest() %>% 
+  mutate(reg = map(data, ~ lm(hauteur ~ diametre, data = .)),
+         augmented = map2(reg, data, augment)) 
+df_2reg
+```
+
+---
+
+```{r}
+df_2reg %>% 
+  pull(reg) %>% 
+  map(~ coef(summary(.)))
+```
+
+---
+
+```{r fig.width=9, fig.height=5}
+df_2reg %>% 
+  unnest(augmented) %>% 
+  ggplot() +
+  aes(x = .fitted, y = .resid, color = variete, shape = variete) +
+  geom_point(size = 3) +
+  geom_hline(yintercept = 0) +
+  facet_wrap(~ variete) +
+  labs(x = "Hauteur prédite", y = "Résidus") +
+  theme(legend.position = "none")
+```
+
+
+
+---
+# Analyse de la covariance
+
+```{r}
+reg_ancova <- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_ancova
+```
+
+---
+
+```{r diag, fig.height=7.5}
+par(mfrow = c(2, 2))
+plot(reg_ancova)
+```
+
+---
+
+```{r message=FALSE}
+anova(reg_ancova)
+library(car)
+Anova(reg_ancova)
+```
+
+---
+# Réanalyse sans intéraction
+
+```{r}
+reg_ancovaSI <- lm(hauteur ~ diametre + variete, data = df_pins)
+reg_ancovaSI
+```
+
+---
+
+```{r diagSI, fig.height=7.5}
+par(mfrow = c(2, 2))
+plot(reg_ancovaSI)
+```
+
+---
+
+```{r message=FALSE}
+anova(reg_ancovaSI)
+library(car)
+Anova(reg_ancovaSI)
+```
+
+---
+
+```{r message=FALSE}
+summary(reg_ancovaSI)
+```
+
+---
+
+```{r message=FALSE}
+library(lsmeans)
+lsmeans(reg_ancovaSI, pairwise ~ variete, adjust = "none")
+```
+
+---
+# Régression quadratique
+
+```{r}
+df_pins <- mutate(df_pins, diametre2 = diametre^2)
+reg_ancova2 <- lm(hauteur ~ (diametre + diametre2) * variete, 
+                  data = df_pins)
+reg_ancova2
+```
+
+---
+
+```{r diag2, fig.height=7.5}
+par(mfrow = c(2, 2))
+plot(reg_ancova2)
+```
+
+---
+```{r}
+anova(reg_ancova2)
+Anova(reg_ancova2)
+```
+
+---
+# Réanalyse avec une seule intéraction 
+
+```{r}
+reg_ancova2bis <- lm(hauteur ~ variete + diametre + diametre2 
+                    + diametre2:variete, data = df_pins)
+reg_ancova2bis
+```
+
+---
+
+```{r diag2bis, fig.height=7.5}
+par(mfrow = c(2, 2))
+plot(reg_ancova2bis)
+```
+
+---
+```{r fig.width=9, fig.height=6.5}
+augment(reg_ancova2bis, df_pins) %>% 
+  ggplot() +
+  aes(x = .fitted, y = .resid, color = variete, shape = variete) +
+  geom_point(size = 3) +
+  geom_hline(yintercept = 0) +
+  labs(x = "Hauteur prédite", y = "Résidus", color = "Variété", shape = "Variété")
+```
+
+---
+```{r}
+anova(reg_ancova2bis)
+Anova(reg_ancova2bis)
+```
+
+---
+
+```{r}
+summary(reg_ancova2bis)
+```
+
+---
+
+```{r message=FALSE}
+lsmeans(reg_ancova2bis, pairwise ~ variete, adjust = "none")
+```
+
+
+---
+
+```{r pred, fig.width=9, fig.height=5.5}
+reg_ancova2bis %>% 
+  augment(df_pins) %>% 
+  ggplot() +
+  aes(x = diametre, color = variete) +
+  geom_point(aes(y = hauteur, shape = variete), size = 3) +
+  geom_line(aes(y = .fitted, linetype = variete)) +
+  labs(x = "Diamètre", y = "Hauteur", 
+       color = "Variété", shape = "Variété", linetype = "Variété")
+```
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package <b><a href="https://github.com/yihui/xaringan" target="_blank">xaringan</a></b>.]
