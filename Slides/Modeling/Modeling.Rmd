@@ -1,0 +1,902 @@
+---
+title: "Modeling in the Tidyverse"
+author: "Antoine Bichat"
+output:
+  xaringan::moon_reader:
+    lib_dir: libs
+    seal: false
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: '%current% / %total%'
+    css: ["sotr.css", "default-fonts"]
+---
+class: title-slide, center, middle
+count: false
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.width = 8,
+                      fig.retina = 2, comment = " ")
+```
+
+<br><br><br>
+
+# Modeling in the Tidyverse
+
+<br><br><br><br><br><br><br><br><br><br><br>
+
+### Antoine Bichat
+<div style = "margin-top: -30px"></div>
+### November 23, 2018 - AgroParisTech
+
+---
+class: center, middle, inverse
+
+<br>
+# Tidyverse
+
+<img src="img/hex-tidyverse.png", width=270> 
+
+---
+## Metapackage
+
+```{r tidyversepack}
+library(tidyverse)
+```
+
+--
+
+<br>
+
+```{r theme}
+theme_set(theme_minimal())
+```
+
+--
+
+<br>
+
+Previous presentation <a href="https://abichat.github.io/Slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html#1" target="_blank">here</a>
+
+---
+## Data analysis pipeline
+
+---
+class: center, middle, inverse
+
+<br>
+# Dplyr
+
+<img src="img/hex-dplyr.png", width=270> 
+
+---
+## List of dplyr's useful functions
+
+.pull-left[
+
+* `mutate()`, `mutate_*()`
+
+* `rename()`
+
+* `arrange()`, `arrange(desc())`
+
+<br>
+
+* `select()`, `select_*()`
+
+* `pull()`
+
+<br>
+
+* `filter()`
+
+* `distinct()`
+
+* `top_n()`
+
+* `sample_n()`, `sample_frac()`
+]
+
+--
+
+.pull-right[
+
+* `*_join()`
+
+<br>
+
+* `group_by()`
+
+* `summarise()`
+
+<br>
+
+* `first()`, `last()`, `nth()`
+
+* `n()`, `n_distinct()`
+
+<br>
+
+* `row_numbers()`
+
+* `lead()`, `lag()`, `cummean()` ...
+]
+
+---
+class: center, middle, inverse
+
+<br>
+# Tidyr
+
+<img src="img/hex-tidyr.png", width=270> 
+
+
+---
+
+## List of tidyr's useful functions
+
+.pull-left[
+* `spread()` & `gather()`
+
+* `separate()` & `unite()`
+
+* `nest()` & `unnest()`
+
+* `fill()`
+]
+
+--
+
+.pull-right[
+<img src="img/tidyr-spread-gather.gif", width=400> 
+]
+
+
+
+
+---
+class: center, middle, inverse
+
+<br>
+# Purrr
+
+<img src="img/hex-purrr.png", width=270> 
+
+---
+## Functionnal programming
+
+* Never use `for` loops.
+
+--
+
+<br>
+
+* Forget all `*apply()` functions and friends
+
+  * `mapply()`, `tapply()`, `lapply()`, `mapply()`, ...
+  
+  * `Map()`, `Reduce()`
+  
+  * `Vectorize()`
+
+--
+
+<br>
+
+* Embrace `map*()` functions and friends
+
+  * `map()`, `map_dbl()`, `map_chr()`, `map_lgl()`, ...
+  
+  * `map2()`, `map2_dbl()`, `map2_chr()`, `map2_lgl()`, ...
+  
+  * `pmap()`, `pmap_dbl()`, `pmap_chr()`, `pmap_lgl()`, ...
+  
+  * `walk()`, `walk2()`, `pwalk()`, ...
+
+---
+## `map*()`
+
+
+<center>
+  <img src="img/map.png", width=400> 
+</center>
+
+--
+
+* `map()` applies the function to each element and returns a list.
+
+--
+
+* `map_lgl()`, `map_int()`, `map_dbl()` and `map_chr()` applies the function to each element and returns a atomic vector of the corresponding type.
+
+
+---
+## `map*()`
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+
+```{r}
+map(1:100, rnorm)
+```
+
+---
+count: false
+## `map*()`
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+```{r}
+map(1:100, rnorm) %>% 
+  map_dbl(mean)
+```
+
+---
+count: false
+## `map*()`
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+```{r}
+map(1:100, rnorm) %>% 
+  map_dbl(mean) %>% 
+  tibble(Mean = .) %>% 
+  mutate(N = row_number())
+```
+
+---
+count: false
+## `map*()`
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+```{r fig.height=5}
+map(1:100, rnorm) %>% 
+  map_dbl(mean) %>% 
+  tibble(Mean = .) %>% 
+  mutate(N = row_number()) %>% 
+  ggplot(aes(x = N, y = Mean)) +
+  geom_line()
+```
+
+---
+## `map*()`
+
+
+<center>
+  <img src="img/map-arg.png", width=400> 
+</center>
+
+
+--
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+```{r}
+map(1:4, rnorm, n = 6)
+```
+
+---
+## `map*()`
+
+
+<center>
+  <img src="img/map-list.png", width=400> 
+</center>
+
+--
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+```{r}
+map(1:4, rnorm, n = 6) %>% 
+  map_dbl(function(x) x[2])
+```
+
+---
+count: false
+## `map*()`
+
+
+<center>
+  <img src="img/map-list.png", width=400> 
+</center>
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+```{r}
+map(1:4, rnorm, n = 6) %>% 
+  map_dbl(~ .[2])
+```
+
+
+---
+## `map2*()`
+
+
+<center>
+  <img src="img/map2.png", width=400> 
+</center>
+
+
+`map2()` and `map2_*()` are variants of `map()` and `map_*()` which work with two arguments.
+
+---
+## `map2*()`
+
+<center>
+  <img src="img/map2-arg.png", width=400> 
+</center>
+
+--
+
+```{r}
+map2(1:4, c(2, 5, 5, 10), runif, n = 5)
+```
+
+
+---
+## `pmap*()`
+
+
+<center>
+  <img src="img/pmap-3.png", width=400> 
+</center>
+
+
+`pmap()` and `pmap_*()` are generalized versions of `map()` and `map_*()` which work with any number of arguments.
+
+---
+## `pmap*()`
+
+
+```{r}
+pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
+```
+
+---
+## `*walk*()` functions 
+
+`walk()` and variant are designed for side-effects function and return the input.
+
+```{r}
+list(iris, mtcars) %>% 
+  walk(~ print(nrow(.))) %>% 
+  str()
+```
+
+
+---
+## `reduce()`
+
+
+<center>
+  <img src="img/reduce.png", width=400> 
+</center>
+
+`reduce(list(x1, x2, x3), f)` is equivalent to `f(f(x1, x2), x3)` 
+
+---
+## `reduce()`
+
+```{r echo=FALSE}
+set.seed(1)
+```
+
+```{r}
+map(1:4, ~ sample(1:10, 6))
+```
+
+--
+
+
+```{r echo=FALSE}
+set.seed(1)
+```
+
+```{r eval=FALSE}
+map(1:4, ~ sample(1:10, 6)) %>% 
+  reduce(intersect)
+```
+
+
+---
+count: false
+## `reduce()`
+
+```{r echo=FALSE}
+set.seed(1)
+```
+
+```{r}
+map(1:4, ~ sample(1:10, 6))
+```
+
+```{r echo=FALSE}
+set.seed(1)
+```
+
+```{r}
+map(1:4, ~ sample(1:10, 6)) %>% 
+  reduce(intersect)
+```
+
+
+
+
+---
+class: center, middle, inverse
+
+<br>
+# Tibble
+
+<img src="img/hex-tibble.png", width=270> 
+
+---
+## Nice printing
+
+```{r}
+mtcars
+```
+
+---
+count: false
+## Nice printing
+
+```{r}
+as_tibble(mtcars)
+```
+
+---
+count: false
+## Nice printing ... but don't use row names!
+
+```{r}
+as_tibble(mtcars, rownames = "model")
+```
+
+---
+## Consistancy in subsetting
+
+```{r}
+class(iris[, 1:2])
+```
+
+--
+
+```{r eval=FALSE}
+class(iris[, 1])
+```
+
+---
+count: false
+## Consistancy in subsetting
+
+```{r}
+class(iris[, 1:2])
+```
+
+```{r}
+class(iris[, 1])
+```
+
+--
+<br>
+
+```{r}
+iris_tbl <- as_tibble(iris)
+class(iris_tbl[, 1:2])
+```
+
+
+```{r}
+class(iris_tbl[, 1])
+```
+
+---
+class: center, middle, noslidenumber, nologo
+
+<img src="img/tibble_kiddo.png", width=400> 
+
+---
+## A little function
+
+```{r divisors}
+divisors <- function(N){
+  if(N == 1) {return(1)}
+  if(N == 2) {return(1:2)}
+  vec <- c()
+  for (i in 2:(N/2)){
+    if (N %% i == 0) {
+      vec <- c(vec, i)
+    }
+  }
+  return(c(1, vec, N))
+}
+```
+
+
+```{r}
+map(4:6, divisors)
+```
+
+
+---
+## List-columns
+
+```{r}
+tibble(N = 1:50)
+```
+
+
+---
+count: false
+## List-columns
+
+
+```{r}
+tibble(N = 1:50) %>% 
+  mutate(Divisors = map(N, divisors))
+```
+
+
+---
+count: false
+## List-columns
+
+
+```{r}
+tibble(N = 1:50) %>% 
+  mutate(Divisors = map(N, divisors)) %>% 
+  pull(Divisors)
+```
+
+
+---
+count: false
+## List-columns
+
+
+```{r eval=FALSE}
+tibble(N = 1:50) %>% 
+  mutate(Divisors = map(N, divisors),
+         NbDivisors = map(Divisors, length)) 
+```
+
+--
+
+```{r echo=FALSE}
+tibble(N = 1:50) %>% 
+  mutate(Divisors = map(N, divisors),
+         NbDivisors = map(Divisors, length)) 
+```
+
+
+---
+count: false
+## List-columns
+
+
+```{r}
+tibble(N = 1:50) %>% 
+  mutate(Divisors = map(N, divisors),
+         NbDivisors = map_dbl(Divisors, length)) 
+```
+
+
+
+---
+count: false
+## List-columns
+
+
+```{r listcolumnplot, fig.height=5, fig.width=9}
+tibble(N = 1:50) %>% 
+  mutate(Divisors = map(N, divisors),
+         NbDivisors = map_dbl(Divisors, length)) %>% 
+  ggplot(aes(x = N, y = NbDivisors)) +
+  geom_col(color = "black", fill = "grey") +
+  geom_hline(yintercept = 2, color = "red", linetype = "dashed") +
+  labs(x = "N", y = "Number of divisors of N")
+```
+
+
+
+
+---
+class: center, middle, inverse
+
+<br>
+# Tidymodels
+
+<img src="img/hex-broom.png", width=270> 
+
+---
+## Metapackage
+
+```{r}
+library(tidymodels)
+```
+
+
+---
+class: center, middle, inverse
+
+<br>
+# Broom
+
+<img src="img/hex-broom.png", width=270> 
+
+
+---
+## Dataset
+
+```{r datapins, message=FALSE}
+df_pins <- read_table2("PINS.DON", 
+                       col_names = c("variete", "diametre", "hauteur"))
+df_pins
+```
+
+
+---
+## Classical output of linear regression
+
+```{r}
+reg_simple <- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_simple
+```
+
+---
+count:false
+## Classical output of linear regression
+
+```{r}
+reg_simple <- lm(hauteur ~ diametre * variete, data = df_pins)
+summary(reg_simple)
+```
+
+---
+count:false
+## Classical output of linear regression
+
+```{r}
+reg_simple <- lm(hauteur ~ diametre * variete, data = df_pins)
+coef(summary(reg_simple))
+coef(reg_simple)
+```
+
+---
+## `tidy()`
+
+Presents the outputs of the model in a tibble.
+
+```{r}
+tidy(reg_simple)
+```
+
+---
+## `glance()` 
+
+Returns summary informations about the model in a singe row tibble.
+
+```{r}
+glance(reg_simple)
+```
+
+---
+## `augment()` 
+
+Adds information about each observation in the dataset.
+
+```{r}
+(augmented <- augment(reg_simple, df_pins))
+```
+
+---
+## Graph of residuals
+
+```{r resid, fig.height=5}
+ggplot(augmented) +
+  aes(x = .fitted, y = .resid, color = variete) +
+  geom_point() +
+  geom_smooth(color = "black", method = "loess", se = FALSE) +
+  labs(x = "Fitted values", y = "Residuals")
+```
+
+---
+## Quantile-quantile plot
+
+```{r qq, fig.height=5}
+ggplot(augmented) +
+  aes(sample = .resid) +
+  geom_qq_line(color = "red") +
+  geom_qq()+
+  labs(x = "Theoretical quantiles", y = "Standardized residuals")
+```
+
+---
+## Leverage
+
+```{r cook, fig.height=5}
+ggplot(augmented) +
+  aes(x = .hat, y = .std.resid, color = variete) +
+  geom_vline(xintercept = 0, alpha = 0.5, linetype = "dashed") +
+  geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
+  geom_point() +
+  geom_smooth(color = "black", method = "loess", se = FALSE) +
+  labs(x = "Leverage", y = "Standardized residuals")
+```
+
+---
+## Cook's distances
+
+```{r, fig.height=5}
+augmented %>% 
+  rowid_to_column("ID") %>% 
+  ggplot() +
+  aes(x = ID, y = .cooksd, fill = variete) +
+  geom_col(color = "grey30") +
+  labs(x = "Observation", y = "Cook's Distance")
+```
+
+---
+## Wilcoxon test
+
+```{r, wilcox, warning=FALSE}
+w_test <- wilcox.test(hauteur ~ variete, data = df_pins)
+w_test
+```
+
+--
+
+<br>
+
+```{r}
+tidy(w_test)
+```
+
+---
+## Output for your package
+
+
+
+
+---
+class: center, middle, inverse
+
+<br>
+# Rsample
+
+<img src="img/hex-broom.png", width=270> 
+
+---
+## Quelques infos
+
+
+---
+## Estimation of parameters
+
+```{r}
+bootstrap_pins <-
+  df_pins %>% 
+  rowid_to_column("ID") %>% 
+  mutate(diametre2 = diametre^2) %>% 
+  bootstraps(times = 50)
+bootstrap_pins
+```
+
+---
+## `rsplit` object
+
+```{r}
+bootstrap_pins %>% 
+  pull(splits) %>% 
+  first()
+```
+
+---
+count:false
+## `rsplit` object
+
+```{r}
+bootstrap_pins %>% 
+  pull(splits) %>% 
+  first() %>% 
+  as_tibble() 
+```
+
+---
+## Analysis & assessment sets
+
+```{r}
+bootstrap_pins %>% 
+  pull(splits) %>% 
+  first() %>% 
+  as_tibble() %>% # analysis()
+  pull(ID) %>% 
+  table()
+```
+
+--
+
+```{r}
+bootstrap_pins %>% 
+  pull(splits) %>% 
+  first() %>% 
+  as_tibble(data = "assessment") %>% # assessment()
+  pull(ID) %>% 
+  table()
+```
+
+---
+## Bootsrtaped models
+
+```{r}
+my_lm <- partial(lm, formula = hauteur ~ (diametre + diametre2) * variete)
+```
+
+--
+
+```{r}
+bootstrap_pins <-
+  bootstrap_pins %>% 
+  mutate(reg = map(splits, my_lm))
+bootstrap_pins
+```
+
+---
+class: center, middle, inverse
+
+# References
+
+---
+### Purrr
+
+* <a href="https://speakerdeck.com/colinfay/vous-allez-aimer-avoir-purrr-7eme-rencontres-r-rennes" target="_blank">Vous allez aimer avoir {purrr} </a>
+
+### Tibble
+
+* <a href="https://www.rstudio.com/resources/videos/using-list-cols-in-your-dataframe/" target="_blank">Putting square pegs in round holes: Using list-cols in your dataframe</a>
+
+### Tidymodels
+
+* <a href="https://static1.squarespace.com/static/51156277e4b0b8b2ffe11c00/t/5b75871e21c67c985a06f481/1534428959053/RPharma_18_Kuhn.pdf" target="_blank">Modeling in the Tidyverse</a>
+
+
+---
+class: center, middle, inverse
+count:false
+
+<br> 
+
+# Thanks for you attention!
+
+<br>
+
+#### `r icon::fa("github", size = 1)` <a href="https://github.com/abichat" target="_blank">@abichat</a>
+<div style = "margin-top: -10px"></div>
+#### `r icon::fa("twitter", size = 1)` <a href="https://twitter.com/_abichat" target="_blank">@_abichat</a>
+<div style = "margin-top: -10px"></div>
+#### `r icon::fa("linkedin", size = 1)` <a href="https://www.linkedin.com/in/antoinebichat" target="_blank">antoinebichat</a>
+<div style = "margin-top: -10px"></div>
+#### `r icon::fa("link", size = 1)` <a href="https://abichat.github.io" target="_blank">abichat.github.io</a>
+<div style = "margin-top: -10px"></div>
+####`r icon::fa("envelope", size = 1)` <a href="mailto:antoine.bichat@mines-nancy.org?subject=SOTR">antoine.bichat@mines-nancy.org</a>
+
+
