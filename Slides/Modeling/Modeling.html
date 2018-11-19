@@ -59,7 +59,7 @@ library(tidyverse)
   ✖ dplyr::lag()    masks stats::lag()
 ```
 
-.footnote[<i class="fas  fa-clone "></i> See previous presentation &lt;a href="https://abichat.github.io/Slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html#1" target="_blank"&gt;Introduction to the Tidyverse&lt;/a&gt;.]
+.footnote[&lt;a href="https://abichat.github.io/Slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html#1" target="_blank"&gt;<i class="fas  fa-clone "></i> Introduction to the Tidyverse&lt;/a&gt;]
 
 --
 
@@ -219,6 +219,8 @@ class: center, middle, inverse
   * `pmap()`, `pmap_dbl()`, `pmap_chr()`, `pmap_lgl()`, ...
   
   * `walk()`, `walk2()`, `pwalk()`, ...
+  
+  * `imap()`, `iwalk()`, ...
 
 
 
@@ -232,11 +234,11 @@ class: center, middle, inverse
 
 --
 
-* `map()` applies the function to each element and returns a list.
+* `map()` applies the function to each element and returns a list
 
 --
 
-* `map_lgl()`, `map_int()`, `map_dbl()` and `map_chr()` applies the function to each element and returns a atomic vector of the corresponding type.
+* `map_lgl()`, `map_int()`, `map_dbl()` and `map_chr()` applies the function to each element and returns a atomic vector of the corresponding type
 
 
 ---
@@ -328,8 +330,8 @@ map(1:100, rnorm) %&gt;%
   tibble(Mean = .) %&gt;% 
   mutate(N = row_number()) %&gt;% 
   ggplot(aes(x = N, y = Mean)) +
-  geom_hline(yintercept = 0, color = "red", alpha = 0.5) +
-  geom_line()
+    geom_hline(yintercept = 0, color = "red", alpha = 0.5) +
+    geom_line()
 ```
 
 &lt;img src="Modeling_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /&gt;
@@ -350,7 +352,7 @@ mean_rnorm(5)
   1 -0.345
 ```
 
---
+
 
 
 ```r
@@ -361,16 +363,16 @@ map_df(1:10, mean_rnorm) %&gt;% rownames_to_column("N")
   # A tibble: 10 x 2
      N         out
      &lt;chr&gt;   &lt;dbl&gt;
-   1 1      0.109 
-   2 2     -0.199 
-   3 3      0.244 
-   4 4      0.0207
-   5 5     -0.444 
-   6 6      0.112 
-   7 7     -0.374 
-   8 8     -0.718 
-   9 9      0.315 
-  10 10    -0.0891
+   1 1      1.37  
+   2 2     -0.101 
+   3 3      0.310 
+   4 4      0.843 
+   5 5      0.358 
+   6 6     -0.622 
+   7 7     -0.185 
+   8 8      0.0243
+   9 9     -0.612 
+  10 10     0.314
 ```
 
 
@@ -382,8 +384,6 @@ map_df(1:10, mean_rnorm) %&gt;% rownames_to_column("N")
   &lt;img src="img/map-arg.png", width=400&gt; 
 &lt;/center&gt;
 
-
---
 
 
 
@@ -411,10 +411,9 @@ map(1:4, rnorm, n = 6)
 
 
 &lt;center&gt;
-  &lt;img src="img/map-list.png", width=400&gt; 
+  &lt;img src="img/map-arg.png", width=400&gt; 
 &lt;/center&gt;
 
---
 
 
 
@@ -434,7 +433,7 @@ count: false
 
 
 &lt;center&gt;
-  &lt;img src="img/map-list.png", width=400&gt; 
+  &lt;img src="img/map-arg.png", width=400&gt; 
 &lt;/center&gt;
 
 
@@ -455,7 +454,7 @@ count: false
 
 
 &lt;center&gt;
-  &lt;img src="img/map-list.png", width=400&gt; 
+  &lt;img src="img/map-arg.png", width=400&gt; 
 &lt;/center&gt;
 
 
@@ -517,19 +516,19 @@ count: false
 
 
 ```r
-sapply(iris$Sepal.Length, as.data.frame) %&gt;% class()
-```
-
-```
-  [1] "list"
-```
-
-```r
 sapply(iris$Sepal.Length, as.numeric) %&gt;% class()
 ```
 
 ```
   [1] "numeric"
+```
+
+```r
+sapply(iris$Sepal.Length, as.data.frame) %&gt;% class()
+```
+
+```
+  [1] "list"
 ```
 
 --
@@ -538,19 +537,19 @@ VS
 
 
 ```r
-map_dfr(iris$Sepal.Length, as.data.frame) %&gt;% class()
-```
-
-```
-  [1] "data.frame"
-```
-
-```r
 map_dbl(iris$Sepal.Length, as.numeric) %&gt;% class()
 ```
 
 ```
   [1] "numeric"
+```
+
+```r
+map_df(iris$Sepal.Length, as.data.frame) %&gt;% class()
+```
+
+```
+  [1] "data.frame"
 ```
 
 ---
@@ -611,7 +610,7 @@ count: false
 &lt;/center&gt;
 
 
-`map2()` and `map2_*()` are variants of `map()` and `map_*()` which work with two arguments.
+`map2()` and `map2_*()` are variants of `map()` and `map_*()` which work with two arguments
 
 ---
 ## `map2*()`
@@ -619,8 +618,6 @@ count: false
 &lt;center&gt;
   &lt;img src="img/map2-arg.png", width=400&gt; 
 &lt;/center&gt;
-
---
 
 
 ```r
@@ -651,7 +648,7 @@ map2(1:4, c(2, 5, 5, 10), runif, n = 5)
 &lt;/center&gt;
 
 
-`pmap()` and `pmap_*()` are generalized versions of `map()` and `map_*()` which work with any number of arguments.
+`pmap()` and `pmap_*()` are generalized versions of `map()` and `map_*()` which work with any number of arguments
 
 ---
 ## `pmap*()`
@@ -684,40 +681,41 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
   &lt;img src="img/walk.png", width=300&gt; 
 &lt;/center&gt;
 
-`walk()` and variants are designed for side-effects function and return the input.
+`walk()` and variants are designed for side-effects function and return the input
 
 ---
 ## `imap*()` functions 
 
+`imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
 
-```r
-swiss %&gt;%
-  map(., function(x) {
-    ggplot(., aes(Fertility, x)) + 
-      geom_point()
-    }) %&gt;%
-  imap( ~ .x + labs(x = "Fertility", y = .y)) %&gt;%
-  .[-1] %&gt;%
-  gridExtra::grid.arrange(grobs = .)
-```
-
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-27-1.png" width="720" style="display: block; margin: auto;" /&gt;
+--
 
 
 ```r
-swiss %&gt;%
-  rownames_to_column() %&gt;%
-  map(., function(x) {
-    ggplot(., aes(rowname, x)) +
-      geom_point() +
-      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
-  }) %&gt;%
-  imap( ~ .x + labs(x = NULL, y = .y)) %&gt;%
+map(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .)) + geom_point()) %&gt;%
+  imap(~ .x + labs(x = "Fertility", y = .y)) %&gt;%
   .[-1] %&gt;%
   gridExtra::grid.arrange(grobs = .)
 ```
 
 &lt;img src="Modeling_files/figure-html/unnamed-chunk-28-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+---
+count:false
+## `imap*()` functions 
+
+`imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
+
+
+```r
+swiss %&gt;%
+  map(., function(x) ggplot(., aes(x = Fertility, y = x)) + geom_point()) %&gt;%
+  imap(~ .x + labs(x = "Fertility", y = .y)) %&gt;%
+  .[-1] %&gt;%
+  gridExtra::grid.arrange(grobs = .)
+```
+
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-29-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -1310,10 +1308,10 @@ tibble(N = 1:50) %&gt;%
   mutate(Divisors = map(N, divisors),
          NbDivisors = map_dbl(Divisors, length)) %&gt;% 
   ggplot(aes(x = N, y = NbDivisors)) +
-  geom_col(aes(fill = NbDivisors &lt; 3), color = "grey30") +
-  scale_fill_viridis_d(begin = 0.6) +
-  labs(x = "N", y = "Number of divisors of N") +
-  theme(legend.position = "none")
+    geom_col(aes(fill = NbDivisors &lt; 3), color = "grey30") +
+    scale_fill_viridis_d(begin = 0.6) +
+    labs(x = "N", y = "Number of divisors of N") +
+    theme(legend.position = "none")
 ```
 
 &lt;img src="Modeling_files/figure-html/listcolumnplot-1.png" width="720" style="display: block; margin: auto;" /&gt;
@@ -1589,7 +1587,7 @@ coef(reg_simple)
 ---
 ## `tidy()`
 
-Presents the outputs of the model in a tibble.
+Presents the outputs of the model in a tibble
 
 
 ```r
@@ -1609,7 +1607,7 @@ tidy(reg_simple)
 ---
 ## `glance()` 
 
-Returns summary informations about the model in a singe row tibble.
+Returns summary informations about the model in a single-row tibble
 
 
 ```r
@@ -1627,7 +1625,7 @@ glance(reg_simple)
 ---
 ## `augment()` 
 
-Adds information about each observation in the dataset.
+Adds information about each observation in the dataset
 
 
 ```r
@@ -1660,11 +1658,11 @@ augmented %&gt;%
   arrange(.fitted) %&gt;% 
   mutate(.lowess = lowess(.fitted, .resid)[[2]]) %&gt;% 
   ggplot() +
-  aes(x = .fitted) +
-  geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
-  geom_line(aes(y = .lowess), color = "red") +
-  geom_point(aes(y = .resid, color = variete)) +
-  labs(x = "Fitted values", y = "Residuals")
+    aes(x = .fitted) +
+    geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
+    geom_line(aes(y = .lowess), color = "red") +
+    geom_point(aes(y = .resid, color = variete)) +
+    labs(x = "Fitted values", y = "Residuals")
 ```
 
 &lt;img src="Modeling_files/figure-html/resid-1.png" width="576" style="display: block; margin: auto;" /&gt;
@@ -1692,12 +1690,12 @@ augmented %&gt;%
   arrange(.hat) %&gt;% 
   mutate(.lowess = lowess(.hat, .std.resid)[[2]]) %&gt;% 
   ggplot() +
-  aes(x = .hat) +
-  geom_vline(xintercept = 0, alpha = 0.5, linetype = "dashed") +
-  geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
-  geom_line(aes(y = .lowess), color = "red") +
-  geom_point(aes(y = .std.resid, color = variete)) +
-  labs(x = "Leverage", y = "Standardized residuals")
+    aes(x = .hat) +
+    geom_vline(xintercept = 0, alpha = 0.5, linetype = "dashed") +
+    geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
+    geom_line(aes(y = .lowess), color = "red") +
+    geom_point(aes(y = .std.resid, color = variete)) +
+    labs(x = "Leverage", y = "Standardized residuals")
 ```
 
 &lt;img src="Modeling_files/figure-html/cook-1.png" width="576" style="display: block; margin: auto;" /&gt;
@@ -1710,12 +1708,12 @@ augmented %&gt;%
 augmented %&gt;% 
   rowid_to_column("ID") %&gt;% 
   ggplot() +
-  aes(x = ID, y = .cooksd, fill = variete) +
-  geom_col(color = "grey30") +
-  labs(x = "Observation", y = "Cook's Distance")
+    aes(x = ID, y = .cooksd, fill = variete) +
+    geom_col(color = "grey30") +
+    labs(x = "Observation", y = "Cook's Distance")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-65-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-66-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Wilcoxon test
@@ -1752,9 +1750,32 @@ tidy(w_test)
 ```
 
 ---
-## Output for your package
+## Tidying methods for your package
+
+If you want to include `tidy()`, `glance()` and `augment()` methods for your models:
+
+1. Re-export the `tidy()`, `glance()` or `augment()` generics from the {modelgenerics} package
+
+2. Implement appropriate tidying methods in your own package
+
+3. Test the tidying methods
+
+--
+
+&lt;br&gt;
+
+General guidelines:
+
+* Reach a minimum 90% test coverage for new tidiers
+
+* `tidy()`, `glance()` and `augment()` methods must return tibbles
+
+* Use new tidyverse packages and follow the tidyverse style conventions
+
+* ...
 
 
+Complete information are on &lt;a href="https://broom.tidyverse.org/articles/adding-tidiers.html" target="_blank"&gt;<i class="fas  fa-edit "></i> Adding new tidiers to broom&lt;/a&gt; and &lt;a href="https://broom.tidyverse.org/articles/external-tidiers.html" target="_blank"&gt;<i class="fas  fa-edit "></i> Exporting tidying methods from a package&lt;/a&gt;
 
 
 ---
@@ -1995,11 +2016,11 @@ my_lm &lt;- partial(lm, formula = hauteur ~ diametre * variete)
 bootstrap_pins %&gt;% 
   mutate(term = fct_relevel(term, "diametre:varietejaune", after = Inf)) %&gt;%
   ggplot(aes(x = estimate, y = term, fill = term)) +
-  ggridges::geom_density_ridges() + 
-  theme(legend.position = "none")
+    ggridges::geom_density_ridges() + 
+    theme(legend.position = "none")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-78-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-79-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 class: center, middle, inverse
