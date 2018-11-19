@@ -46,6 +46,8 @@ class: center, middle, inverse
 library(tidyverse)
 ```
 
+.footnote[`r icon::fa("clone", size = 1)` See previous presentation <a href="https://abichat.github.io/Slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html#1" target="_blank">Introduction to the Tidyverse</a>.]
+
 --
 
 <br>
@@ -54,14 +56,19 @@ library(tidyverse)
 theme_set(theme_minimal())
 ```
 
---
 
-<br>
 
-Previous presentation <a href="https://abichat.github.io/Slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html#1" target="_blank">here</a>
 
 ---
 ## Data analysis pipeline
+
+<br>
+
+<center>
+  <img src="img/data-science-pipeline.png", height=250> 
+</center>
+
+.footnote[<a href="https://r4ds.had.co.nz" target="_blank">`r icon::fa("book", size = 1)` R for data science (G. Grolemund & H. Wickham)</a>]
 
 ---
 class: center, middle, inverse
@@ -76,15 +83,15 @@ class: center, middle, inverse
 
 .pull-left[
 
-* `mutate()`, `mutate_*()`
+* `mutate()`
 
 * `rename()`
+
+* `select()`
 
 * `arrange()`, `arrange(desc())`
 
 <br>
-
-* `select()`, `select_*()`
 
 * `pull()`
 
@@ -102,6 +109,10 @@ class: center, middle, inverse
 --
 
 .pull-right[
+
+* `*_if()`, `*_at()`, `*_all()`
+
+<br>
 
 * `*_join()`
 
@@ -153,7 +164,7 @@ class: center, middle, inverse
 <img src="img/tidyr-spread-gather.gif", width=400> 
 ]
 
-
+.footnote[<a href="https://github.com/gadenbuie/tidyexplain" target="_blank">`r icon::fa("github", size = 1)` Animations of tidyverse verbs (G. Aden-Buie)</a>]
 
 
 ---
@@ -167,15 +178,15 @@ class: center, middle, inverse
 ---
 ## Functionnal programming
 
-* Never use `for` loops.
+* Never use `for` loops
 
 --
 
 <br>
 
-* Forget all `*apply()` functions and friends
+* Forget all `*apply()` functions and friends for lists and dataframes
 
-  * `mapply()`, `tapply()`, `lapply()`, `mapply()`, ...
+  * `apply`, `lapply()`, `sapply()`, `tapply()`, `mapply()`, ...
   
   * `Map()`, `Reduce()`
   
@@ -185,7 +196,7 @@ class: center, middle, inverse
 
 <br>
 
-* Embrace `map*()` functions and friends
+* Embrace `map()` function and variants
 
   * `map()`, `map_dbl()`, `map_chr()`, `map_lgl()`, ...
   
@@ -194,6 +205,8 @@ class: center, middle, inverse
   * `pmap()`, `pmap_dbl()`, `pmap_chr()`, `pmap_lgl()`, ...
   
   * `walk()`, `walk2()`, `pwalk()`, ...
+
+
 
 ---
 ## `map*()`
@@ -221,7 +234,7 @@ set.seed(42)
 
 
 ```{r}
-map(1:100, rnorm)
+map(1:5, rnorm)
 ```
 
 ---
@@ -233,7 +246,7 @@ set.seed(42)
 ```
 
 ```{r}
-map(1:100, rnorm) %>% 
+map(1:5, rnorm) %>% 
   map_dbl(mean)
 ```
 
@@ -249,8 +262,9 @@ set.seed(42)
 map(1:100, rnorm) %>% 
   map_dbl(mean) %>% 
   tibble(Mean = .) %>% 
-  mutate(N = row_number())
+  mutate(N = row_number()) # Slightly ifferent from rownames_to_column("N")
 ```
+
 
 ---
 count: false
@@ -266,8 +280,24 @@ map(1:100, rnorm) %>%
   tibble(Mean = .) %>% 
   mutate(N = row_number()) %>% 
   ggplot(aes(x = N, y = Mean)) +
+  geom_hline(yintercept = 0, color = "red", alpha = 0.5) +
   geom_line()
 ```
+
+---
+## A better way with `compose()` and `map_df()`
+
+```{r}
+mean_rnorm <- compose(tibble, mean, rnorm)
+mean_rnorm(5)
+```
+
+--
+
+```{r}
+map_df(1:10, mean_rnorm) %>% rownames_to_column("N")
+```
+
 
 ---
 ## `map*()`
@@ -325,6 +355,127 @@ map(1:4, rnorm, n = 6) %>%
   map_dbl(~ .[2])
 ```
 
+---
+count: false
+## `map*()`
+
+
+<center>
+  <img src="img/map-list.png", width=400> 
+</center>
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+```{r}
+map(1:4, rnorm, n = 6) %>% 
+  map_dbl(2)
+```
+
+
+---
+## Why `map()` is better 
+
+.footnote[<a href="https://colinfay.me/happy-dev-purrr/" target="_blank">`r icon::fa("edit", size = 1)` Happy dev with {purrr} (C.Fay)</a>]
+
+* Stable and consistent grammar
+
+```{r eval=FALSE}
+apply(X, MARGIN, FUN, ...)
+lapply(X, FUN, ...)
+sapply(X, FUN, ..., simplify = TRUE, USE.NAMES = TRUE)
+tapply(X, INDEX, FUN = NULL, ..., default = NA, simplify = TRUE)
+mapply(FUN, ..., MoreArgs = NULL, SIMPLIFY = TRUE, USE.NAMES = TRUE)
+eapply(env, FUN, ..., all.names = FALSE, USE.NAMES = TRUE)
+...
+```
+
+--
+
+VS 
+
+```{r eval=FALSE}
+map(.x, .f, ...)
+map_if(.x, .p, .f, ...)
+map_chr(.x, .f, ...)
+map_int(.x, .f, ...)
+map_dbl(.x, .f, ...)
+...
+```
+
+
+---
+count: false
+## Why `map()` is better 
+
+.footnote[<a href="https://colinfay.me/happy-dev-purrr/" target="_blank">`r icon::fa("edit", size = 1)` Happy dev with {purrr} (C.Fay)</a>]
+
+* Stable and consistent grammar
+
+* Type stability
+
+
+```{r}
+sapply(iris$Sepal.Length, as.data.frame) %>% class()
+sapply(iris$Sepal.Length, as.numeric) %>% class()
+```
+
+--
+
+VS 
+
+```{r}
+map_dfr(iris$Sepal.Length, as.data.frame) %>% class()
+map_dbl(iris$Sepal.Length, as.numeric) %>% class()
+```
+
+---
+count: false
+## Why `map()` is better 
+
+.footnote[<a href="https://colinfay.me/happy-dev-purrr/" target="_blank">`r icon::fa("edit", size = 1)` Happy dev with {purrr} (C.Fay)</a>]
+
+* Stable and consistent grammar
+
+* Type stability
+
+* Anonymous functions & verbosity
+
+
+```{r eval=FALSE}
+lapply(list, function(x) x + 2)
+mapply(function(x, y) x + y, list1, list2)
+lapply(list, function(x) x[2])
+lapply(list, function(x) x$foo)
+```
+
+--
+
+VS 
+
+```{r eval=FALSE}
+map(list, ~ . + 2)
+map2(list1, list2, ~ .x + .y)
+map(list, 2)
+map(list, "foo")
+```
+
+
+---
+count: false
+## Why `map()` is better 
+
+.footnote[<a href="https://colinfay.me/happy-dev-purrr/" target="_blank">`r icon::fa("edit", size = 1)` Happy dev with {purrr} (C.Fay)</a>]
+
+* Stable and consistent grammar
+
+* Type stability
+
+* Anonymous functions & verbosity
+
+* But it's slightly slower... (~ 40 ns per element)
+
 
 ---
 ## `map2*()`
@@ -373,12 +524,38 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 ---
 ## `*walk*()` functions 
 
-`walk()` and variant are designed for side-effects function and return the input.
 
-```{r}
-list(iris, mtcars) %>% 
-  walk(~ print(nrow(.))) %>% 
-  str()
+<center>
+  <img src="img/walk.png", width=300> 
+</center>
+
+`walk()` and variants are designed for side-effects function and return the input.
+
+---
+## `imap*()` functions 
+
+```{r fig.width=10}
+swiss %>%
+  map(., function(x) {
+    ggplot(., aes(Fertility, x)) + 
+      geom_point()
+    }) %>%
+  imap( ~ .x + labs(x = "Fertility", y = .y)) %>%
+  .[-1] %>%
+  gridExtra::grid.arrange(grobs = .)
+```
+
+```{r fig.width=10}
+swiss %>%
+  rownames_to_column() %>%
+  map(., function(x) {
+    ggplot(., aes(rowname, x)) +
+      geom_point() +
+      theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
+  }) %>%
+  imap( ~ .x + labs(x = NULL, y = .y)) %>%
+  .[-1] %>%
+  gridExtra::grid.arrange(grobs = .)
 ```
 
 
@@ -400,7 +577,7 @@ set.seed(1)
 ```
 
 ```{r}
-map(1:4, ~ sample(1:10, 6))
+rerun(4, sample(1:10, 6)) 
 ```
 
 --
@@ -411,7 +588,7 @@ set.seed(1)
 ```
 
 ```{r eval=FALSE}
-map(1:4, ~ sample(1:10, 6)) %>% 
+rerun(4, sample(1:10, 6)) %>% 
   reduce(intersect)
 ```
 
@@ -425,7 +602,7 @@ set.seed(1)
 ```
 
 ```{r}
-map(1:4, ~ sample(1:10, 6))
+rerun(4, sample(1:10, 6))
 ```
 
 ```{r echo=FALSE}
@@ -433,7 +610,7 @@ set.seed(1)
 ```
 
 ```{r}
-map(1:4, ~ sample(1:10, 6)) %>% 
+rerun(4, sample(1:10, 6)) %>% 
   reduce(intersect)
 ```
 
@@ -521,19 +698,13 @@ class: center, middle, noslidenumber, nologo
 divisors <- function(N){
   if(N == 1) {return(1)}
   if(N == 2) {return(1:2)}
-  vec <- c()
-  for (i in 2:(N/2)){
-    if (N %% i == 0) {
-      vec <- c(vec, i)
-    }
-  }
-  return(c(1, vec, N))
+  c(1, (2:(N/2))[N %% 2:(N/2) == 0], N)
 }
 ```
 
 
 ```{r}
-map(4:6, divisors)
+map(4:8, divisors)
 ```
 
 
@@ -606,15 +777,60 @@ count: false
 ## List-columns
 
 
-```{r listcolumnplot, fig.height=5, fig.width=9}
+```{r listcolumnplot, fig.height=4.6, fig.width=10}
 tibble(N = 1:50) %>% 
   mutate(Divisors = map(N, divisors),
          NbDivisors = map_dbl(Divisors, length)) %>% 
   ggplot(aes(x = N, y = NbDivisors)) +
-  geom_col(color = "black", fill = "grey") +
-  geom_hline(yintercept = 2, color = "red", linetype = "dashed") +
-  labs(x = "N", y = "Number of divisors of N")
+  geom_col(aes(fill = NbDivisors < 3), color = "grey30") +
+  scale_fill_viridis_d(begin = 0.6) +
+  labs(x = "N", y = "Number of divisors of N") +
+  theme(legend.position = "none")
 ```
+
+---
+# `nest()`
+
+```{r}
+iris %>% 
+  as_tibble()
+```
+
+---
+count:false
+# `nest()`
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  summarise(N = n())
+```
+
+---
+count:false
+# `nest()`
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  nest()
+```
+
+---
+count:false
+# `nest()`
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  nest() %>% 
+  pull(data) %>% 
+  first()
+```
+
+
+
+
 
 
 
@@ -625,7 +841,7 @@ class: center, middle, inverse
 <br>
 # Tidymodels
 
-<img src="img/hex-broom.png", width=270> 
+<img src="img/hex-tidymodels.png", width=270> 
 
 ---
 ## Metapackage
@@ -634,6 +850,11 @@ class: center, middle, inverse
 library(tidymodels)
 ```
 
+--
+
+```{r}
+tidy <- broom::tidy
+```
 
 ---
 class: center, middle, inverse
@@ -711,11 +932,15 @@ Adds information about each observation in the dataset.
 ---
 ## Graph of residuals
 
-```{r resid, fig.height=5}
-ggplot(augmented) +
-  aes(x = .fitted, y = .resid, color = variete) +
-  geom_point() +
-  geom_smooth(color = "black", method = "loess", se = FALSE) +
+```{r resid, fig.height=4}
+augmented %>% 
+  arrange(.fitted) %>% 
+  mutate(.lowess = lowess(.fitted, .resid)[[2]]) %>% 
+  ggplot() +
+  aes(x = .fitted) +
+  geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
+  geom_line(aes(y = .lowess), color = "red") +
+  geom_point(aes(y = .resid, color = variete)) +
   labs(x = "Fitted values", y = "Residuals")
 ```
 
@@ -733,13 +958,16 @@ ggplot(augmented) +
 ---
 ## Leverage
 
-```{r cook, fig.height=5}
-ggplot(augmented) +
-  aes(x = .hat, y = .std.resid, color = variete) +
+```{r cook, fig.height=4}
+augmented %>% 
+  arrange(.hat) %>% 
+  mutate(.lowess = lowess(.hat, .std.resid)[[2]]) %>% 
+  ggplot() +
+  aes(x = .hat) +
   geom_vline(xintercept = 0, alpha = 0.5, linetype = "dashed") +
   geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
-  geom_point() +
-  geom_smooth(color = "black", method = "loess", se = FALSE) +
+  geom_line(aes(y = .lowess), color = "red") +
+  geom_point(aes(y = .std.resid, color = variete)) +
   labs(x = "Leverage", y = "Standardized residuals")
 ```
 
@@ -783,7 +1011,7 @@ class: center, middle, inverse
 <br>
 # Rsample
 
-<img src="img/hex-broom.png", width=270> 
+<img src="img/hex-rsample.png", width=270> 
 
 ---
 ## Quelques infos
@@ -796,8 +1024,7 @@ class: center, middle, inverse
 bootstrap_pins <-
   df_pins %>% 
   rowid_to_column("ID") %>% 
-  mutate(diametre2 = diametre^2) %>% 
-  bootstraps(times = 50)
+  bootstraps(times = 500)
 bootstrap_pins
 ```
 
@@ -845,19 +1072,61 @@ bootstrap_pins %>%
 ```
 
 ---
-## Bootsrtaped models
+## Bootstrapped models
 
 ```{r}
-my_lm <- partial(lm, formula = hauteur ~ (diametre + diametre2) * variete)
+my_lm <- partial(lm, formula = hauteur ~ diametre * variete)
 ```
 
 --
 
 ```{r}
-bootstrap_pins <-
-  bootstrap_pins %>% 
-  mutate(reg = map(splits, my_lm))
-bootstrap_pins
+(bootstrap_pins <-
+   bootstrap_pins %>% 
+   mutate(reg = map(splits, my_lm)))
+```
+
+---
+count: false
+## Bootstrapped models
+
+```{r}
+my_lm <- partial(lm, formula = hauteur ~ diametre * variete)
+```
+
+```{r}
+(bootstrap_pins <-
+   bootstrap_pins %>% 
+   mutate(reg = map(splits, my_lm),
+          tidied = map(reg, tidy)))
+```
+
+
+---
+count: false
+## Bootstrapped models
+
+```{r}
+my_lm <- partial(lm, formula = hauteur ~ diametre * variete)
+```
+
+```{r}
+(bootstrap_pins <-
+   bootstrap_pins %>% 
+   mutate(reg = map(splits, my_lm),
+          tidied = map(reg, tidy)) %>% 
+   unnest(tidied)) 
+```
+
+---
+## Bootstrapped models
+
+```{r message=FALSE, fig.height=5.5}
+bootstrap_pins %>% 
+  mutate(term = fct_relevel(term, "diametre:varietejaune", after = Inf)) %>%
+  ggplot(aes(x = estimate, y = term, fill = term)) +
+  ggridges::geom_density_ridges() + 
+  theme(legend.position = "none")
 ```
 
 ---
@@ -866,17 +1135,23 @@ class: center, middle, inverse
 # References
 
 ---
+
+
 ### Purrr
 
-* <a href="https://speakerdeck.com/colinfay/vous-allez-aimer-avoir-purrr-7eme-rencontres-r-rennes" target="_blank">Vous allez aimer avoir {purrr} </a>
+
+* <a href="https://stackoverflow.com/questions/45101045/why-use-purrrmap-instead-of-lapply/47123420" target="_blank">`r icon::fa("stack-overflow", size = 1)` Why use purrr::map instead of lapply? (H. Wickham)</a>
+
+
 
 ### Tibble
 
-* <a href="https://www.rstudio.com/resources/videos/using-list-cols-in-your-dataframe/" target="_blank">Putting square pegs in round holes: Using list-cols in your dataframe</a>
+* <a href="https://www.rstudio.com/resources/videos/using-list-cols-in-your-dataframe/" target="_blank">`r icon::fa("play-circle", size = 1)` Putting square pegs in round holes: Using list-cols in your dataframe (J. Bryan)</a>
+
 
 ### Tidymodels
 
-* <a href="https://static1.squarespace.com/static/51156277e4b0b8b2ffe11c00/t/5b75871e21c67c985a06f481/1534428959053/RPharma_18_Kuhn.pdf" target="_blank">Modeling in the Tidyverse</a>
+* <a href="https://static1.squarespace.com/static/51156277e4b0b8b2ffe11c00/t/5b75871e21c67c985a06f481/1534428959053/RPharma_18_Kuhn.pdf" target="_blank">`r icon::fa("clone", size = 1)` Modeling in the Tidyverse (M. Kuhn)</a>
 
 
 ---
