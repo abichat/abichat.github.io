@@ -21,11 +21,13 @@ knitr::opts_chunk$set(echo = TRUE, fig.align = "center", fig.width = 8,
                       fig.retina = 2, comment = " ")
 ```
 
-<br><br><br>
+<br>
 
 # Modeling in the Tidyverse
+<div style = "margin-top: -40px"></div>
+## and applications to metagenomics data
 
-<br><br><br><br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br><br>
 
 ### Antoine Bichat
 <div style = "margin-top: -30px"></div>
@@ -54,6 +56,7 @@ library(tidyverse)
 
 ```{r theme}
 theme_set(theme_minimal())
+options("tibble.max_extra_cols" = 5)
 ```
 
 
@@ -1156,11 +1159,11 @@ bootstrap_pins %>%
 
 * `loo_cv()`
 
+* `mc_cv()`
+
 * `vfold_cv()`
 
 * `group_vfold_cv()`
-
-* `make_strata()`
 
 * `rolling_origin()`
 
@@ -1171,6 +1174,587 @@ bootstrap_pins %>%
 <br>
 
 Since the original data is not modified, `r icon::fa("r-project", size = 1)` does not make an automatic copy so creating $N$ bootstraps of a data set does not create an object that is $N$-fold larger in memory.
+
+
+---
+class: center, middle, inverse
+
+# Your turn!
+## Application to human microbiome
+
+---
+class: nologo
+## Data
+
+
+```{r message=FALSE}
+df_abund <- read_csv("abund_table.txt")
+df_abund
+df_abund$Clade[1:2]
+```
+
+
+---
+## Data
+
+```{r message=FALSE}
+df_samples <- read_csv("samples_table.txt")
+df_samples
+```
+
+
+---
+## Create a taxonomic table
+
+Like this:
+
+```{r echo=FALSE}
+df_abund %>% 
+  select(Clade) %>% 
+  separate(Clade, into = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus"), sep = "\\|") %>% 
+  mutate_all(str_remove, ".__") %>% 
+  arrange_all()
+```
+
+--
+
+<br>
+
+Hint: use `tidyr::separate()` and `stringr`
+
+---
+count: false
+## Create a taxonomic table
+
+```{r}
+df_tax <-
+  df_abund %>% 
+  select(Clade) %>% 
+  separate(Clade, sep = "\\|",
+           into = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus")) %>% 
+  mutate_all(str_remove, ".__") %>% 
+  arrange_all()
+df_tax
+```
+
+
+---
+## Put `df_abund` in a tidy way
+
+Like this:
+
+```{r echo=FALSE}
+df_abund %>% 
+  mutate(Genus = str_remove(Clade,  ".*__")) %>% 
+  select(-Clade) %>% 
+  gather(key = "Sample", value = "Abundance", -Genus)
+```
+
+--
+
+<br>
+
+Hint: use a regular expression and `tidyr::gather()`
+
+---
+count: false
+## Put `df_abund` in a tidy way
+
+
+```{r}
+df_abund_long <-
+  df_abund %>% 
+  mutate(Genus = str_remove(Clade,  ".*__")) %>% 
+  select(-Clade) %>% 
+  gather(key = "Sample", value = "Abundance", -Genus)
+df_abund_long
+```
+
+---
+## Remove genera present in less than 25 samples
+
+--
+
+```{r}
+df_abund_filtered <-
+  df_abund_long %>% 
+  group_by(Genus) %>% 
+  mutate(Preval = sum(Abundance > 0)) %>% 
+  filter(Preval > 25) %>% 
+  select(-Preval) %>% 
+  ungroup()
+df_abund_filtered
+```
+
+
+---
+## Find differentially abundant genera 
+
+<br>
+
+* Between subsites `buccal_mucosa` and `bupragingival_plaque` 
+
+<br>
+
+* With a Wilcowon-text: `wilcox.test()`
+
+<br>
+
+* Corrected for false discovery rate: `p.adjust(method = "FDR")`
+
+---
+## Find differentially abundant genera
+
+```{r}
+df_abund_filtered %>% 
+  left_join(df_samples, by = "Sample") %>%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %>%
+  select(Genus, Body_subsite, Abundance)
+```
+
+---
+count: false
+## Find differentially abundant genera
+
+```{r}
+df_abund_filtered %>% 
+  left_join(df_samples, by = "Sample") %>%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %>%
+  select(Genus, Body_subsite, Abundance) %>% 
+  group_by(Genus) %>% 
+  nest()
+```
+
+---
+count: false
+## Find differentially abundant genera
+
+```{r}
+df_abund_filtered %>% 
+  left_join(df_samples, by = "Sample") %>%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %>%
+  select(Genus, Body_subsite, Abundance) %>% 
+  group_by(Genus) %>% 
+  nest() %>% 
+  mutate(wt = map(data, ~ wilcox.test(formula = Abundance ~ Body_subsite, 
+                                      data = .)))
+```
+
+---
+count: false
+## Find differentially abundant genera
+
+```{r}
+df_abund_filtered %>% 
+  left_join(df_samples, by = "Sample") %>%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %>%
+  select(Genus, Body_subsite, Abundance) %>% 
+  group_by(Genus) %>% 
+  nest() %>% 
+  mutate(wt = map(data, ~ wilcox.test(formula = Abundance ~ Body_subsite, 
+                                      data = .)),
+         tidied = map(wt, tidy))
+```
+
+---
+count: false
+class: nologo
+## Find differentially abundant genera
+
+```{r}
+df_abund_filtered %>% 
+  left_join(df_samples, by = "Sample") %>%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %>%
+  select(Genus, Body_subsite, Abundance) %>% 
+  group_by(Genus) %>% 
+  nest() %>% 
+  mutate(wt = map(data, ~ wilcox.test(formula = Abundance ~ Body_subsite, 
+                                      data = .)),
+         tidied = map(wt, tidy)) %>% 
+  unnest(tidied, .drop = TRUE)
+```
+
+---
+count: false
+class: nologo
+## Find differentially abundant genera
+
+```{r}
+df_abund_filtered %>% 
+  left_join(df_samples, by = "Sample") %>%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %>%
+  select(Genus, Body_subsite, Abundance) %>% 
+  group_by(Genus) %>% 
+  nest() %>% 
+  mutate(wt = map(data, ~ wilcox.test(formula = Abundance ~ Body_subsite, 
+                                      data = .)),
+         tidied = map(wt, tidy)) %>% 
+  unnest(tidied, .drop = TRUE) %>% 
+  mutate(q.value = p.adjust(p.value, method = "fdr")) %>% 
+  select(Genus, p.value, q.value) %>% 
+  filter(q.value < 0.05) %>% 
+  arrange(q.value)
+```
+
+---
+## Make a PCA with samples as observations
+
+```{r message=FALSE}
+df_abund_transp <-
+  df_abund_filtered %>%   
+  spread(key = Genus, value = Abundance) 
+```
+
+--
+
+<br>
+
+* Don't forget to remove the `Sample` column
+
+<br>
+
+* Use `prcomp()` for PCA (there is no `broom` methods for `FactoMineR` functions yet)
+
+<br>
+
+* Keep only the four first principal components
+
+---
+## Make a PCA with samples as observations
+
+```{r message=FALSE}
+df_abund_transp %>% 
+  select(-Sample) %>% 
+  prcomp() %>% 
+  augment(df_abund_transp) %>% 
+  select(Sample, .fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4)
+```
+
+---
+count: false
+## Make a PCA with samples as observations
+
+
+```{r message=FALSE}
+df_abund_transp %>% 
+  select(-Sample) %>% 
+  prcomp() %>% 
+  augment(df_abund_transp) %>% 
+  select(Sample, .fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4) %>% 
+  left_join(df_samples, by = "Sample") -> df_PCA
+df_PCA
+```
+
+---
+## Make a PCA with samples as observations
+
+
+```{r, fig.height=6}
+ggplot(df_PCA) +
+  aes(x = .fittedPC1, y = .fittedPC2, color = Body_site) +
+  geom_point()
+```
+
+---
+count: false
+## Make a PCA with samples as observations
+
+
+```{r, fig.height=6}
+ggplot(df_PCA) +
+  aes(x = .fittedPC1, y = .fittedPC2, color = Body_subsite) +
+  geom_point()
+```
+
+---
+## Compute k-means for several K
+
+```{r}
+tibble(K = 1:10)
+```
+
+---
+count: false
+## Compute k-means for several K
+
+```{r}
+tibble(K = 1:10) %>% 
+  mutate(kmeans = map(K, kmeans, nstart = 10,
+                      x = select(df_abund_transp, -Sample)))
+```
+
+---
+count: false
+## Compute k-means for several K
+
+```{r}
+tibble(K = 1:10) %>% 
+    mutate(kmeans = map(K, kmeans, nstart = 10,
+                      x = select(df_abund_transp, -Sample)), 
+         tidied = map(kmeans, tidy),
+         glanced = map(kmeans, glance),
+         augmented = map(kmeans, augment, df_PCA))
+```
+
+---
+count: false
+## Compute k-means for several K
+
+```{r}
+tibble(K = 1:10) %>% 
+    mutate(kmeans = map(K, kmeans, nstart = 10,
+                      x = select(df_abund_transp, -Sample)), 
+         tidied = map(kmeans, tidy),
+         glanced = map(kmeans, glance),
+         augmented = map(kmeans, augment, df_PCA)) %>% 
+  unnest(glanced)  -> df_kmeans
+df_kmeans
+```
+
+
+---
+## Compute k-means for several K
+
+```{r fig.height=5.5}
+ggplot(df_kmeans) +
+  aes(x = K, y = betweenss) +
+  geom_line(color = "grey30") +
+  geom_point(color = "tomato")
+```
+
+---
+## Plots of k-means on the principal plane
+
+
+```{r}
+df_kmeans %>% 
+  filter(K %in% 2:4)
+```
+
+
+---
+count: false
+## Plots of k-means on the principal plane
+
+```{r warning=FALSE}
+df_kmeans %>% 
+  filter(K %in% 2:4) %>% 
+  select(K, augmented) %>% 
+  unnest(augmented) -> df_clust
+df_clust
+```
+
+---
+## Plots of k-means on the principal plane
+
+```{r fig.height=5.7, fig.width=10}
+ggplot(df_clust) +
+  geom_point(aes(x = .fittedPC1, y = .fittedPC2, color = .cluster, shape = Body_site)) +
+  facet_grid(. ~ K) +
+  theme(legend.position = "bottom")
+```
+
+
+---
+## Contingency tables of the clusterings
+
+Using the `janitor::tabyl()` function, create a contingency table by K
+
+--
+
+```{r}
+df_clust %>% 
+  nest(-K)
+```
+
+---
+count: false
+## Contingency tables of the clusterings
+
+Using the `janitor::tabyl()` function, create a contingency table by K
+
+```{r}
+df_clust %>% 
+  nest(-K) %>% 
+  mutate(CT = map(data, janitor::tabyl, Body_site, .cluster))
+```
+
+---
+count: false
+## Contingency tables of the clusterings
+
+Using the `janitor::tabyl()` function, create a contingency table by K
+
+```{r}
+df_clust %>% 
+  nest(-K) %>% 
+  mutate(CT = map(data, janitor::tabyl, .cluster, Body_site)) %>% 
+  pull(CT)
+```
+
+
+
+
+---
+## Agregate the abundance at phylum level
+
+
+Like this:
+
+```{r echo=FALSE}
+df_abund %>% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %>% 
+  rename(Genus = Clade) %>% 
+  left_join(df_tax, ., by = "Genus") %>% 
+  select(-c(Kingdom, Class, Order, Family, Genus)) %>% 
+  group_by(Phylum) %>% 
+  summarise_all(sum)
+```
+
+
+---
+count: false
+## Agregate the abundance at phylum level
+
+```{r}
+df_abund %>% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %>% 
+  rename(Genus = Clade)
+```
+
+---
+count: false
+## Agregate the abundance at phylum level
+
+```{r}
+df_abund %>% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %>% 
+  rename(Genus = Clade)%>% 
+  left_join(df_tax, ., by = "Genus")
+```
+
+---
+count: false
+## Agregate the abundance at phylum level
+
+```{r}
+df_abund %>% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %>% 
+  rename(Genus = Clade)%>% 
+  left_join(df_tax, ., by = "Genus") %>% 
+  select(-c(Kingdom, Class, Order, Family, Genus))
+```
+
+---
+count: false
+## Agregate the abundance at phylum level
+
+```{r }
+df_abund %>% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %>% 
+  rename(Genus = Clade)%>% 
+  left_join(df_tax, ., by = "Genus") %>% 
+  select(-c(Kingdom, Class, Order, Family, Genus)) %>% 
+  group_by(Phylum) %>% 
+  summarise_all(sum) -> df_phylum
+df_phylum
+```
+
+---
+## Transpose the dataset and choose stool samples
+
+--
+
+```{r}
+df_phylum_transp_stool <-
+  df_phylum %>% 
+  gather(key = "Sample", value = "Abundance", -Phylum) %>% 
+  spread(key = "Phylum", value = "Abundance") %>% 
+  left_join(df_samples, by = "Sample") %>% 
+  filter(Body_site == "stool")
+df_phylum_transp_stool
+```
+
+---
+## Correlation between Firmicutes and Bacteroidetes
+
+```{r fig.height=5.5}
+ggplot(df_phylum_transp_stool) +
+  aes(x = Firmicutes, y = Bacteroidetes) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm")
+```
+
+
+---
+## Correlation between Firmicutes and Bacteroidetes
+
+* Create 500 bootstrapped datasets to find the distribution of the correlation
+
+* Plot it
+
+
+---
+## Correlation between Firmicutes and Bacteroidetes
+
+
+```{r}
+df_phylum_transp_stool %>% 
+  select(Firmicutes, Bacteroidetes) %>% 
+  bootstraps(times = 500) 
+```
+
+---
+count: false
+## Correlation between Firmicutes and Bacteroidetes
+
+
+```{r}
+df_phylum_transp_stool %>% 
+  select(Firmicutes, Bacteroidetes) %>% 
+  bootstraps(times = 500) %>%
+  mutate(splits = map(splits, as_tibble), 
+         Firmicutes = map(splits, pull, Firmicutes),
+         Bacteroidetes = map(splits, pull, Bacteroidetes))
+```
+
+
+---
+count: false
+class= nologo
+## Correlation between Firmicutes and Bacteroidetes
+
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+
+```{r}
+df_phylum_transp_stool %>% 
+  select(Firmicutes, Bacteroidetes) %>% 
+  bootstraps(times = 500) %>%
+  mutate(splits = map(splits, as_tibble), 
+         Firmicutes = map(splits, pull, Firmicutes),
+         Bacteroidetes = map(splits, pull, Bacteroidetes),
+         Cor = map2_dbl(Firmicutes, Bacteroidetes, cor)) -> df_cor
+df_cor
+```
+
+
+---
+## Correlation between Firmicutes and Bacteroidetes
+
+
+```{r fig.height=5}
+ggplot(df_cor) +
+  geom_density(aes(x = Cor), fill = "grey") +
+  geom_vline(xintercept = 0, color = "grey") +
+  geom_vline(xintercept = cor(df_phylum_transp_stool$Firmicutes, 
+                              df_phylum_transp_stool$Bacteroidetes), 
+             color = "tomato") 
+```
+
 
 ---
 class: center, middle, inverse

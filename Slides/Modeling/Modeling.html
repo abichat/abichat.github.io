@@ -16,11 +16,13 @@ count: false
 
 
 
-&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;br&gt;
 
 # Modeling in the Tidyverse
+&lt;div style = "margin-top: -40px"&gt;&lt;/div&gt;
+## and applications to metagenomics data
 
-&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
+&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;&lt;br&gt;
 
 ### Antoine Bichat
 &lt;div style = "margin-top: -30px"&gt;&lt;/div&gt;
@@ -43,7 +45,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Attaching packages ───────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+  ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -54,7 +56,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Conflicts ──────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+  ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
   ✖ dplyr::filter() masks stats::filter()
   ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -68,6 +70,7 @@ library(tidyverse)
 
 ```r
 theme_set(theme_minimal())
+options("tibble.max_extra_cols" = 5)
 ```
 
 
@@ -1436,7 +1439,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Attaching packages ──────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
+  ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
 ```
 
 ```
@@ -1446,7 +1449,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Conflicts ─────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
+  ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
   ✖ rsample::fill()    masks tidyr::fill()
   ✖ dplyr::filter()    masks stats::filter()
   ✖ recipes::fixed()   masks stringr::fixed()
@@ -2026,11 +2029,11 @@ bootstrap_pins %&gt;%
 
 * `loo_cv()`
 
+* `mc_cv()`
+
 * `vfold_cv()`
 
 * `group_vfold_cv()`
-
-* `make_strata()`
 
 * `rolling_origin()`
 
@@ -2041,6 +2044,1183 @@ bootstrap_pins %&gt;%
 &lt;br&gt;
 
 Since the original data is not modified, <i class="fab  fa-r-project "></i> does not make an automatic copy so creating `\(N\)` bootstraps of a data set does not create an object that is `\(N\)`-fold larger in memory.
+
+
+---
+class: center, middle, inverse
+
+# Your turn!
+## Application to human microbiome
+
+---
+class: nologo
+## Data
+
+
+
+```r
+df_abund &lt;- read_csv("abund_table.txt")
+df_abund
+```
+
+```
+  # A tibble: 256 x 654
+     Clade SRS011086 SRS011090 SRS011098 SRS011111 SRS011115 SRS011126
+     &lt;chr&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+   1 k__B…         0         0         0         0         0         0
+   2 k__B…         0         0         0         0         0         0
+   3 k__B…         0         0         0         0         0         0
+   4 k__B…         0         0         0         0         0         0
+   5 k__B…         0         0         0         0         0         0
+   6 k__B…         0         0         0         0         0         0
+   7 k__B…         0      5366         0         0      1182         0
+   8 k__B…         0         0         0         0         0         0
+   9 k__B…         0         0         0         0         0         0
+  10 k__B…         0         0         0         0         0         0
+  # ... with 246 more rows, and 647 more variables: SRS011140 &lt;int&gt;,
+  #   SRS011144 &lt;int&gt;, SRS011152 &lt;int&gt;, SRS011243 &lt;int&gt;, SRS011247 &lt;int&gt;, …
+```
+
+```r
+df_abund$Clade[1:2]
+```
+
+```
+  [1] "k__Bacteria|p__Bacteroidetes|c__Bacteroidia|o__Bacteroidales|f__Bacteroidaceae|g__Bacteroides"        
+  [2] "k__Bacteria|p__Bacteroidetes|c__Bacteroidia|o__Bacteroidales|f__Porphyromonadaceae|g__Parabacteroides"
+```
+
+
+---
+## Data
+
+
+```r
+df_samples &lt;- read_csv("samples_table.txt")
+df_samples
+```
+
+```
+  # A tibble: 653 x 6
+     Sample    Body_site  Body_subsite           Age Age_category Gender
+     &lt;chr&gt;     &lt;chr&gt;      &lt;chr&gt;                &lt;int&gt; &lt;chr&gt;        &lt;chr&gt; 
+   1 SRS011086 oralcavity tongue_dorsum           30 adult        female
+   2 SRS011090 oralcavity buccal_mucosa           30 adult        female
+   3 SRS011098 oralcavity supragingival_plaque    30 adult        female
+   4 SRS011111 oralcavity posterior_fornix        30 adult        female
+   5 SRS011115 oralcavity tongue_dorsum           28 adult        male  
+   6 SRS011126 oralcavity supragingival_plaque    28 adult        male  
+   7 SRS011140 oralcavity tongue_dorsum           25 adult        male  
+   8 SRS011144 oralcavity buccal_mucosa           25 adult        male  
+   9 SRS011152 oralcavity supragingival_plaque    25 adult        male  
+  10 SRS011243 oralcavity tongue_dorsum           27 adult        female
+  # ... with 643 more rows
+```
+
+
+---
+## Create a taxonomic table
+
+Like this:
+
+
+```
+  # A tibble: 256 x 6
+     Kingdom  Phylum     Class       Order       Family      Genus          
+     &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;          
+   1 Archaea  Euryarcha… Methanobac… Methanobac… Methanobac… Methanobreviba…
+   2 Archaea  Euryarcha… Methanobac… Methanobac… Methanobac… Methanosphaera 
+   3 Bacteria Acidobact… Acidobacte… Acidobacte… Acidobacte… Candidatus_Chl…
+   4 Bacteria Acidobact… Acidobacte… Acidobacte… Acidobacte… Granulicella   
+   5 Bacteria Acidobact… Acidobacte… Acidobacte… Acidobacte… Terriglobus    
+   6 Bacteria Actinobac… Actinobact… Actinomyce… Actinomyce… Actinobaculum  
+   7 Bacteria Actinobac… Actinobact… Actinomyce… Actinomyce… Actinomyces    
+   8 Bacteria Actinobac… Actinobact… Actinomyce… Actinomyce… Mobiluncus     
+   9 Bacteria Actinobac… Actinobact… Actinomyce… Actinomyce… Varibaculum    
+  10 Bacteria Actinobac… Actinobact… Actinomyce… Brevibacte… Brevibacterium 
+  # ... with 246 more rows
+```
+
+--
+
+&lt;br&gt;
+
+Hint: use `tidyr::separate()` and `stringr`
+
+---
+count: false
+## Create a taxonomic table
+
+
+```r
+df_tax &lt;-
+  df_abund %&gt;% 
+  select(Clade) %&gt;% 
+  separate(Clade, sep = "\\|",
+           into = c("Kingdom", "Phylum", "Class", "Order", "Family", "Genus")) %&gt;% 
+  mutate_all(str_remove, ".__") %&gt;% 
+  arrange_all()
+df_tax
+```
+
+```
+  # A tibble: 256 x 6
+     Kingdom  Phylum     Class       Order       Family      Genus          
+     &lt;chr&gt;    &lt;chr&gt;      &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;       &lt;chr&gt;          
+   1 Archaea  Euryarcha… Methanobac… Methanobac… Methanobac… Methanobreviba…
+   2 Archaea  Euryarcha… Methanobac… Methanobac… Methanobac… Methanosphaera 
+   3 Bacteria Acidobact… Acidobacte… Acidobacte… Acidobacte… Candidatus_Chl…
+   4 Bacteria Acidobact… Acidobacte… Acidobacte… Acidobacte… Granulicella   
+   5 Bacteria Acidobact… Acidobacte… Acidobacte… Acidobacte… Terriglobus    
+   6 Bacteria Actinobac… Actinobact… Actinomyce… Actinomyce… Actinobaculum  
+   7 Bacteria Actinobac… Actinobact… Actinomyce… Actinomyce… Actinomyces    
+   8 Bacteria Actinobac… Actinobact… Actinomyce… Actinomyce… Mobiluncus     
+   9 Bacteria Actinobac… Actinobact… Actinomyce… Actinomyce… Varibaculum    
+  10 Bacteria Actinobac… Actinobact… Actinomyce… Brevibacte… Brevibacterium 
+  # ... with 246 more rows
+```
+
+
+---
+## Put `df_abund` in a tidy way
+
+Like this:
+
+
+```
+  # A tibble: 167,168 x 3
+     Genus                  Sample    Abundance
+     &lt;chr&gt;                  &lt;chr&gt;         &lt;dbl&gt;
+   1 Bacteroides            SRS011086         0
+   2 Parabacteroides        SRS011086         0
+   3 Alistipes              SRS011086         0
+   4 Burkholderiales_noname SRS011086         0
+   5 Faecalibacterium       SRS011086         0
+   6 Roseburia              SRS011086         0
+   7 Subdoligranulum        SRS011086         0
+   8 Bacteroidales_noname   SRS011086         0
+   9 Parasutterella         SRS011086         0
+  10 Oscillibacter          SRS011086         0
+  # ... with 167,158 more rows
+```
+
+--
+
+&lt;br&gt;
+
+Hint: use a regular expression and `tidyr::gather()`
+
+---
+count: false
+## Put `df_abund` in a tidy way
+
+
+
+```r
+df_abund_long &lt;-
+  df_abund %&gt;% 
+  mutate(Genus = str_remove(Clade,  ".*__")) %&gt;% 
+  select(-Clade) %&gt;% 
+  gather(key = "Sample", value = "Abundance", -Genus)
+df_abund_long
+```
+
+```
+  # A tibble: 167,168 x 3
+     Genus                  Sample    Abundance
+     &lt;chr&gt;                  &lt;chr&gt;         &lt;dbl&gt;
+   1 Bacteroides            SRS011086         0
+   2 Parabacteroides        SRS011086         0
+   3 Alistipes              SRS011086         0
+   4 Burkholderiales_noname SRS011086         0
+   5 Faecalibacterium       SRS011086         0
+   6 Roseburia              SRS011086         0
+   7 Subdoligranulum        SRS011086         0
+   8 Bacteroidales_noname   SRS011086         0
+   9 Parasutterella         SRS011086         0
+  10 Oscillibacter          SRS011086         0
+  # ... with 167,158 more rows
+```
+
+---
+## Remove genera present in less than 25 samples
+
+--
+
+
+```r
+df_abund_filtered &lt;-
+  df_abund_long %&gt;% 
+  group_by(Genus) %&gt;% 
+  mutate(Preval = sum(Abundance &gt; 0)) %&gt;% 
+  filter(Preval &gt; 25) %&gt;% 
+  select(-Preval) %&gt;% 
+  ungroup()
+df_abund_filtered
+```
+
+```
+  # A tibble: 85,543 x 3
+     Genus                  Sample    Abundance
+     &lt;chr&gt;                  &lt;chr&gt;         &lt;dbl&gt;
+   1 Bacteroides            SRS011086         0
+   2 Parabacteroides        SRS011086         0
+   3 Alistipes              SRS011086         0
+   4 Burkholderiales_noname SRS011086         0
+   5 Faecalibacterium       SRS011086         0
+   6 Roseburia              SRS011086         0
+   7 Subdoligranulum        SRS011086         0
+   8 Bacteroidales_noname   SRS011086         0
+   9 Parasutterella         SRS011086         0
+  10 Oscillibacter          SRS011086         0
+  # ... with 85,533 more rows
+```
+
+
+---
+## Find differentially abundant genera 
+
+&lt;br&gt;
+
+* Between subsites `buccal_mucosa` and `bupragingival_plaque` 
+
+&lt;br&gt;
+
+* With a Wilcowon-text: `wilcox.test()`
+
+&lt;br&gt;
+
+* Corrected for false discovery rate: `p.adjust(method = "FDR")`
+
+---
+## Find differentially abundant genera
+
+
+```r
+df_abund_filtered %&gt;% 
+  left_join(df_samples, by = "Sample") %&gt;%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %&gt;%
+  select(Genus, Body_subsite, Abundance)
+```
+
+```
+  # A tibble: 32,357 x 3
+     Genus                  Body_subsite  Abundance
+     &lt;chr&gt;                  &lt;chr&gt;             &lt;dbl&gt;
+   1 Bacteroides            buccal_mucosa         0
+   2 Parabacteroides        buccal_mucosa         0
+   3 Alistipes              buccal_mucosa         0
+   4 Burkholderiales_noname buccal_mucosa         0
+   5 Faecalibacterium       buccal_mucosa         0
+   6 Roseburia              buccal_mucosa         0
+   7 Subdoligranulum        buccal_mucosa      5366
+   8 Bacteroidales_noname   buccal_mucosa         0
+   9 Parasutterella         buccal_mucosa         0
+  10 Oscillibacter          buccal_mucosa         0
+  # ... with 32,347 more rows
+```
+
+---
+count: false
+## Find differentially abundant genera
+
+
+```r
+df_abund_filtered %&gt;% 
+  left_join(df_samples, by = "Sample") %&gt;%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %&gt;%
+  select(Genus, Body_subsite, Abundance) %&gt;% 
+  group_by(Genus) %&gt;% 
+  nest()
+```
+
+```
+  # A tibble: 131 x 2
+     Genus                  data              
+     &lt;chr&gt;                  &lt;list&gt;            
+   1 Bacteroides            &lt;tibble [247 × 2]&gt;
+   2 Parabacteroides        &lt;tibble [247 × 2]&gt;
+   3 Alistipes              &lt;tibble [247 × 2]&gt;
+   4 Burkholderiales_noname &lt;tibble [247 × 2]&gt;
+   5 Faecalibacterium       &lt;tibble [247 × 2]&gt;
+   6 Roseburia              &lt;tibble [247 × 2]&gt;
+   7 Subdoligranulum        &lt;tibble [247 × 2]&gt;
+   8 Bacteroidales_noname   &lt;tibble [247 × 2]&gt;
+   9 Parasutterella         &lt;tibble [247 × 2]&gt;
+  10 Oscillibacter          &lt;tibble [247 × 2]&gt;
+  # ... with 121 more rows
+```
+
+---
+count: false
+## Find differentially abundant genera
+
+
+```r
+df_abund_filtered %&gt;% 
+  left_join(df_samples, by = "Sample") %&gt;%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %&gt;%
+  select(Genus, Body_subsite, Abundance) %&gt;% 
+  group_by(Genus) %&gt;% 
+  nest() %&gt;% 
+  mutate(wt = map(data, ~ wilcox.test(formula = Abundance ~ Body_subsite, 
+                                      data = .)))
+```
+
+```
+  # A tibble: 131 x 3
+     Genus                  data               wt         
+     &lt;chr&gt;                  &lt;list&gt;             &lt;list&gt;     
+   1 Bacteroides            &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+   2 Parabacteroides        &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+   3 Alistipes              &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+   4 Burkholderiales_noname &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+   5 Faecalibacterium       &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+   6 Roseburia              &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+   7 Subdoligranulum        &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+   8 Bacteroidales_noname   &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+   9 Parasutterella         &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+  10 Oscillibacter          &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt;
+  # ... with 121 more rows
+```
+
+---
+count: false
+## Find differentially abundant genera
+
+
+```r
+df_abund_filtered %&gt;% 
+  left_join(df_samples, by = "Sample") %&gt;%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %&gt;%
+  select(Genus, Body_subsite, Abundance) %&gt;% 
+  group_by(Genus) %&gt;% 
+  nest() %&gt;% 
+  mutate(wt = map(data, ~ wilcox.test(formula = Abundance ~ Body_subsite, 
+                                      data = .)),
+         tidied = map(wt, tidy))
+```
+
+```
+  # A tibble: 131 x 4
+     Genus                  data               wt          tidied          
+     &lt;chr&gt;                  &lt;list&gt;             &lt;list&gt;      &lt;list&gt;          
+   1 Bacteroides            &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+   2 Parabacteroides        &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+   3 Alistipes              &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+   4 Burkholderiales_noname &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+   5 Faecalibacterium       &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+   6 Roseburia              &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+   7 Subdoligranulum        &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+   8 Bacteroidales_noname   &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+   9 Parasutterella         &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+  10 Oscillibacter          &lt;tibble [247 × 2]&gt; &lt;S3: htest&gt; &lt;tibble [1 × 4]&gt;
+  # ... with 121 more rows
+```
+
+---
+count: false
+class: nologo
+## Find differentially abundant genera
+
+
+```r
+df_abund_filtered %&gt;% 
+  left_join(df_samples, by = "Sample") %&gt;%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %&gt;%
+  select(Genus, Body_subsite, Abundance) %&gt;% 
+  group_by(Genus) %&gt;% 
+  nest() %&gt;% 
+  mutate(wt = map(data, ~ wilcox.test(formula = Abundance ~ Body_subsite, 
+                                      data = .)),
+         tidied = map(wt, tidy)) %&gt;% 
+  unnest(tidied, .drop = TRUE)
+```
+
+```
+  # A tibble: 131 x 5
+     Genus          statistic p.value method                     alternative
+     &lt;chr&gt;              &lt;dbl&gt;   &lt;dbl&gt; &lt;chr&gt;                      &lt;chr&gt;      
+   1 Bacteroides        8248   0.142  Wilcoxon rank sum test wi… two.sided  
+   2 Parabacteroid…     7722.  0.651  Wilcoxon rank sum test wi… two.sided  
+   3 Alistipes          8073   0.127  Wilcoxon rank sum test wi… two.sided  
+   4 Burkholderial…     7621   0.959  Wilcoxon rank sum test wi… two.sided  
+   5 Faecalibacter…     7645   0.882  Wilcoxon rank sum test wi… two.sided  
+   6 Roseburia          7754   0.358  Wilcoxon rank sum test wi… two.sided  
+   7 Subdoligranul…     7824   0.579  Wilcoxon rank sum test wi… two.sided  
+   8 Bacteroidales…     7808   0.0720 Wilcoxon rank sum test wi… two.sided  
+   9 Parasutterella     7621   0.959  Wilcoxon rank sum test wi… two.sided  
+  10 Oscillibacter      7684.  0.529  Wilcoxon rank sum test wi… two.sided  
+  # ... with 121 more rows
+```
+
+---
+count: false
+class: nologo
+## Find differentially abundant genera
+
+
+```r
+df_abund_filtered %&gt;% 
+  left_join(df_samples, by = "Sample") %&gt;%
+  filter(Body_subsite %in% c("buccal_mucosa", "supragingival_plaque")) %&gt;%
+  select(Genus, Body_subsite, Abundance) %&gt;% 
+  group_by(Genus) %&gt;% 
+  nest() %&gt;% 
+  mutate(wt = map(data, ~ wilcox.test(formula = Abundance ~ Body_subsite, 
+                                      data = .)),
+         tidied = map(wt, tidy)) %&gt;% 
+  unnest(tidied, .drop = TRUE) %&gt;% 
+  mutate(q.value = p.adjust(p.value, method = "fdr")) %&gt;% 
+  select(Genus, p.value, q.value) %&gt;% 
+  filter(q.value &lt; 0.05) %&gt;% 
+  arrange(q.value)
+```
+
+```
+  # A tibble: 55 x 3
+     Genus                         p.value  q.value
+     &lt;chr&gt;                           &lt;dbl&gt;    &lt;dbl&gt;
+   1 Corynebacterium              4.99e-37 2.87e-35
+   2 Cardiobacterium              2.74e-37 2.87e-35
+   3 Actinomyces                  1.27e-36 4.85e-35
+   4 Capnocytophaga               3.38e-36 9.72e-35
+   5 Kingella                     8.21e-36 1.89e-34
+   6 Eikenella                    2.78e-35 5.33e-34
+   7 Actinobaculum                1.75e-33 2.87e-32
+   8 Propionibacterium            2.14e-33 3.08e-32
+   9 Peptostreptococcaceae_noname 2.88e-31 3.68e-30
+  10 Campylobacter                8.68e-31 9.98e-30
+  # ... with 45 more rows
+```
+
+---
+## Make a PCA with samples as observations
+
+
+```r
+df_abund_transp &lt;-
+  df_abund_filtered %&gt;%   
+  spread(key = Genus, value = Abundance) 
+```
+
+--
+
+&lt;br&gt;
+
+* Don't forget to remove the `Sample` column
+
+&lt;br&gt;
+
+* Use `prcomp()` for PCA (there is no `broom` methods for `FactoMineR` functions yet)
+
+&lt;br&gt;
+
+* Keep only the four first principal components
+
+---
+## Make a PCA with samples as observations
+
+
+```r
+df_abund_transp %&gt;% 
+  select(-Sample) %&gt;% 
+  prcomp() %&gt;% 
+  augment(df_abund_transp) %&gt;% 
+  select(Sample, .fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4)
+```
+
+```
+  # A tibble: 653 x 5
+     Sample     .fittedPC1 .fittedPC2 .fittedPC3 .fittedPC4
+     &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+   1 SRS011061  -34992102.   3143110.   2101294.  -4648594.
+   2 SRS011084 -122097647. -10209495.  -2650908.  -8273403.
+   3 SRS011086   15578387. -16376313.  -5174529.  14606530.
+   4 SRS011090   10347055.   9231812.   1882414.   -733350.
+   5 SRS011098   12670289.   4001474.  -5447203.   9894241.
+   6 SRS011111   10501118.  10146423.   6037539.  -1486339.
+   7 SRS011115   18169282. -27537025. -17281307.  -3673846.
+   8 SRS011126   13687695.   1687184.  -8855225.   9042300.
+   9 SRS011134  -22954271.  -1036333.  12207056.  -9608300.
+  10 SRS011140   15217167. -13528729. -10929731.    783376.
+  # ... with 643 more rows
+```
+
+---
+count: false
+## Make a PCA with samples as observations
+
+
+
+```r
+df_abund_transp %&gt;% 
+  select(-Sample) %&gt;% 
+  prcomp() %&gt;% 
+  augment(df_abund_transp) %&gt;% 
+  select(Sample, .fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4) %&gt;% 
+  left_join(df_samples, by = "Sample") -&gt; df_PCA
+df_PCA
+```
+
+```
+  # A tibble: 653 x 10
+     Sample .fittedPC1 .fittedPC2 .fittedPC3 .fittedPC4 Body_site
+     &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;    
+   1 SRS01…    -3.50e7   3143110.   2101294.  -4648594. stool    
+   2 SRS01…    -1.22e8 -10209495.  -2650908.  -8273403. stool    
+   3 SRS01…     1.56e7 -16376313.  -5174529.  14606530. oralcavi…
+   4 SRS01…     1.03e7   9231812.   1882414.   -733350. oralcavi…
+   5 SRS01…     1.27e7   4001474.  -5447203.   9894241. oralcavi…
+   6 SRS01…     1.05e7  10146423.   6037539.  -1486339. oralcavi…
+   7 SRS01…     1.82e7 -27537025. -17281307.  -3673846. oralcavi…
+   8 SRS01…     1.37e7   1687184.  -8855225.   9042300. oralcavi…
+   9 SRS01…    -2.30e7  -1036333.  12207056.  -9608300. stool    
+  10 SRS01…     1.52e7 -13528729. -10929731.    783376. oralcavi…
+  # ... with 643 more rows, and 4 more variables: Body_subsite &lt;chr&gt;,
+  #   Age &lt;int&gt;, Age_category &lt;chr&gt;, Gender &lt;chr&gt;
+```
+
+---
+## Make a PCA with samples as observations
+
+
+
+```r
+ggplot(df_PCA) +
+  aes(x = .fittedPC1, y = .fittedPC2, color = Body_site) +
+  geom_point()
+```
+
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-96-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+count: false
+## Make a PCA with samples as observations
+
+
+
+```r
+ggplot(df_PCA) +
+  aes(x = .fittedPC1, y = .fittedPC2, color = Body_subsite) +
+  geom_point()
+```
+
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-97-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+## Compute k-means for several K
+
+
+```r
+tibble(K = 1:10)
+```
+
+```
+  # A tibble: 10 x 1
+         K
+     &lt;int&gt;
+   1     1
+   2     2
+   3     3
+   4     4
+   5     5
+   6     6
+   7     7
+   8     8
+   9     9
+  10    10
+```
+
+---
+count: false
+## Compute k-means for several K
+
+
+```r
+tibble(K = 1:10) %&gt;% 
+  mutate(kmeans = map(K, kmeans, nstart = 10,
+                      x = select(df_abund_transp, -Sample)))
+```
+
+```
+  # A tibble: 10 x 2
+         K kmeans      
+     &lt;int&gt; &lt;list&gt;      
+   1     1 &lt;S3: kmeans&gt;
+   2     2 &lt;S3: kmeans&gt;
+   3     3 &lt;S3: kmeans&gt;
+   4     4 &lt;S3: kmeans&gt;
+   5     5 &lt;S3: kmeans&gt;
+   6     6 &lt;S3: kmeans&gt;
+   7     7 &lt;S3: kmeans&gt;
+   8     8 &lt;S3: kmeans&gt;
+   9     9 &lt;S3: kmeans&gt;
+  10    10 &lt;S3: kmeans&gt;
+```
+
+---
+count: false
+## Compute k-means for several K
+
+
+```r
+tibble(K = 1:10) %&gt;% 
+    mutate(kmeans = map(K, kmeans, nstart = 10,
+                      x = select(df_abund_transp, -Sample)), 
+         tidied = map(kmeans, tidy),
+         glanced = map(kmeans, glance),
+         augmented = map(kmeans, augment, df_PCA))
+```
+
+```
+  # A tibble: 10 x 5
+         K kmeans       tidied             glanced         augmented        
+     &lt;int&gt; &lt;list&gt;       &lt;list&gt;             &lt;list&gt;          &lt;list&gt;           
+   1     1 &lt;S3: kmeans&gt; &lt;tibble [1 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+   2     2 &lt;S3: kmeans&gt; &lt;tibble [2 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+   3     3 &lt;S3: kmeans&gt; &lt;tibble [3 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+   4     4 &lt;S3: kmeans&gt; &lt;tibble [4 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+   5     5 &lt;S3: kmeans&gt; &lt;tibble [5 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+   6     6 &lt;S3: kmeans&gt; &lt;tibble [6 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+   7     7 &lt;S3: kmeans&gt; &lt;tibble [7 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+   8     8 &lt;S3: kmeans&gt; &lt;tibble [8 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+   9     9 &lt;S3: kmeans&gt; &lt;tibble [9 × 134]&gt; &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+  10    10 &lt;S3: kmeans&gt; &lt;tibble [10 × 134… &lt;tibble [1 × 4… &lt;tibble [653 × 1…
+```
+
+---
+count: false
+## Compute k-means for several K
+
+
+```r
+tibble(K = 1:10) %&gt;% 
+    mutate(kmeans = map(K, kmeans, nstart = 10,
+                      x = select(df_abund_transp, -Sample)), 
+         tidied = map(kmeans, tidy),
+         glanced = map(kmeans, glance),
+         augmented = map(kmeans, augment, df_PCA)) %&gt;% 
+  unnest(glanced)  -&gt; df_kmeans
+df_kmeans
+```
+
+```
+  # A tibble: 10 x 8
+         K kmeans   tidied   augmented    totss tot.withinss betweenss  iter
+     &lt;int&gt; &lt;list&gt;   &lt;list&gt;   &lt;list&gt;       &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;
+   1     1 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      7.55e17  -2.42e 4     1
+   2     2 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      3.79e17   3.76e17     1
+   3     3 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      3.15e17   4.40e17     3
+   4     4 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.73e17   4.82e17     2
+   5     5 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.53e17   5.02e17     3
+   6     6 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.30e17   5.25e17     4
+   7     7 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.12e17   5.44e17     3
+   8     8 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      1.95e17   5.60e17     3
+   9     9 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      1.90e17   5.65e17     3
+  10    10 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      1.64e17   5.91e17     3
+```
+
+
+---
+## Compute k-means for several K
+
+
+```r
+ggplot(df_kmeans) +
+  aes(x = K, y = betweenss) +
+  geom_line(color = "grey30") +
+  geom_point(color = "tomato")
+```
+
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-102-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+## Plots of k-means on the principal plane
+
+
+
+```r
+df_kmeans %&gt;% 
+  filter(K %in% 2:4)
+```
+
+```
+  # A tibble: 3 x 8
+        K kmeans   tidied   augmented     totss tot.withinss betweenss  iter
+    &lt;int&gt; &lt;list&gt;   &lt;list&gt;   &lt;list&gt;        &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;
+  1     2 &lt;S3: km… &lt;tibble… &lt;tibble [6… 7.55e17      3.79e17   3.76e17     1
+  2     3 &lt;S3: km… &lt;tibble… &lt;tibble [6… 7.55e17      3.15e17   4.40e17     3
+  3     4 &lt;S3: km… &lt;tibble… &lt;tibble [6… 7.55e17      2.73e17   4.82e17     2
+```
+
+
+---
+count: false
+## Plots of k-means on the principal plane
+
+
+```r
+df_kmeans %&gt;% 
+  filter(K %in% 2:4) %&gt;% 
+  select(K, augmented) %&gt;% 
+  unnest(augmented) -&gt; df_clust
+df_clust
+```
+
+```
+  # A tibble: 1,959 x 12
+         K Sample .fittedPC1 .fittedPC2 .fittedPC3 .fittedPC4 Body_site
+     &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;    
+   1     2 SRS01…    -3.50e7   3143110.   2101294.  -4648594. stool    
+   2     2 SRS01…    -1.22e8 -10209495.  -2650908.  -8273403. stool    
+   3     2 SRS01…     1.56e7 -16376313.  -5174529.  14606530. oralcavi…
+   4     2 SRS01…     1.03e7   9231812.   1882414.   -733350. oralcavi…
+   5     2 SRS01…     1.27e7   4001474.  -5447203.   9894241. oralcavi…
+   6     2 SRS01…     1.05e7  10146423.   6037539.  -1486339. oralcavi…
+   7     2 SRS01…     1.82e7 -27537025. -17281307.  -3673846. oralcavi…
+   8     2 SRS01…     1.37e7   1687184.  -8855225.   9042300. oralcavi…
+   9     2 SRS01…    -2.30e7  -1036333.  12207056.  -9608300. stool    
+  10     2 SRS01…     1.52e7 -13528729. -10929731.    783376. oralcavi…
+  # ... with 1,949 more rows, and 5 more variables: Body_subsite &lt;chr&gt;,
+  #   Age &lt;int&gt;, Age_category &lt;chr&gt;, Gender &lt;chr&gt;, .cluster &lt;chr&gt;
+```
+
+---
+## Plots of k-means on the principal plane
+
+
+```r
+ggplot(df_clust) +
+  geom_point(aes(x = .fittedPC1, y = .fittedPC2, color = .cluster, shape = Body_site)) +
+  facet_grid(. ~ K) +
+  theme(legend.position = "bottom")
+```
+
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-105-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Contingency tables of the clusterings
+
+Using the `janitor::tabyl()` function, create a contingency table by K
+
+--
+
+
+```r
+df_clust %&gt;% 
+  nest(-K)
+```
+
+```
+  # A tibble: 3 x 2
+        K data               
+    &lt;int&gt; &lt;list&gt;             
+  1     2 &lt;tibble [653 × 11]&gt;
+  2     3 &lt;tibble [653 × 11]&gt;
+  3     4 &lt;tibble [653 × 11]&gt;
+```
+
+---
+count: false
+## Contingency tables of the clusterings
+
+Using the `janitor::tabyl()` function, create a contingency table by K
+
+
+```r
+df_clust %&gt;% 
+  nest(-K) %&gt;% 
+  mutate(CT = map(data, janitor::tabyl, Body_site, .cluster))
+```
+
+```
+  # A tibble: 3 x 3
+        K data                CT             
+    &lt;int&gt; &lt;list&gt;              &lt;list&gt;         
+  1     2 &lt;tibble [653 × 11]&gt; &lt;tabyl [3 × 3]&gt;
+  2     3 &lt;tibble [653 × 11]&gt; &lt;tabyl [3 × 4]&gt;
+  3     4 &lt;tibble [653 × 11]&gt; &lt;tabyl [3 × 5]&gt;
+```
+
+---
+count: false
+## Contingency tables of the clusterings
+
+Using the `janitor::tabyl()` function, create a contingency table by K
+
+
+```r
+df_clust %&gt;% 
+  nest(-K) %&gt;% 
+  mutate(CT = map(data, janitor::tabyl, .cluster, Body_site)) %&gt;% 
+  pull(CT)
+```
+
+```
+  [[1]]
+   .cluster oralcavity skin stool
+          1          0    0   114
+          2        479   27    33
+  
+  [[2]]
+   .cluster oralcavity skin stool
+          1          0    0   113
+          2        132    0     6
+          3        347   27    28
+  
+  [[3]]
+   .cluster oralcavity skin stool
+          1          0    0    63
+          2        135    0     0
+          3          0    0    79
+          4        344   27     5
+```
+
+
+
+
+---
+## Agregate the abundance at phylum level
+
+
+Like this:
+
+
+```
+  # A tibble: 17 x 654
+     Phylum SRS011086 SRS011090 SRS011098 SRS011111 SRS011115 SRS011126
+     &lt;chr&gt;      &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+   1 Acido…         0         0         0         0         0         0
+   2 Actin…  19795422    261680  40149371  70894509  17912678  36577594
+   3 Ascom…         0         0         0         0         0         0
+   4 Bacte…   5173832    161067   4307084   1532049  31986039  19951810
+   5 Basid…         0         0         0         0         0         0
+   6 Candi…         0         0      4925         0     59724   3161196
+   7 Chlor…         0         0         0         0         0         0
+   8 Deino…         0         0         0         0         0         0
+   9 Eurya…         0         0         0         0         0         0
+  10 Firmi…  52604350   2118788   4312759  10592022  47823300   8196029
+  11 Fusob…    319848    122811   1206832      1387  19118873   7588485
+  12 Prote…   3646454   1066799   5391435         0  49033824  31115434
+  13 Spiro…         0         0       214         0    114106   1021118
+  14 Syner…         0         0         0         0         0         0
+  15 Tener…         0         0         0     36345    345065         0
+  16 Verru…         0         0         0         0         0         0
+  17 Virus…    124898    126218   1041431         0     15143    430516
+  # ... with 647 more variables: SRS011140 &lt;int&gt;, SRS011144 &lt;int&gt;,
+  #   SRS011152 &lt;int&gt;, SRS011243 &lt;int&gt;, SRS011247 &lt;int&gt;, …
+```
+
+
+---
+count: false
+## Agregate the abundance at phylum level
+
+
+```r
+df_abund %&gt;% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %&gt;% 
+  rename(Genus = Clade)
+```
+
+```
+  # A tibble: 256 x 654
+     Genus SRS011086 SRS011090 SRS011098 SRS011111 SRS011115 SRS011126
+     &lt;chr&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+   1 Bact…         0         0         0         0         0         0
+   2 Para…         0         0         0         0         0         0
+   3 Alis…         0         0         0         0         0         0
+   4 Burk…         0         0         0         0         0         0
+   5 Faec…         0         0         0         0         0         0
+   6 Rose…         0         0         0         0         0         0
+   7 Subd…         0      5366         0         0      1182         0
+   8 Bact…         0         0         0         0         0         0
+   9 Para…         0         0         0         0         0         0
+  10 Osci…         0         0         0         0         0         0
+  # ... with 246 more rows, and 647 more variables: SRS011140 &lt;int&gt;,
+  #   SRS011144 &lt;int&gt;, SRS011152 &lt;int&gt;, SRS011243 &lt;int&gt;, SRS011247 &lt;int&gt;, …
+```
+
+---
+count: false
+## Agregate the abundance at phylum level
+
+
+```r
+df_abund %&gt;% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %&gt;% 
+  rename(Genus = Clade)%&gt;% 
+  left_join(df_tax, ., by = "Genus")
+```
+
+```
+  # A tibble: 256 x 659
+     Kingdom Phylum Class Order Family Genus SRS011086 SRS011090 SRS011098
+     &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt; &lt;chr&gt; &lt;chr&gt;  &lt;chr&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+   1 Archaea Eurya… Meth… Meth… Metha… Meth…         0         0         0
+   2 Archaea Eurya… Meth… Meth… Metha… Meth…         0         0         0
+   3 Bacter… Acido… Acid… Acid… Acido… Cand…         0         0         0
+   4 Bacter… Acido… Acid… Acid… Acido… Gran…         0         0         0
+   5 Bacter… Acido… Acid… Acid… Acido… Terr…         0         0         0
+   6 Bacter… Actin… Acti… Acti… Actin… Acti…      4949         0    810698
+   7 Bacter… Actin… Acti… Acti… Actin… Acti…   9596511    105544   6691711
+   8 Bacter… Actin… Acti… Acti… Actin… Mobi…         0         0         0
+   9 Bacter… Actin… Acti… Acti… Actin… Vari…         0         0         0
+  10 Bacter… Actin… Acti… Acti… Brevi… Brev…     15933         0      1630
+  # ... with 246 more rows, and 650 more variables: SRS011111 &lt;int&gt;,
+  #   SRS011115 &lt;int&gt;, SRS011126 &lt;int&gt;, SRS011140 &lt;int&gt;, SRS011144 &lt;int&gt;, …
+```
+
+---
+count: false
+## Agregate the abundance at phylum level
+
+
+```r
+df_abund %&gt;% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %&gt;% 
+  rename(Genus = Clade)%&gt;% 
+  left_join(df_tax, ., by = "Genus") %&gt;% 
+  select(-c(Kingdom, Class, Order, Family, Genus))
+```
+
+```
+  # A tibble: 256 x 654
+     Phylum SRS011086 SRS011090 SRS011098 SRS011111 SRS011115 SRS011126
+     &lt;chr&gt;      &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+   1 Eurya…         0         0         0         0         0         0
+   2 Eurya…         0         0         0         0         0         0
+   3 Acido…         0         0         0         0         0         0
+   4 Acido…         0         0         0         0         0         0
+   5 Acido…         0         0         0         0         0         0
+   6 Actin…      4949         0    810698         0     33598    725860
+   7 Actin…   9596511    105544   6691711         0  11614891   7299386
+   8 Actin…         0         0         0    142209         0         0
+   9 Actin…         0         0         0      4610         0         0
+  10 Actin…     15933         0      1630         0     10634      1826
+  # ... with 246 more rows, and 647 more variables: SRS011140 &lt;int&gt;,
+  #   SRS011144 &lt;int&gt;, SRS011152 &lt;int&gt;, SRS011243 &lt;int&gt;, SRS011247 &lt;int&gt;, …
+```
+
+---
+count: false
+## Agregate the abundance at phylum level
+
+
+```r
+df_abund %&gt;% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %&gt;% 
+  rename(Genus = Clade)%&gt;% 
+  left_join(df_tax, ., by = "Genus") %&gt;% 
+  select(-c(Kingdom, Class, Order, Family, Genus)) %&gt;% 
+  group_by(Phylum) %&gt;% 
+  summarise_all(sum) -&gt; df_phylum
+df_phylum
+```
+
+```
+  # A tibble: 17 x 654
+     Phylum SRS011086 SRS011090 SRS011098 SRS011111 SRS011115 SRS011126
+     &lt;chr&gt;      &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+   1 Acido…         0         0         0         0         0         0
+   2 Actin…  19795422    261680  40149371  70894509  17912678  36577594
+   3 Ascom…         0         0         0         0         0         0
+   4 Bacte…   5173832    161067   4307084   1532049  31986039  19951810
+   5 Basid…         0         0         0         0         0         0
+   6 Candi…         0         0      4925         0     59724   3161196
+   7 Chlor…         0         0         0         0         0         0
+   8 Deino…         0         0         0         0         0         0
+   9 Eurya…         0         0         0         0         0         0
+  10 Firmi…  52604350   2118788   4312759  10592022  47823300   8196029
+  11 Fusob…    319848    122811   1206832      1387  19118873   7588485
+  12 Prote…   3646454   1066799   5391435         0  49033824  31115434
+  13 Spiro…         0         0       214         0    114106   1021118
+  14 Syner…         0         0         0         0         0         0
+  15 Tener…         0         0         0     36345    345065         0
+  16 Verru…         0         0         0         0         0         0
+  17 Virus…    124898    126218   1041431         0     15143    430516
+  # ... with 647 more variables: SRS011140 &lt;int&gt;, SRS011144 &lt;int&gt;,
+  #   SRS011152 &lt;int&gt;, SRS011243 &lt;int&gt;, SRS011247 &lt;int&gt;, …
+```
+
+---
+## Transpose the dataset and choose stool samples
+
+--
+
+
+```r
+df_phylum_transp_stool &lt;-
+  df_phylum %&gt;% 
+  gather(key = "Sample", value = "Abundance", -Phylum) %&gt;% 
+  spread(key = "Phylum", value = "Abundance") %&gt;% 
+  left_join(df_samples, by = "Sample") %&gt;% 
+  filter(Body_site == "stool")
+df_phylum_transp_stool
+```
+
+```
+  # A tibble: 147 x 23
+     Sample Acidobacteria Actinobacteria Ascomycota Bacteroidetes
+     &lt;chr&gt;          &lt;dbl&gt;          &lt;dbl&gt;      &lt;dbl&gt;         &lt;dbl&gt;
+   1 SRS01…             0          37836          0      82049580
+   2 SRS01…             0         925978          0     199905409
+   3 SRS01…             0          80513          0      74422158
+   4 SRS01…             0        1101941       1825     112432267
+   5 SRS01…             0         277822          0     106439366
+   6 SRS01…             0         547275          0      58763094
+   7 SRS01…             0          20241          0     119708033
+   8 SRS01…             0          47477          0      33479123
+   9 SRS01…             0         416032          0     111204570
+  10 SRS01…             0         138253          0      76713977
+  # ... with 137 more rows, and 18 more variables: Basidiomycota &lt;dbl&gt;,
+  #   Candidatus_Saccharibacteria &lt;dbl&gt;, Chloroflexi &lt;dbl&gt;,
+  #   Deinococcus_Thermus &lt;dbl&gt;, Euryarchaeota &lt;dbl&gt;, …
+```
+
+---
+## Correlation between Firmicutes and Bacteroidetes
+
+
+```r
+ggplot(df_phylum_transp_stool) +
+  aes(x = Firmicutes, y = Bacteroidetes) +
+  geom_point(alpha = 0.7) +
+  geom_smooth(method = "lm")
+```
+
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-115-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+
+---
+## Correlation between Firmicutes and Bacteroidetes
+
+* Create 500 bootstrapped datasets to find the distribution of the correlation
+
+* Plot it
+
+
+---
+## Correlation between Firmicutes and Bacteroidetes
+
+
+
+```r
+df_phylum_transp_stool %&gt;% 
+  select(Firmicutes, Bacteroidetes) %&gt;% 
+  bootstraps(times = 500) 
+```
+
+```
+  # Bootstrap sampling 
+  # A tibble: 500 x 2
+     splits       id          
+     &lt;list&gt;       &lt;chr&gt;       
+   1 &lt;S3: rsplit&gt; Bootstrap001
+   2 &lt;S3: rsplit&gt; Bootstrap002
+   3 &lt;S3: rsplit&gt; Bootstrap003
+   4 &lt;S3: rsplit&gt; Bootstrap004
+   5 &lt;S3: rsplit&gt; Bootstrap005
+   6 &lt;S3: rsplit&gt; Bootstrap006
+   7 &lt;S3: rsplit&gt; Bootstrap007
+   8 &lt;S3: rsplit&gt; Bootstrap008
+   9 &lt;S3: rsplit&gt; Bootstrap009
+  10 &lt;S3: rsplit&gt; Bootstrap010
+  # ... with 490 more rows
+```
+
+---
+count: false
+## Correlation between Firmicutes and Bacteroidetes
+
+
+
+```r
+df_phylum_transp_stool %&gt;% 
+  select(Firmicutes, Bacteroidetes) %&gt;% 
+  bootstraps(times = 500) %&gt;%
+  mutate(splits = map(splits, as_tibble), 
+         Firmicutes = map(splits, pull, Firmicutes),
+         Bacteroidetes = map(splits, pull, Bacteroidetes))
+```
+
+```
+  # Bootstrap sampling 
+  # A tibble: 500 x 4
+     splits             id           Firmicutes  Bacteroidetes
+   * &lt;list&gt;             &lt;chr&gt;        &lt;list&gt;      &lt;list&gt;       
+   1 &lt;tibble [147 × 2]&gt; Bootstrap001 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+   2 &lt;tibble [147 × 2]&gt; Bootstrap002 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+   3 &lt;tibble [147 × 2]&gt; Bootstrap003 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+   4 &lt;tibble [147 × 2]&gt; Bootstrap004 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+   5 &lt;tibble [147 × 2]&gt; Bootstrap005 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+   6 &lt;tibble [147 × 2]&gt; Bootstrap006 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+   7 &lt;tibble [147 × 2]&gt; Bootstrap007 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+   8 &lt;tibble [147 × 2]&gt; Bootstrap008 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+   9 &lt;tibble [147 × 2]&gt; Bootstrap009 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+  10 &lt;tibble [147 × 2]&gt; Bootstrap010 &lt;dbl [147]&gt; &lt;dbl [147]&gt;  
+  # ... with 490 more rows
+```
+
+
+---
+count: false
+class= nologo
+## Correlation between Firmicutes and Bacteroidetes
+
+
+
+
+
+
+```r
+df_phylum_transp_stool %&gt;% 
+  select(Firmicutes, Bacteroidetes) %&gt;% 
+  bootstraps(times = 500) %&gt;%
+  mutate(splits = map(splits, as_tibble), 
+         Firmicutes = map(splits, pull, Firmicutes),
+         Bacteroidetes = map(splits, pull, Bacteroidetes),
+         Cor = map2_dbl(Firmicutes, Bacteroidetes, cor)) -&gt; df_cor
+df_cor
+```
+
+```
+  # Bootstrap sampling 
+  # A tibble: 500 x 5
+     splits             id           Firmicutes  Bacteroidetes    Cor
+   * &lt;list&gt;             &lt;chr&gt;        &lt;list&gt;      &lt;list&gt;         &lt;dbl&gt;
+   1 &lt;tibble [147 × 2]&gt; Bootstrap001 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.489
+   2 &lt;tibble [147 × 2]&gt; Bootstrap002 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.510
+   3 &lt;tibble [147 × 2]&gt; Bootstrap003 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.535
+   4 &lt;tibble [147 × 2]&gt; Bootstrap004 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.714
+   5 &lt;tibble [147 × 2]&gt; Bootstrap005 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.542
+   6 &lt;tibble [147 × 2]&gt; Bootstrap006 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.444
+   7 &lt;tibble [147 × 2]&gt; Bootstrap007 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.633
+   8 &lt;tibble [147 × 2]&gt; Bootstrap008 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.392
+   9 &lt;tibble [147 × 2]&gt; Bootstrap009 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.557
+  10 &lt;tibble [147 × 2]&gt; Bootstrap010 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.543
+  # ... with 490 more rows
+```
+
+
+---
+## Correlation between Firmicutes and Bacteroidetes
+
+
+
+```r
+ggplot(df_cor) +
+  geom_density(aes(x = Cor), fill = "grey") +
+  geom_vline(xintercept = 0, color = "grey") +
+  geom_vline(xintercept = cor(df_phylum_transp_stool$Firmicutes, 
+                              df_phylum_transp_stool$Bacteroidetes), 
+             color = "tomato") 
+```
+
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-120-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
 
 ---
 class: center, middle, inverse
