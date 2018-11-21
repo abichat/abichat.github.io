@@ -1489,7 +1489,7 @@ count: false
 
 ```{r}
 tibble(K = 1:10) %>% 
-    mutate(kmeans = map(K, kmeans, nstart = 10,
+  mutate(kmeans = map(K, kmeans, nstart = 10,
                       x = select(df_abund_transp, -Sample)), 
          tidied = map(kmeans, tidy),
          glanced = map(kmeans, glance),
@@ -1502,7 +1502,7 @@ count: false
 
 ```{r}
 tibble(K = 1:10) %>% 
-    mutate(kmeans = map(K, kmeans, nstart = 10,
+  mutate(kmeans = map(K, kmeans, nstart = 10,
                       x = select(df_abund_transp, -Sample)), 
          tidied = map(kmeans, tidy),
          glanced = map(kmeans, glance),
@@ -1558,7 +1558,7 @@ ggplot(df_clust) +
 ---
 ## Contingency tables of the clusterings
 
-Using the `janitor::tabyl()` function, create a contingency table by K
+* Use the `janitor::tabyl()` function to create a contingency table by K
 
 --
 
@@ -1571,7 +1571,7 @@ df_clust %>%
 count: false
 ## Contingency tables of the clusterings
 
-Using the `janitor::tabyl()` function, create a contingency table by K
+* Use the `janitor::tabyl()` function to create a contingency table by K
 
 ```{r}
 df_clust %>% 
@@ -1583,7 +1583,7 @@ df_clust %>%
 count: false
 ## Contingency tables of the clusterings
 
-Using the `janitor::tabyl()` function, create a contingency table by K
+* Use the `janitor::tabyl()` function to create a contingency table by K
 
 ```{r}
 df_clust %>% 
@@ -1591,8 +1591,6 @@ df_clust %>%
   mutate(CT = map(data, janitor::tabyl, .cluster, Body_site)) %>% 
   pull(CT)
 ```
-
-
 
 
 ---
@@ -1721,7 +1719,7 @@ df_phylum_transp_stool %>%
 
 ---
 count: false
-class= nologo
+class: nologo
 ## Correlation between Firmicutes and Bacteroidetes
 
 
@@ -1762,7 +1760,7 @@ class: center, middle, inverse
 # References
 
 ---
-
+<br>
 
 ### Purrr
 
