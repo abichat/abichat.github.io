@@ -447,7 +447,7 @@ count: false
 ```{r eval=FALSE}
 lapply(list, function(x) x + 2)
 mapply(function(x, y) x + y, list1, list2)
-lapply(list, function(x) x[2])
+lapply(list, function(x) x[[2]])
 lapply(list, function(x) x$foo)
 ```
 
@@ -538,8 +538,8 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 --
 
 ```{r fig.width=10}
-map(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .)) + geom_point()) %>%
-  imap(~ .x + labs(x = "Fertility", y = .y)) %>%
+imap(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .x)) + 
+       geom_point() + labs(x = "Fertility", y = .y)) %>%
   .[-1] %>%
   gridExtra::grid.arrange(grobs = .)
 ```
@@ -552,8 +552,8 @@ count:false
 
 ```{r fig.width=10}
 swiss %>%
-  map(., function(x) ggplot(., aes(x = Fertility, y = x)) + geom_point()) %>%
-  imap(~ .x + labs(x = "Fertility", y = .y)) %>%
+  imap(., function(x, y) ggplot(., aes(x = Fertility, y = x)) + 
+         geom_point() + labs(x = "Fertility", y = y)) %>%
   .[-1] %>%
   gridExtra::grid.arrange(grobs = .)
 ```
@@ -852,6 +852,8 @@ library(tidymodels)
 
 --
 
+<br>
+
 ```{r}
 tidy <- broom::tidy
 ```
@@ -869,9 +871,8 @@ class: center, middle, inverse
 ## Dataset
 
 ```{r datapins, message=FALSE}
-df_pins <- read_table2("PINS.DON", 
-                       col_names = c("variete", "diametre", "hauteur"))
-df_pins
+df_pines <- read_csv("pines.txt")
+df_pines
 ```
 
 
@@ -879,7 +880,7 @@ df_pins
 ## Classical output of linear regression
 
 ```{r}
-reg_simple <- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_simple <- lm(Height ~ Diameter * Species, data = df_pines)
 reg_simple
 ```
 
@@ -888,7 +889,7 @@ count:false
 ## Classical output of linear regression
 
 ```{r}
-reg_simple <- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_simple <- lm(Height ~ Diameter * Species, data = df_pines)
 summary(reg_simple)
 ```
 
@@ -897,7 +898,7 @@ count:false
 ## Classical output of linear regression
 
 ```{r}
-reg_simple <- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_simple <- lm(Height ~ Diameter * Species, data = df_pines)
 coef(summary(reg_simple))
 coef(reg_simple)
 ```
@@ -926,7 +927,7 @@ glance(reg_simple)
 Adds information about each observation in the dataset
 
 ```{r}
-(augmented <- augment(reg_simple, df_pins))
+(augmented <- augment(reg_simple, df_pines))
 ```
 
 ---
@@ -939,8 +940,8 @@ augmented %>%
   ggplot() +
     aes(x = .fitted) +
     geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
-    geom_line(aes(y = .lowess), color = "red") +
-    geom_point(aes(y = .resid, color = variete)) +
+    geom_line(aes(y = .lowess), color = "saddlebrown") +
+    geom_point(aes(y = .resid, color = Species)) +
     labs(x = "Fitted values", y = "Residuals")
 ```
 
@@ -966,8 +967,8 @@ augmented %>%
     aes(x = .hat) +
     geom_vline(xintercept = 0, alpha = 0.5, linetype = "dashed") +
     geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
-    geom_line(aes(y = .lowess), color = "red") +
-    geom_point(aes(y = .std.resid, color = variete)) +
+    geom_line(aes(y = .lowess), color = "saddlebrown") +
+    geom_point(aes(y = .std.resid, color = Species)) +
     labs(x = "Leverage", y = "Standardized residuals")
 ```
 
@@ -978,7 +979,7 @@ augmented %>%
 augmented %>% 
   rowid_to_column("ID") %>% 
   ggplot() +
-    aes(x = ID, y = .cooksd, fill = variete) +
+    aes(x = ID, y = .cooksd, fill = Species) +
     geom_col(color = "grey30") +
     labs(x = "Observation", y = "Cook's Distance")
 ```
@@ -987,7 +988,7 @@ augmented %>%
 ## Wilcoxon test
 
 ```{r, wilcox, warning=FALSE}
-w_test <- wilcox.test(hauteur ~ variete, data = df_pins)
+w_test <- wilcox.test(Height ~ Species, data = df_pines)
 w_test
 ```
 
@@ -1037,15 +1038,11 @@ class: center, middle, inverse
 <img src="img/hex-rsample.png", width=270> 
 
 ---
-## Quelques infos
-
-
----
 ## Estimation of parameters
 
 ```{r}
 bootstrap_pins <-
-  df_pins %>% 
+  df_pines %>% 
   rowid_to_column("ID") %>% 
   bootstraps(times = 500)
 bootstrap_pins
@@ -1098,7 +1095,7 @@ bootstrap_pins %>%
 ## Bootstrapped models
 
 ```{r}
-my_lm <- partial(lm, formula = hauteur ~ diametre * variete)
+my_lm <- partial(lm, formula = Height ~ Diameter * Species)
 ```
 
 --
@@ -1114,7 +1111,7 @@ count: false
 ## Bootstrapped models
 
 ```{r}
-my_lm <- partial(lm, formula = hauteur ~ diametre * variete)
+my_lm <- partial(lm, formula = Height ~ Diameter * Species)
 ```
 
 ```{r}
@@ -1130,7 +1127,7 @@ count: false
 ## Bootstrapped models
 
 ```{r}
-my_lm <- partial(lm, formula = hauteur ~ diametre * variete)
+my_lm <- partial(lm, formula = Height ~ Diameter * Species)
 ```
 
 ```{r}
@@ -1146,11 +1143,34 @@ my_lm <- partial(lm, formula = hauteur ~ diametre * variete)
 
 ```{r message=FALSE, fig.height=5.5}
 bootstrap_pins %>% 
-  mutate(term = fct_relevel(term, "diametre:varietejaune", after = Inf)) %>%
+  mutate(term = fct_relevel(term, "Diameter:SpeciesYellow", after = Inf)) %>%
   ggplot(aes(x = estimate, y = term, fill = term)) +
     ggridges::geom_density_ridges() + 
     theme(legend.position = "none")
 ```
+
+---
+## Other resampling techniques
+
+* `initial_split(prop = 3/4)`, `training()`, `testing()`
+
+* `loo_cv()`
+
+* `vfold_cv()`
+
+* `group_vfold_cv()`
+
+* `make_strata()`
+
+* `rolling_origin()`
+
+* `nested_cv()`
+
+--
+
+<br>
+
+Since the original data is not modified, `r icon::fa("r-project", size = 1)` does not make an automatic copy so creating $N$ bootstraps of a data set does not create an object that is $N$-fold larger in memory.
 
 ---
 class: center, middle, inverse

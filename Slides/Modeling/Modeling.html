@@ -43,7 +43,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Attaching packages ──────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+  ── Attaching packages ───────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -54,7 +54,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Conflicts ─────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+  ── Conflicts ──────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
   ✖ dplyr::filter() masks stats::filter()
   ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -569,7 +569,7 @@ count: false
 ```r
 lapply(list, function(x) x + 2)
 mapply(function(x, y) x + y, list1, list2)
-lapply(list, function(x) x[2])
+lapply(list, function(x) x[[2]])
 lapply(list, function(x) x$foo)
 ```
 
@@ -692,8 +692,8 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 
 
 ```r
-map(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .)) + geom_point()) %&gt;%
-  imap(~ .x + labs(x = "Fertility", y = .y)) %&gt;%
+imap(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .x)) + 
+       geom_point() + labs(x = "Fertility", y = .y)) %&gt;%
   .[-1] %&gt;%
   gridExtra::grid.arrange(grobs = .)
 ```
@@ -709,8 +709,8 @@ count:false
 
 ```r
 swiss %&gt;%
-  map(., function(x) ggplot(., aes(x = Fertility, y = x)) + geom_point()) %&gt;%
-  imap(~ .x + labs(x = "Fertility", y = .y)) %&gt;%
+  imap(., function(x, y) ggplot(., aes(x = Fertility, y = x)) + 
+         geom_point() + labs(x = "Fertility", y = y)) %&gt;%
   .[-1] %&gt;%
   gridExtra::grid.arrange(grobs = .)
 ```
@@ -1436,7 +1436,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Attaching packages ─────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
+  ── Attaching packages ──────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
 ```
 
 ```
@@ -1446,7 +1446,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Conflicts ────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
+  ── Conflicts ─────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
   ✖ rsample::fill()    masks tidyr::fill()
   ✖ dplyr::filter()    masks stats::filter()
   ✖ recipes::fixed()   masks stringr::fixed()
@@ -1458,6 +1458,8 @@ library(tidymodels)
 ```
 
 --
+
+&lt;br&gt;
 
 
 ```r
@@ -1478,25 +1480,24 @@ class: center, middle, inverse
 
 
 ```r
-df_pins &lt;- read_table2("PINS.DON", 
-                       col_names = c("variete", "diametre", "hauteur"))
-df_pins
+df_pines &lt;- read_csv("pines.txt")
+df_pines
 ```
 
 ```
   # A tibble: 39 x 3
-     variete diametre hauteur
-     &lt;chr&gt;      &lt;dbl&gt;   &lt;int&gt;
-   1 blanc       21.2     127
-   2 blanc       20.2     119
-   3 blanc       24.6     135
-   4 blanc       23       132
-   5 blanc       27.2     130
-   6 blanc       18.6     130
-   7 blanc       17.3     110
-   8 blanc       10        75
-   9 blanc       19.7     110
-  10 blanc       22.3     124
+     Species Diameter Height
+     &lt;chr&gt;      &lt;dbl&gt;  &lt;int&gt;
+   1 White       21.2    127
+   2 White       20.2    119
+   3 White       24.6    135
+   4 White       23      132
+   5 White       27.2    130
+   6 White       18.6    130
+   7 White       17.3    110
+   8 White       10       75
+   9 White       19.7    110
+  10 White       22.3    124
   # ... with 29 more rows
 ```
 
@@ -1506,20 +1507,20 @@ df_pins
 
 
 ```r
-reg_simple &lt;- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_simple &lt;- lm(Height ~ Diameter * Species, data = df_pines)
 reg_simple
 ```
 
 ```
   
   Call:
-  lm(formula = hauteur ~ diametre * variete, data = df_pins)
+  lm(formula = Height ~ Diameter * Species, data = df_pines)
   
   Coefficients:
-            (Intercept)               diametre           varietejaune  
-                41.2747                 3.9789               -35.8390  
-  diametre:varietejaune  
-                 0.5293
+             (Intercept)                Diameter           SpeciesYellow  
+                 41.2747                  3.9789                -35.8390  
+  Diameter:SpeciesYellow  
+                  0.5293
 ```
 
 ---
@@ -1528,25 +1529,25 @@ count:false
 
 
 ```r
-reg_simple &lt;- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_simple &lt;- lm(Height ~ Diameter * Species, data = df_pines)
 summary(reg_simple)
 ```
 
 ```
   
   Call:
-  lm(formula = hauteur ~ diametre * variete, data = df_pins)
+  lm(formula = Height ~ Diameter * Species, data = df_pines)
   
   Residuals:
        Min       1Q   Median       3Q      Max 
   -19.5014  -8.2424  -0.7899   7.5008  28.3598 
   
   Coefficients:
-                        Estimate Std. Error t value Pr(&gt;|t|)    
-  (Intercept)            41.2747     6.8238   6.049 6.66e-07 ***
-  diametre                3.9789     0.3926  10.136 5.95e-12 ***
-  varietejaune          -35.8390    10.5955  -3.382  0.00178 ** 
-  diametre:varietejaune   0.5293     0.5899   0.897  0.37572    
+                         Estimate Std. Error t value Pr(&gt;|t|)    
+  (Intercept)             41.2747     6.8238   6.049 6.66e-07 ***
+  Diameter                 3.9789     0.3926  10.136 5.95e-12 ***
+  SpeciesYellow          -35.8390    10.5955  -3.382  0.00178 ** 
+  Diameter:SpeciesYellow   0.5293     0.5899   0.897  0.37572    
   ---
   Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
   
@@ -1561,16 +1562,16 @@ count:false
 
 
 ```r
-reg_simple &lt;- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_simple &lt;- lm(Height ~ Diameter * Species, data = df_pines)
 coef(summary(reg_simple))
 ```
 
 ```
-                           Estimate Std. Error    t value     Pr(&gt;|t|)
-  (Intercept)            41.2747285  6.8237545  6.0486831 6.661673e-07
-  diametre                3.9789200  0.3925661 10.1356694 5.951760e-12
-  varietejaune          -35.8390158 10.5955323 -3.3824649 1.781368e-03
-  diametre:varietejaune   0.5292551  0.5898638  0.8972496 3.757164e-01
+                            Estimate Std. Error    t value     Pr(&gt;|t|)
+  (Intercept)             41.2747285  6.8237545  6.0486831 6.661673e-07
+  Diameter                 3.9789200  0.3925661 10.1356694 5.951760e-12
+  SpeciesYellow          -35.8390158 10.5955323 -3.3824649 1.781368e-03
+  Diameter:SpeciesYellow   0.5292551  0.5898638  0.8972496 3.757164e-01
 ```
 
 ```r
@@ -1578,10 +1579,10 @@ coef(reg_simple)
 ```
 
 ```
-            (Intercept)              diametre          varietejaune 
-             41.2747285             3.9789200           -35.8390158 
-  diametre:varietejaune 
-              0.5292551
+             (Intercept)               Diameter          SpeciesYellow 
+              41.2747285              3.9789200            -35.8390158 
+  Diameter:SpeciesYellow 
+               0.5292551
 ```
 
 ---
@@ -1596,12 +1597,12 @@ tidy(reg_simple)
 
 ```
   # A tibble: 4 x 5
-    term                  estimate std.error statistic  p.value
-    &lt;chr&gt;                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-  1 (Intercept)             41.3       6.82      6.05  6.66e- 7
-  2 diametre                 3.98      0.393    10.1   5.95e-12
-  3 varietejaune           -35.8      10.6      -3.38  1.78e- 3
-  4 diametre:varietejaune    0.529     0.590     0.897 3.76e- 1
+    term                   estimate std.error statistic  p.value
+    &lt;chr&gt;                     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+  1 (Intercept)              41.3       6.82      6.05  6.66e- 7
+  2 Diameter                  3.98      0.393    10.1   5.95e-12
+  3 SpeciesYellow           -35.8      10.6      -3.38  1.78e- 3
+  4 Diameter:SpeciesYellow    0.529     0.590     0.897 3.76e- 1
 ```
 
 ---
@@ -1629,23 +1630,23 @@ Adds information about each observation in the dataset
 
 
 ```r
-(augmented &lt;- augment(reg_simple, df_pins))
+(augmented &lt;- augment(reg_simple, df_pines))
 ```
 
 ```
   # A tibble: 39 x 10
-     variete diametre hauteur .fitted .se.fit  .resid   .hat .sigma .cooksd
-   * &lt;chr&gt;      &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
-   1 blanc       21.2     127   126.     3.16   1.37  0.0775   11.5 3.32e-4
-   2 blanc       20.2     119   122.     2.94  -2.65  0.0668   11.5 1.04e-3
-   3 blanc       24.6     135   139.     4.13  -4.16  0.132    11.5 5.86e-3
-   4 blanc       23       132   133.     3.64  -0.790 0.103    11.5 1.55e-4
-   5 blanc       27.2     130   150.     4.98 -19.5   0.192    10.9 2.17e-1
-   6 blanc       18.6     130   115.     2.65  14.7   0.0545   11.2 2.56e-2
-   7 blanc       17.3     110   110.     2.52  -0.110 0.0491   11.5 1.27e-6
-   8 blanc       10        75    81.1    3.47  -6.06  0.0935   11.5 8.10e-3
-   9 blanc       19.7     110   120.     2.83  -9.66  0.0623   11.4 1.28e-2
-  10 blanc       22.3     124   130.     3.45  -6.00  0.0921   11.5 7.81e-3
+     Species Diameter Height .fitted .se.fit  .resid   .hat .sigma .cooksd
+   * &lt;chr&gt;      &lt;dbl&gt;  &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+   1 White       21.2    127   126.     3.16   1.37  0.0775   11.5 3.32e-4
+   2 White       20.2    119   122.     2.94  -2.65  0.0668   11.5 1.04e-3
+   3 White       24.6    135   139.     4.13  -4.16  0.132    11.5 5.86e-3
+   4 White       23      132   133.     3.64  -0.790 0.103    11.5 1.55e-4
+   5 White       27.2    130   150.     4.98 -19.5   0.192    10.9 2.17e-1
+   6 White       18.6    130   115.     2.65  14.7   0.0545   11.2 2.56e-2
+   7 White       17.3    110   110.     2.52  -0.110 0.0491   11.5 1.27e-6
+   8 White       10       75    81.1    3.47  -6.06  0.0935   11.5 8.10e-3
+   9 White       19.7    110   120.     2.83  -9.66  0.0623   11.4 1.28e-2
+  10 White       22.3    124   130.     3.45  -6.00  0.0921   11.5 7.81e-3
   # ... with 29 more rows, and 1 more variable: .std.resid &lt;dbl&gt;
 ```
 
@@ -1660,8 +1661,8 @@ augmented %&gt;%
   ggplot() +
     aes(x = .fitted) +
     geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
-    geom_line(aes(y = .lowess), color = "red") +
-    geom_point(aes(y = .resid, color = variete)) +
+    geom_line(aes(y = .lowess), color = "saddlebrown") +
+    geom_point(aes(y = .resid, color = Species)) +
     labs(x = "Fitted values", y = "Residuals")
 ```
 
@@ -1693,8 +1694,8 @@ augmented %&gt;%
     aes(x = .hat) +
     geom_vline(xintercept = 0, alpha = 0.5, linetype = "dashed") +
     geom_hline(yintercept = 0, alpha = 0.5, linetype = "dashed") +
-    geom_line(aes(y = .lowess), color = "red") +
-    geom_point(aes(y = .std.resid, color = variete)) +
+    geom_line(aes(y = .lowess), color = "saddlebrown") +
+    geom_point(aes(y = .std.resid, color = Species)) +
     labs(x = "Leverage", y = "Standardized residuals")
 ```
 
@@ -1708,7 +1709,7 @@ augmented %&gt;%
 augmented %&gt;% 
   rowid_to_column("ID") %&gt;% 
   ggplot() +
-    aes(x = ID, y = .cooksd, fill = variete) +
+    aes(x = ID, y = .cooksd, fill = Species) +
     geom_col(color = "grey30") +
     labs(x = "Observation", y = "Cook's Distance")
 ```
@@ -1720,7 +1721,7 @@ augmented %&gt;%
 
 
 ```r
-w_test &lt;- wilcox.test(hauteur ~ variete, data = df_pins)
+w_test &lt;- wilcox.test(Height ~ Species, data = df_pines)
 w_test
 ```
 
@@ -1728,7 +1729,7 @@ w_test
   
   	Wilcoxon rank sum test with continuity correction
   
-  data:  hauteur by variete
+  data:  Height by Species
   W = 269.5, p-value = 0.0241
   alternative hypothesis: true location shift is not equal to 0
 ```
@@ -1787,16 +1788,12 @@ class: center, middle, inverse
 &lt;img src="img/hex-rsample.png", width=270&gt; 
 
 ---
-## Quelques infos
-
-
----
 ## Estimation of parameters
 
 
 ```r
 bootstrap_pins &lt;-
-  df_pins %&gt;% 
+  df_pines %&gt;% 
   rowid_to_column("ID") %&gt;% 
   bootstraps(times = 500)
 bootstrap_pins
@@ -1848,18 +1845,18 @@ bootstrap_pins %&gt;%
 
 ```
   # A tibble: 39 x 4
-        ID variete diametre hauteur
-     &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;   &lt;int&gt;
-   1    11 blanc        5.6      55
-   2    16 blanc       14.4     107
-   3     1 blanc       21.2     127
-   4    15 blanc       12.6     108
-   5    34 jaune       12.2      57
-   6    14 blanc       13.1     116
-   7    19 blanc        7        56
-   8    24 jaune       14.4      84
-   9    20 blanc        9.3      70
-  10     8 blanc       10        75
+        ID Species Diameter Height
+     &lt;int&gt; &lt;chr&gt;      &lt;dbl&gt;  &lt;int&gt;
+   1    11 White        5.6     55
+   2    16 White       14.4    107
+   3     1 White       21.2    127
+   4    15 White       12.6    108
+   5    34 Yellow      12.2     57
+   6    14 White       13.1    116
+   7    19 White        7       56
+   8    24 Yellow      14.4     84
+   9    20 White        9.3     70
+  10     8 White       10       75
   # ... with 29 more rows
 ```
 
@@ -1907,7 +1904,7 @@ bootstrap_pins %&gt;%
 
 
 ```r
-my_lm &lt;- partial(lm, formula = hauteur ~ diametre * variete)
+my_lm &lt;- partial(lm, formula = Height ~ Diameter * Species)
 ```
 
 --
@@ -1943,7 +1940,7 @@ count: false
 
 
 ```r
-my_lm &lt;- partial(lm, formula = hauteur ~ diametre * variete)
+my_lm &lt;- partial(lm, formula = Height ~ Diameter * Species)
 ```
 
 
@@ -1979,7 +1976,7 @@ count: false
 
 
 ```r
-my_lm &lt;- partial(lm, formula = hauteur ~ diametre * variete)
+my_lm &lt;- partial(lm, formula = Height ~ Diameter * Species)
 ```
 
 
@@ -1993,18 +1990,18 @@ my_lm &lt;- partial(lm, formula = hauteur ~ diametre * variete)
 
 ```
   # A tibble: 2,000 x 6
-     id           term                  estimate std.error statistic  p.value
-     &lt;chr&gt;        &lt;chr&gt;                    &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-   1 Bootstrap001 (Intercept)             35.0       4.93      7.09  2.95e- 8
-   2 Bootstrap001 diametre                 4.32      0.299    14.4   2.57e-16
-   3 Bootstrap001 varietejaune           -37.0       8.26     -4.48  7.56e- 5
-   4 Bootstrap001 diametre:varietejaune    0.387     0.516     0.750 4.58e- 1
-   5 Bootstrap002 (Intercept)             49.6       6.64      7.47  9.53e- 9
-   6 Bootstrap002 diametre                 3.68      0.394     9.32  5.19e-11
-   7 Bootstrap002 varietejaune           -53.4       9.91     -5.38  5.00e- 6
-   8 Bootstrap002 diametre:varietejaune    1.37      0.605     2.26  2.99e- 2
-   9 Bootstrap003 (Intercept)             33.4       7.70      4.34  1.14e- 4
-  10 Bootstrap003 diametre                 4.31      0.449     9.59  2.52e-11
+     id           term                 estimate std.error statistic  p.value
+     &lt;chr&gt;        &lt;chr&gt;                   &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+   1 Bootstrap001 (Intercept)            35.0       4.93      7.09  2.95e- 8
+   2 Bootstrap001 Diameter                4.32      0.299    14.4   2.57e-16
+   3 Bootstrap001 SpeciesYellow         -37.0       8.26     -4.48  7.56e- 5
+   4 Bootstrap001 Diameter:SpeciesYel…    0.387     0.516     0.750 4.58e- 1
+   5 Bootstrap002 (Intercept)            49.6       6.64      7.47  9.53e- 9
+   6 Bootstrap002 Diameter                3.68      0.394     9.32  5.19e-11
+   7 Bootstrap002 SpeciesYellow         -53.4       9.91     -5.38  5.00e- 6
+   8 Bootstrap002 Diameter:SpeciesYel…    1.37      0.605     2.26  2.99e- 2
+   9 Bootstrap003 (Intercept)            33.4       7.70      4.34  1.14e- 4
+  10 Bootstrap003 Diameter                4.31      0.449     9.59  2.52e-11
   # ... with 1,990 more rows
 ```
 
@@ -2014,13 +2011,36 @@ my_lm &lt;- partial(lm, formula = hauteur ~ diametre * variete)
 
 ```r
 bootstrap_pins %&gt;% 
-  mutate(term = fct_relevel(term, "diametre:varietejaune", after = Inf)) %&gt;%
+  mutate(term = fct_relevel(term, "Diameter:SpeciesYellow", after = Inf)) %&gt;%
   ggplot(aes(x = estimate, y = term, fill = term)) +
     ggridges::geom_density_ridges() + 
     theme(legend.position = "none")
 ```
 
 &lt;img src="Modeling_files/figure-html/unnamed-chunk-79-1.png" width="576" style="display: block; margin: auto;" /&gt;
+
+---
+## Other resampling techniques
+
+* `initial_split(prop = 3/4)`, `training()`, `testing()`
+
+* `loo_cv()`
+
+* `vfold_cv()`
+
+* `group_vfold_cv()`
+
+* `make_strata()`
+
+* `rolling_origin()`
+
+* `nested_cv()`
+
+--
+
+&lt;br&gt;
+
+Since the original data is not modified, <i class="fab  fa-r-project "></i> does not make an automatic copy so creating `\(N\)` bootstraps of a data set does not create an object that is `\(N\)`-fold larger in memory.
 
 ---
 class: center, middle, inverse
