@@ -1832,6 +1832,11 @@ class: center, middle, inverse
 * <a href="https://static1.squarespace.com/static/51156277e4b0b8b2ffe11c00/t/5b75871e21c67c985a06f481/1534428959053/RPharma_18_Kuhn.pdf" target="_blank">`r icon::fa("clone", size = 1)` Modeling in the Tidyverse (M. Kuhn)</a>
 
 
+### Metagenomic data
+
+* <a href="http://waldronlab.io/curatedMetagenomicData/" target="_blank">`r icon::fa("link", size = 1)` Curated Metagenomic Data (L. Waldron)</a>
+
+
 ---
 class: center, middle, inverse
 count:false
