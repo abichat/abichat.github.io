@@ -535,7 +535,9 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
   <img src="img/walk.png", width=300> 
 </center>
 
-`walk()` and variants are designed for side-effects function and return the input
+`walk()` and variants work like `map()` but silently apply the function and return the list unchanged
+
+Useful for saving files or plotting
 
 ---
 class: nologo

@@ -45,7 +45,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Attaching packages ─────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+  ── Attaching packages ────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -56,7 +56,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Conflicts ────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+  ── Conflicts ───────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
   ✖ dplyr::filter() masks stats::filter()
   ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -700,7 +700,9 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
   &lt;img src="img/walk.png", width=300&gt; 
 &lt;/center&gt;
 
-`walk()` and variants are designed for side-effects function and return the input
+`walk()` and variants work like `map()` but silently apply the function and return the list unchanged
+
+Useful for saving files or plotting
 
 ---
 class: nologo
@@ -1455,7 +1457,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Attaching packages ────────────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
+  ── Attaching packages ───────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
 ```
 
 ```
@@ -1465,7 +1467,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Conflicts ───────────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
+  ── Conflicts ──────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
   ✖ rsample::fill()    masks tidyr::fill()
   ✖ dplyr::filter()    masks stats::filter()
   ✖ recipes::fixed()   masks stringr::fixed()
