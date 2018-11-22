@@ -45,7 +45,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Attaching packages ─────────────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+  ── Attaching packages ───────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -56,7 +56,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+  ── Conflicts ──────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
   ✖ dplyr::filter() masks stats::filter()
   ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -178,8 +178,26 @@ class: center, middle, inverse
 --
 
 .pull-right[
-&lt;img src="img/tidyr-spread-gather.gif", width=400&gt; 
+&lt;img src="img/tidyr-spread-gather.gif", width=300&gt; 
 ]
+
+
+```r
+pryr::object_size(iris)
+```
+
+```
+  7.2 kB
+```
+
+```r
+pryr::object_size(gather(iris, key = "Part", value = "Size", -Species))
+```
+
+```
+  13.8 kB
+```
+
 
 .footnote[&lt;a href="https://github.com/gadenbuie/tidyexplain" target="_blank"&gt;<i class="fab  fa-github "></i> Animations of tidyverse verbs (G. Aden-Buie)&lt;/a&gt;]
 
@@ -299,7 +317,7 @@ count: false
 map(1:100, rnorm) %&gt;% 
   map_dbl(mean) %&gt;% 
   tibble(Mean = .) %&gt;% 
-  mutate(N = row_number()) # Slightly ifferent from rownames_to_column("N")
+  mutate(N = row_number()) # Slightly different from rownames_to_column("N")
 ```
 
 ```
@@ -317,6 +335,10 @@ map(1:100, rnorm) %&gt;%
    9 -0.612      9
   10  0.314     10
   # ... with 90 more rows
+```
+
+```r
+                           # Faster than 1:n() and rownames_to_column("N")
 ```
 
 
@@ -337,7 +359,7 @@ map(1:100, rnorm) %&gt;%
     geom_line()
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-8-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## A better way with `compose()` and `map_df()`
@@ -687,7 +709,7 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 `walk()` and variants are designed for side-effects function and return the input
 
 ---
-## `imap*()` functions 
+## `imap*()` 
 
 `imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
 
@@ -697,15 +719,14 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 ```r
 imap(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .x)) + 
        geom_point() + labs(x = "Fertility", y = .y)) %&gt;%
-  .[-1] %&gt;%
   gridExtra::grid.arrange(grobs = .)
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-28-1.png" width="720" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-29-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 ---
 count:false
-## `imap*()` functions 
+## `imap*()`  
 
 `imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
 
@@ -714,11 +735,10 @@ count:false
 swiss %&gt;%
   imap(., function(x, y) ggplot(., aes(x = Fertility, y = x)) + 
          geom_point() + labs(x = "Fertility", y = y)) %&gt;%
-  .[-1] %&gt;%
   gridExtra::grid.arrange(grobs = .)
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-29-1.png" width="720" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-30-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -1439,7 +1459,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Attaching packages ────────────────────────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
+  ── Attaching packages ──────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
 ```
 
 ```
@@ -1449,7 +1469,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Conflicts ───────────────────────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
+  ── Conflicts ─────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
   ✖ rsample::fill()    masks tidyr::fill()
   ✖ dplyr::filter()    masks stats::filter()
   ✖ recipes::fixed()   masks stringr::fixed()
@@ -1717,7 +1737,7 @@ augmented %&gt;%
     labs(x = "Observation", y = "Cook's Distance")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-66-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-67-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Wilcoxon test
@@ -2020,7 +2040,7 @@ bootstrap_pins %&gt;%
     theme(legend.position = "none")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-79-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-80-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Other resampling techniques
@@ -2044,6 +2064,16 @@ bootstrap_pins %&gt;%
 &lt;br&gt;
 
 Since the original data is not modified, <i class="fab  fa-r-project "></i> does not make an automatic copy so creating `\(N\)` bootstraps of a data set does not create an object that is `\(N\)`-fold larger in memory.
+
+
+```r
+pryr::object_size(bootstraps(mtcars, 100)) / pryr::object_size(mtcars)
+```
+
+```
+  15.2 B
+```
+
 
 
 ---
@@ -2516,6 +2546,10 @@ df_abund_transp &lt;-
 
 &lt;br&gt;
 
+* Set `scale. = TRUE` 
+
+&lt;br&gt;
+
 * Keep only the four first principal components
 
 ---
@@ -2525,25 +2559,25 @@ df_abund_transp &lt;-
 ```r
 df_abund_transp %&gt;% 
   select(-Sample) %&gt;% 
-  prcomp() %&gt;% 
+  prcomp(scale. = TRUE) %&gt;% 
   augment(df_abund_transp) %&gt;% 
-  select(Sample, .fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4)
+  select(Sample, .fittedPC1:.fittedPC4)
 ```
 
 ```
   # A tibble: 653 x 5
-     Sample     .fittedPC1 .fittedPC2 .fittedPC3 .fittedPC4
-     &lt;chr&gt;           &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
-   1 SRS011061  -34992102.   3143110.   2101294.  -4648594.
-   2 SRS011084 -122097647. -10209495.  -2650908.  -8273403.
-   3 SRS011086   15578387. -16376313.  -5174529.  14606530.
-   4 SRS011090   10347055.   9231812.   1882414.   -733350.
-   5 SRS011098   12670289.   4001474.  -5447203.   9894241.
-   6 SRS011111   10501118.  10146423.   6037539.  -1486339.
-   7 SRS011115   18169282. -27537025. -17281307.  -3673846.
-   8 SRS011126   13687695.   1687184.  -8855225.   9042300.
-   9 SRS011134  -22954271.  -1036333.  12207056.  -9608300.
-  10 SRS011140   15217167. -13528729. -10929731.    783376.
+     Sample    .fittedPC1 .fittedPC2 .fittedPC3 .fittedPC4
+     &lt;chr&gt;          &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;
+   1 SRS011061      4.34       0.430      0.751     -2.60 
+   2 SRS011084     10.3        1.45       4.48      -1.19 
+   3 SRS011086     -1.51      -2.67      -0.586      0.726
+   4 SRS011090      0.499     -0.493     -2.51      -0.314
+   5 SRS011098     -1.51       1.42      -1.68       2.12 
+   6 SRS011111      0.196     -2.31      -2.72      -3.91 
+   7 SRS011115     -9.51      -4.81       9.64       5.33 
+   8 SRS011126     -6.38       8.50       2.13       4.04 
+   9 SRS011134      6.27       0.489      2.17      -0.815
+  10 SRS011140     -2.23      -2.54       0.111      1.86 
   # ... with 643 more rows
 ```
 
@@ -2556,9 +2590,9 @@ count: false
 ```r
 df_abund_transp %&gt;% 
   select(-Sample) %&gt;% 
-  prcomp() %&gt;% 
+  prcomp(scale. = TRUE) %&gt;% 
   augment(df_abund_transp) %&gt;% 
-  select(Sample, .fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4) %&gt;% 
+  select(Sample, .fittedPC1:.fittedPC4) %&gt;% 
   left_join(df_samples, by = "Sample") -&gt; df_PCA
 df_PCA
 ```
@@ -2567,16 +2601,16 @@ df_PCA
   # A tibble: 653 x 10
      Sample .fittedPC1 .fittedPC2 .fittedPC3 .fittedPC4 Body_site
      &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;    
-   1 SRS01…    -3.50e7   3143110.   2101294.  -4648594. stool    
-   2 SRS01…    -1.22e8 -10209495.  -2650908.  -8273403. stool    
-   3 SRS01…     1.56e7 -16376313.  -5174529.  14606530. oralcavi…
-   4 SRS01…     1.03e7   9231812.   1882414.   -733350. oralcavi…
-   5 SRS01…     1.27e7   4001474.  -5447203.   9894241. oralcavi…
-   6 SRS01…     1.05e7  10146423.   6037539.  -1486339. oralcavi…
-   7 SRS01…     1.82e7 -27537025. -17281307.  -3673846. oralcavi…
-   8 SRS01…     1.37e7   1687184.  -8855225.   9042300. oralcavi…
-   9 SRS01…    -2.30e7  -1036333.  12207056.  -9608300. stool    
-  10 SRS01…     1.52e7 -13528729. -10929731.    783376. oralcavi…
+   1 SRS01…      4.34       0.430      0.751     -2.60  stool    
+   2 SRS01…     10.3        1.45       4.48      -1.19  stool    
+   3 SRS01…     -1.51      -2.67      -0.586      0.726 oralcavi…
+   4 SRS01…      0.499     -0.493     -2.51      -0.314 oralcavi…
+   5 SRS01…     -1.51       1.42      -1.68       2.12  oralcavi…
+   6 SRS01…      0.196     -2.31      -2.72      -3.91  oralcavi…
+   7 SRS01…     -9.51      -4.81       9.64       5.33  oralcavi…
+   8 SRS01…     -6.38       8.50       2.13       4.04  oralcavi…
+   9 SRS01…      6.27       0.489      2.17      -0.815 stool    
+  10 SRS01…     -2.23      -2.54       0.111      1.86  oralcavi…
   # ... with 643 more rows, and 4 more variables: Body_subsite &lt;chr&gt;,
   #   Age &lt;int&gt;, Age_category &lt;chr&gt;, Gender &lt;chr&gt;
 ```
@@ -2589,10 +2623,10 @@ df_PCA
 ```r
 ggplot(df_PCA) +
   aes(x = .fittedPC1, y = .fittedPC2, color = Body_site) +
-  geom_point()
+  geom_point(alpha = 0.6)
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-96-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-98-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 count: false
@@ -2603,10 +2637,10 @@ count: false
 ```r
 ggplot(df_PCA) +
   aes(x = .fittedPC1, y = .fittedPC2, color = Body_subsite) +
-  geom_point()
+  geom_point(alpha = 0.6)
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-97-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-99-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Compute k-means for several K
@@ -2711,14 +2745,14 @@ df_kmeans
      &lt;int&gt; &lt;list&gt;   &lt;list&gt;   &lt;list&gt;       &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;
    1     1 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      7.55e17  -2.42e 4     1
    2     2 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      3.79e17   3.76e17     1
-   3     3 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      3.15e17   4.40e17     3
+   3     3 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      3.15e17   4.40e17     2
    4     4 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.73e17   4.82e17     2
-   5     5 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.53e17   5.02e17     3
-   6     6 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.30e17   5.25e17     4
-   7     7 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.12e17   5.44e17     3
-   8     8 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      1.95e17   5.60e17     3
-   9     9 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      1.90e17   5.65e17     3
-  10    10 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      1.64e17   5.91e17     3
+   5     5 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.54e17   5.01e17     2
+   6     6 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.35e17   5.20e17     3
+   7     7 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.13e17   5.42e17     4
+   8     8 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      2.02e17   5.53e17     4
+   9     9 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      1.84e17   5.71e17     4
+  10    10 &lt;S3: km… &lt;tibble… &lt;tibble [… 7.55e17      1.78e17   5.77e17     5
 ```
 
 
@@ -2733,7 +2767,7 @@ ggplot(df_kmeans) +
   geom_point(color = "tomato")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-102-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-104-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Plots of k-means on the principal plane
@@ -2750,7 +2784,7 @@ df_kmeans %&gt;%
         K kmeans   tidied   augmented     totss tot.withinss betweenss  iter
     &lt;int&gt; &lt;list&gt;   &lt;list&gt;   &lt;list&gt;        &lt;dbl&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;int&gt;
   1     2 &lt;S3: km… &lt;tibble… &lt;tibble [6… 7.55e17      3.79e17   3.76e17     1
-  2     3 &lt;S3: km… &lt;tibble… &lt;tibble [6… 7.55e17      3.15e17   4.40e17     3
+  2     3 &lt;S3: km… &lt;tibble… &lt;tibble [6… 7.55e17      3.15e17   4.40e17     2
   3     4 &lt;S3: km… &lt;tibble… &lt;tibble [6… 7.55e17      2.73e17   4.82e17     2
 ```
 
@@ -2772,32 +2806,35 @@ df_clust
   # A tibble: 1,959 x 12
          K Sample .fittedPC1 .fittedPC2 .fittedPC3 .fittedPC4 Body_site
      &lt;int&gt; &lt;chr&gt;       &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt; &lt;chr&gt;    
-   1     2 SRS01…    -3.50e7   3143110.   2101294.  -4648594. stool    
-   2     2 SRS01…    -1.22e8 -10209495.  -2650908.  -8273403. stool    
-   3     2 SRS01…     1.56e7 -16376313.  -5174529.  14606530. oralcavi…
-   4     2 SRS01…     1.03e7   9231812.   1882414.   -733350. oralcavi…
-   5     2 SRS01…     1.27e7   4001474.  -5447203.   9894241. oralcavi…
-   6     2 SRS01…     1.05e7  10146423.   6037539.  -1486339. oralcavi…
-   7     2 SRS01…     1.82e7 -27537025. -17281307.  -3673846. oralcavi…
-   8     2 SRS01…     1.37e7   1687184.  -8855225.   9042300. oralcavi…
-   9     2 SRS01…    -2.30e7  -1036333.  12207056.  -9608300. stool    
-  10     2 SRS01…     1.52e7 -13528729. -10929731.    783376. oralcavi…
+   1     2 SRS01…      4.34       0.430      0.751     -2.60  stool    
+   2     2 SRS01…     10.3        1.45       4.48      -1.19  stool    
+   3     2 SRS01…     -1.51      -2.67      -0.586      0.726 oralcavi…
+   4     2 SRS01…      0.499     -0.493     -2.51      -0.314 oralcavi…
+   5     2 SRS01…     -1.51       1.42      -1.68       2.12  oralcavi…
+   6     2 SRS01…      0.196     -2.31      -2.72      -3.91  oralcavi…
+   7     2 SRS01…     -9.51      -4.81       9.64       5.33  oralcavi…
+   8     2 SRS01…     -6.38       8.50       2.13       4.04  oralcavi…
+   9     2 SRS01…      6.27       0.489      2.17      -0.815 stool    
+  10     2 SRS01…     -2.23      -2.54       0.111      1.86  oralcavi…
   # ... with 1,949 more rows, and 5 more variables: Body_subsite &lt;chr&gt;,
   #   Age &lt;int&gt;, Age_category &lt;chr&gt;, Gender &lt;chr&gt;, .cluster &lt;chr&gt;
 ```
 
 ---
+class: nologo
 ## Plots of k-means on the principal plane
 
 
 ```r
 ggplot(df_clust) +
-  geom_point(aes(x = .fittedPC1, y = .fittedPC2, color = .cluster, shape = Body_site)) +
+  aes(x = .fittedPC1, y = .fittedPC2, color = .cluster, shape = Body_site) +
+  geom_point(alpha = 0.6) +
+  scale_shape_manual(values = 0:2) +
   facet_grid(. ~ K) +
   theme(legend.position = "bottom")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-105-1.png" width="720" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-107-1.png" width="792" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -2866,16 +2903,16 @@ df_clust %&gt;%
   
   [[2]]
    .cluster oralcavity skin stool
-          1          0    0   113
-          2        132    0     6
-          3        347   27    28
+          1        347   27    28
+          2          0    0   113
+          3        132    0     6
   
   [[3]]
    .cluster oralcavity skin stool
           1          0    0    63
-          2        135    0     0
-          3          0    0    79
-          4        344   27     5
+          2          0    0    79
+          3        344   27     5
+          4        135    0     0
 ```
 
 
@@ -2885,6 +2922,31 @@ df_clust %&gt;%
 
 Like this:
 
+
+```
+  # A tibble: 17 x 654
+     Phylum SRS011086 SRS011090 SRS011098 SRS011111 SRS011115 SRS011126
+     &lt;chr&gt;      &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;     &lt;int&gt;
+   1 Acido…         0         0         0         0         0         0
+   2 Actin…  19795422    261680  40149371  70894509  17912678  36577594
+   3 Ascom…         0         0         0         0         0         0
+   4 Bacte…   5173832    161067   4307084   1532049  31986039  19951810
+   5 Basid…         0         0         0         0         0         0
+   6 Candi…         0         0      4925         0     59724   3161196
+   7 Chlor…         0         0         0         0         0         0
+   8 Deino…         0         0         0         0         0         0
+   9 Eurya…         0         0         0         0         0         0
+  10 Firmi…  52604350   2118788   4312759  10592022  47823300   8196029
+  11 Fusob…    319848    122811   1206832      1387  19118873   7588485
+  12 Prote…   3646454   1066799   5391435         0  49033824  31115434
+  13 Spiro…         0         0       214         0    114106   1021118
+  14 Syner…         0         0         0         0         0         0
+  15 Tener…         0         0         0     36345    345065         0
+  16 Verru…         0         0         0         0         0         0
+  17 Virus…    124898    126218   1041431         0     15143    430516
+  # ... with 647 more variables: SRS011140 &lt;int&gt;, SRS011144 &lt;int&gt;,
+  #   SRS011152 &lt;int&gt;, SRS011243 &lt;int&gt;, SRS011247 &lt;int&gt;, …
+```
 
 ```
   # A tibble: 17 x 654
@@ -2981,7 +3043,7 @@ df_abund %&gt;%
   mutate(Clade = str_remove(Clade,  ".*__")) %&gt;% 
   rename(Genus = Clade)%&gt;% 
   left_join(df_tax, ., by = "Genus") %&gt;% 
-  select(-c(Kingdom, Class, Order, Family, Genus))
+  select(-c(Kingdom, Class:Genus))
 ```
 
 ```
@@ -3012,7 +3074,7 @@ df_abund %&gt;%
   mutate(Clade = str_remove(Clade,  ".*__")) %&gt;% 
   rename(Genus = Clade)%&gt;% 
   left_join(df_tax, ., by = "Genus") %&gt;% 
-  select(-c(Kingdom, Class, Order, Family, Genus)) %&gt;% 
+  select(-c(Kingdom, Class:Genus)) %&gt;% 
   group_by(Phylum) %&gt;% 
   summarise_all(sum) -&gt; df_phylum
 df_phylum
@@ -3050,13 +3112,12 @@ df_phylum
 
 
 ```r
-df_phylum_transp_stool &lt;-
+(df_phylum_transp_stool &lt;-
   df_phylum %&gt;% 
   gather(key = "Sample", value = "Abundance", -Phylum) %&gt;% 
   spread(key = "Phylum", value = "Abundance") %&gt;% 
   left_join(df_samples, by = "Sample") %&gt;% 
-  filter(Body_site == "stool")
-df_phylum_transp_stool
+  filter(Body_site == "stool"))
 ```
 
 ```
@@ -3089,13 +3150,19 @@ ggplot(df_phylum_transp_stool) +
   geom_smooth(method = "lm")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-115-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-117-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---
 ## Correlation between Firmicutes and Bacteroidetes
 
 * Create 500 bootstrapped datasets to find the distribution of the correlation
+
+&lt;br&gt;
+
+* Use both Pearson and Spearman methods
+
+&lt;br&gt;
 
 * Plot it
 
@@ -3180,26 +3247,70 @@ df_phylum_transp_stool %&gt;%
   mutate(splits = map(splits, as_tibble), 
          Firmicutes = map(splits, pull, Firmicutes),
          Bacteroidetes = map(splits, pull, Bacteroidetes),
-         Cor = map2_dbl(Firmicutes, Bacteroidetes, cor)) -&gt; df_cor
-df_cor
+         Pearson = map2_dbl(Firmicutes, Bacteroidetes, cor),
+         Spearman = map2_dbl(Firmicutes, Bacteroidetes, cor, 
+                             method = "spearman"))
 ```
 
 ```
   # Bootstrap sampling 
-  # A tibble: 500 x 5
-     splits             id           Firmicutes  Bacteroidetes    Cor
-   * &lt;list&gt;             &lt;chr&gt;        &lt;list&gt;      &lt;list&gt;         &lt;dbl&gt;
-   1 &lt;tibble [147 × 2]&gt; Bootstrap001 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.489
-   2 &lt;tibble [147 × 2]&gt; Bootstrap002 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.510
-   3 &lt;tibble [147 × 2]&gt; Bootstrap003 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.535
-   4 &lt;tibble [147 × 2]&gt; Bootstrap004 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.714
-   5 &lt;tibble [147 × 2]&gt; Bootstrap005 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.542
-   6 &lt;tibble [147 × 2]&gt; Bootstrap006 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.444
-   7 &lt;tibble [147 × 2]&gt; Bootstrap007 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.633
-   8 &lt;tibble [147 × 2]&gt; Bootstrap008 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.392
-   9 &lt;tibble [147 × 2]&gt; Bootstrap009 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.557
-  10 &lt;tibble [147 × 2]&gt; Bootstrap010 &lt;dbl [147]&gt; &lt;dbl [147]&gt;   -0.543
+  # A tibble: 500 x 6
+     splits            id          Firmicutes Bacteroidetes Pearson Spearman
+   * &lt;list&gt;            &lt;chr&gt;       &lt;list&gt;     &lt;list&gt;          &lt;dbl&gt;    &lt;dbl&gt;
+   1 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.489   -0.515
+   2 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.510   -0.422
+   3 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.535   -0.530
+   4 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.714   -0.634
+   5 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.542   -0.460
+   6 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.444   -0.456
+   7 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.633   -0.681
+   8 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.392   -0.379
+   9 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.557   -0.382
+  10 &lt;tibble [147 × 2… Bootstrap0… &lt;dbl [147… &lt;dbl [147]&gt;    -0.543   -0.525
   # ... with 490 more rows
+```
+
+---
+count: false
+class: nologo
+## Correlation between Firmicutes and Bacteroidetes
+
+
+
+
+
+
+```r
+df_phylum_transp_stool %&gt;% 
+  select(Firmicutes, Bacteroidetes) %&gt;% 
+  bootstraps(times = 500) %&gt;%
+  mutate(splits = map(splits, as_tibble), 
+         Firmicutes = map(splits, pull, Firmicutes),
+         Bacteroidetes = map(splits, pull, Bacteroidetes),
+         Pearson = map2_dbl(Firmicutes, Bacteroidetes, cor),
+         Spearman = map2_dbl(Firmicutes, Bacteroidetes, cor, 
+                             method = "spearman")) %&gt;% 
+  select(Pearson, Spearman) %&gt;% 
+  {.[, ]} %&gt;% 
+  gather(key = "Method", value = "Correlation") -&gt; df_cor
+df_cor
+```
+
+```
+  # A tibble: 1,000 x 2
+     Method  Correlation
+     &lt;chr&gt;         &lt;dbl&gt;
+   1 Pearson      -0.489
+   2 Pearson      -0.510
+   3 Pearson      -0.535
+   4 Pearson      -0.714
+   5 Pearson      -0.542
+   6 Pearson      -0.444
+   7 Pearson      -0.633
+   8 Pearson      -0.392
+   9 Pearson      -0.557
+  10 Pearson      -0.543
+  # ... with 990 more rows
 ```
 
 
@@ -3210,14 +3321,12 @@ df_cor
 
 ```r
 ggplot(df_cor) +
-  geom_density(aes(x = Cor), fill = "grey") +
-  geom_vline(xintercept = 0, color = "grey") +
-  geom_vline(xintercept = cor(df_phylum_transp_stool$Firmicutes, 
-                              df_phylum_transp_stool$Bacteroidetes), 
-             color = "tomato") 
+  aes(x = Correlation, fill = Method) +
+  geom_density(alpha = 0.5) +
+  geom_vline(xintercept = 0, color = "grey")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-120-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="Modeling_files/figure-html/unnamed-chunk-124-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---

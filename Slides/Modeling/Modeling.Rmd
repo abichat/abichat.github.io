@@ -164,8 +164,14 @@ class: center, middle, inverse
 --
 
 .pull-right[
-<img src="img/tidyr-spread-gather.gif", width=400> 
+<img src="img/tidyr-spread-gather.gif", width=300> 
 ]
+
+```{r}
+pryr::object_size(iris)
+pryr::object_size(gather(iris, key = "Part", value = "Size", -Species))
+```
+
 
 .footnote[<a href="https://github.com/gadenbuie/tidyexplain" target="_blank">`r icon::fa("github", size = 1)` Animations of tidyverse verbs (G. Aden-Buie)</a>]
 
@@ -267,7 +273,8 @@ set.seed(42)
 map(1:100, rnorm) %>% 
   map_dbl(mean) %>% 
   tibble(Mean = .) %>% 
-  mutate(N = row_number()) # Slightly ifferent from rownames_to_column("N")
+  mutate(N = row_number()) # Slightly different from rownames_to_column("N")
+                           # Faster than 1:n() and rownames_to_column("N")
 ```
 
 
@@ -534,7 +541,7 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 `walk()` and variants are designed for side-effects function and return the input
 
 ---
-## `imap*()` functions 
+## `imap*()` 
 
 `imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
 
@@ -543,13 +550,12 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 ```{r fig.width=10}
 imap(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .x)) + 
        geom_point() + labs(x = "Fertility", y = .y)) %>%
-  .[-1] %>%
   gridExtra::grid.arrange(grobs = .)
 ```
 
 ---
 count:false
-## `imap*()` functions 
+## `imap*()`  
 
 `imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
 
@@ -557,7 +563,6 @@ count:false
 swiss %>%
   imap(., function(x, y) ggplot(., aes(x = Fertility, y = x)) + 
          geom_point() + labs(x = "Fertility", y = y)) %>%
-  .[-1] %>%
   gridExtra::grid.arrange(grobs = .)
 ```
 
@@ -1175,6 +1180,11 @@ bootstrap_pins %>%
 
 Since the original data is not modified, `r icon::fa("r-project", size = 1)` does not make an automatic copy so creating $N$ bootstraps of a data set does not create an object that is $N$-fold larger in memory.
 
+```{r}
+pryr::object_size(bootstraps(mtcars, 100)) / pryr::object_size(mtcars)
+```
+
+
 
 ---
 class: center, middle, inverse
@@ -1417,6 +1427,10 @@ df_abund_transp <-
 
 <br>
 
+* Set `scale. = TRUE` 
+
+<br>
+
 * Keep only the four first principal components
 
 ---
@@ -1425,9 +1439,9 @@ df_abund_transp <-
 ```{r message=FALSE}
 df_abund_transp %>% 
   select(-Sample) %>% 
-  prcomp() %>% 
+  prcomp(scale. = TRUE) %>% 
   augment(df_abund_transp) %>% 
-  select(Sample, .fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4)
+  select(Sample, .fittedPC1:.fittedPC4)
 ```
 
 ---
@@ -1438,9 +1452,9 @@ count: false
 ```{r message=FALSE}
 df_abund_transp %>% 
   select(-Sample) %>% 
-  prcomp() %>% 
+  prcomp(scale. = TRUE) %>% 
   augment(df_abund_transp) %>% 
-  select(Sample, .fittedPC1, .fittedPC2, .fittedPC3, .fittedPC4) %>% 
+  select(Sample, .fittedPC1:.fittedPC4) %>% 
   left_join(df_samples, by = "Sample") -> df_PCA
 df_PCA
 ```
@@ -1452,7 +1466,7 @@ df_PCA
 ```{r, fig.height=6}
 ggplot(df_PCA) +
   aes(x = .fittedPC1, y = .fittedPC2, color = Body_site) +
-  geom_point()
+  geom_point(alpha = 0.6)
 ```
 
 ---
@@ -1463,7 +1477,7 @@ count: false
 ```{r, fig.height=6}
 ggplot(df_PCA) +
   aes(x = .fittedPC1, y = .fittedPC2, color = Body_subsite) +
-  geom_point()
+  geom_point(alpha = 0.6)
 ```
 
 ---
@@ -1545,11 +1559,14 @@ df_clust
 ```
 
 ---
+class: nologo
 ## Plots of k-means on the principal plane
 
-```{r fig.height=5.7, fig.width=10}
+```{r fig.height=5.5, fig.width=11}
 ggplot(df_clust) +
-  geom_point(aes(x = .fittedPC1, y = .fittedPC2, color = .cluster, shape = Body_site)) +
+  aes(x = .fittedPC1, y = .fittedPC2, color = .cluster, shape = Body_site) +
+  geom_point(alpha = 0.6) +
+  scale_shape_manual(values = 0:2) +
   facet_grid(. ~ K) +
   theme(legend.position = "bottom")
 ```
@@ -1607,6 +1624,13 @@ df_abund %>%
   select(-c(Kingdom, Class, Order, Family, Genus)) %>% 
   group_by(Phylum) %>% 
   summarise_all(sum)
+df_abund %>% 
+  mutate(Clade = str_remove(Clade,  ".*__")) %>% 
+  rename(Genus = Clade) %>% 
+  left_join(df_tax, ., by = "Genus") %>% 
+  select(-c(Kingdom, Class:Genus)) %>% 
+  group_by(Phylum) %>% 
+  summarise_all(sum)
 ```
 
 
@@ -1640,7 +1664,7 @@ df_abund %>%
   mutate(Clade = str_remove(Clade,  ".*__")) %>% 
   rename(Genus = Clade)%>% 
   left_join(df_tax, ., by = "Genus") %>% 
-  select(-c(Kingdom, Class, Order, Family, Genus))
+  select(-c(Kingdom, Class:Genus))
 ```
 
 ---
@@ -1652,7 +1676,7 @@ df_abund %>%
   mutate(Clade = str_remove(Clade,  ".*__")) %>% 
   rename(Genus = Clade)%>% 
   left_join(df_tax, ., by = "Genus") %>% 
-  select(-c(Kingdom, Class, Order, Family, Genus)) %>% 
+  select(-c(Kingdom, Class:Genus)) %>% 
   group_by(Phylum) %>% 
   summarise_all(sum) -> df_phylum
 df_phylum
@@ -1664,13 +1688,12 @@ df_phylum
 --
 
 ```{r}
-df_phylum_transp_stool <-
+(df_phylum_transp_stool <-
   df_phylum %>% 
   gather(key = "Sample", value = "Abundance", -Phylum) %>% 
   spread(key = "Phylum", value = "Abundance") %>% 
   left_join(df_samples, by = "Sample") %>% 
-  filter(Body_site == "stool")
-df_phylum_transp_stool
+  filter(Body_site == "stool"))
 ```
 
 ---
@@ -1688,6 +1711,12 @@ ggplot(df_phylum_transp_stool) +
 ## Correlation between Firmicutes and Bacteroidetes
 
 * Create 500 bootstrapped datasets to find the distribution of the correlation
+
+<br>
+
+* Use both Pearson and Spearman methods
+
+<br>
 
 * Plot it
 
@@ -1735,7 +1764,35 @@ df_phylum_transp_stool %>%
   mutate(splits = map(splits, as_tibble), 
          Firmicutes = map(splits, pull, Firmicutes),
          Bacteroidetes = map(splits, pull, Bacteroidetes),
-         Cor = map2_dbl(Firmicutes, Bacteroidetes, cor)) -> df_cor
+         Pearson = map2_dbl(Firmicutes, Bacteroidetes, cor),
+         Spearman = map2_dbl(Firmicutes, Bacteroidetes, cor, 
+                             method = "spearman"))
+```
+
+---
+count: false
+class: nologo
+## Correlation between Firmicutes and Bacteroidetes
+
+
+```{r echo=FALSE}
+set.seed(42)
+```
+
+
+```{r}
+df_phylum_transp_stool %>% 
+  select(Firmicutes, Bacteroidetes) %>% 
+  bootstraps(times = 500) %>%
+  mutate(splits = map(splits, as_tibble), 
+         Firmicutes = map(splits, pull, Firmicutes),
+         Bacteroidetes = map(splits, pull, Bacteroidetes),
+         Pearson = map2_dbl(Firmicutes, Bacteroidetes, cor),
+         Spearman = map2_dbl(Firmicutes, Bacteroidetes, cor, 
+                             method = "spearman")) %>% 
+  select(Pearson, Spearman) %>% 
+  {.[, ]} %>% 
+  gather(key = "Method", value = "Correlation") -> df_cor
 df_cor
 ```
 
@@ -1744,13 +1801,11 @@ df_cor
 ## Correlation between Firmicutes and Bacteroidetes
 
 
-```{r fig.height=5}
+```{r fig.height=6, fig.width=8}
 ggplot(df_cor) +
-  geom_density(aes(x = Cor), fill = "grey") +
-  geom_vline(xintercept = 0, color = "grey") +
-  geom_vline(xintercept = cor(df_phylum_transp_stool$Firmicutes, 
-                              df_phylum_transp_stool$Bacteroidetes), 
-             color = "tomato") 
+  aes(x = Correlation, fill = Method) +
+  geom_density(alpha = 0.5) +
+  geom_vline(xintercept = 0, color = "grey")
 ```
 
 
