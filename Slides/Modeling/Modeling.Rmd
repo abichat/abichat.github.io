@@ -1814,6 +1814,8 @@ class: center, middle, inverse
 
 # References
 
+`r icon::fa("book-open", size = 5)`
+
 ---
 <br>
 
