@@ -213,9 +213,7 @@ class: center, middle, inverse
   
   * `pmap()`, `pmap_dbl()`, `pmap_chr()`, `pmap_lgl()`, ...
   
-  * `walk()`, `walk2()`, `pwalk()`, ...
-  
-  * `imap()`, `iwalk()`, ...
+  * `walk()`, `imap()` and variants
 
 
 
@@ -272,9 +270,8 @@ set.seed(42)
 ```{r}
 map(1:100, rnorm) %>% 
   map_dbl(mean) %>% 
-  tibble(Mean = .) %>% 
+  tibble(Mean = .) %>%       # Faster than 1:n() and rownames_to_column("N")
   mutate(N = row_number()) # Slightly different from rownames_to_column("N")
-                           # Faster than 1:n() and rownames_to_column("N")
 ```
 
 
@@ -286,7 +283,7 @@ count: false
 set.seed(42)
 ```
 
-```{r fig.height=5}
+```{r fig.height=4.8}
 map(1:100, rnorm) %>% 
   map_dbl(mean) %>% 
   tibble(Mean = .) %>% 
@@ -1352,6 +1349,7 @@ df_abund_filtered %>%
 
 ---
 count: false
+class: nologo
 ## Find differentially abundant genera
 
 ```{r}
@@ -1791,7 +1789,7 @@ df_phylum_transp_stool %>%
          Spearman = map2_dbl(Firmicutes, Bacteroidetes, cor, 
                              method = "spearman")) %>% 
   select(Pearson, Spearman) %>% 
-  {.[, ]} %>% 
+  {.[, ]} %>% # To use gather() and not gather.rset()
   gather(key = "Method", value = "Correlation") -> df_cor
 df_cor
 ```
