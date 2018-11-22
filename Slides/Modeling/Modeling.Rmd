@@ -538,29 +538,31 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 `walk()` and variants are designed for side-effects function and return the input
 
 ---
+class: nologo
 ## `imap*()` 
 
 `imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
 
 --
 
-```{r fig.width=10}
+```{r fig.width=10, fig.height=5.5}
 imap(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .x)) + 
        geom_point() + labs(x = "Fertility", y = .y)) %>%
-  gridExtra::grid.arrange(grobs = .)
+  gridExtra::grid.arrange(grobs = ., ncol = 3)
 ```
 
 ---
 count:false
+class: nologo
 ## `imap*()`  
 
 `imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
 
-```{r fig.width=10}
+```{r fig.width=10, fig.height=5.5}
 swiss %>%
   imap(., function(x, y) ggplot(., aes(x = Fertility, y = x)) + 
          geom_point() + labs(x = "Fertility", y = y)) %>%
-  gridExtra::grid.arrange(grobs = .)
+  gridExtra::grid.arrange(grobs = ., ncol = 3)
 ```
 
 

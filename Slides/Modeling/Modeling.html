@@ -45,7 +45,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Attaching packages ───────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+  ── Attaching packages ─────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -56,7 +56,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Conflicts ──────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+  ── Conflicts ────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
   ✖ dplyr::filter() masks stats::filter()
   ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -703,6 +703,7 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 `walk()` and variants are designed for side-effects function and return the input
 
 ---
+class: nologo
 ## `imap*()` 
 
 `imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
@@ -713,13 +714,14 @@ pmap(list(n = c(2, 3, 2, 5), min = 1:4, max = c(2, 5, 5, 10)), runif)
 ```r
 imap(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .x)) + 
        geom_point() + labs(x = "Fertility", y = .y)) %&gt;%
-  gridExtra::grid.arrange(grobs = .)
+  gridExtra::grid.arrange(grobs = ., ncol = 3)
 ```
 
 &lt;img src="Modeling_files/figure-html/unnamed-chunk-29-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 ---
 count:false
+class: nologo
 ## `imap*()`  
 
 `imap(x, fun)` is equivalent to `map2(x, names(x), fun)` 
@@ -729,7 +731,7 @@ count:false
 swiss %&gt;%
   imap(., function(x, y) ggplot(., aes(x = Fertility, y = x)) + 
          geom_point() + labs(x = "Fertility", y = y)) %&gt;%
-  gridExtra::grid.arrange(grobs = .)
+  gridExtra::grid.arrange(grobs = ., ncol = 3)
 ```
 
 &lt;img src="Modeling_files/figure-html/unnamed-chunk-30-1.png" width="720" style="display: block; margin: auto;" /&gt;
@@ -1453,7 +1455,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Attaching packages ──────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
+  ── Attaching packages ────────────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
 ```
 
 ```
@@ -1463,7 +1465,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Conflicts ─────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
+  ── Conflicts ───────────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
   ✖ rsample::fill()    masks tidyr::fill()
   ✖ dplyr::filter()    masks stats::filter()
   ✖ recipes::fixed()   masks stringr::fixed()
