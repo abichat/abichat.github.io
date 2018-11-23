@@ -306,7 +306,7 @@ set.seed(42)
 ```
 
 ```{r}
-map_df(1:10, mean_rnorm) %>% rownames_to_column("N")
+map_dfr(1:10, mean_rnorm) %>% rownames_to_column("N")
 ```
 
 
@@ -1303,7 +1303,7 @@ df_abund_filtered
 
 <br>
 
-* Between subsites `buccal_mucosa` and `bupragingival_plaque` 
+* Between subsites `buccal_mucosa` and `supragingival_plaque` 
 
 <br>
 
@@ -1311,7 +1311,7 @@ df_abund_filtered
 
 <br>
 
-* Corrected for false discovery rate: `p.adjust(method = "FDR")`
+* Corrected for false discovery rate: `p.adjust(method = "fdr")`
 
 ---
 ## Find differentially abundant genera

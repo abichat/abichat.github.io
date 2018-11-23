@@ -45,7 +45,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Attaching packages ────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
+  ── Attaching packages ─────────────────────────────────────────────────────────────────────────────── tidyverse 1.2.1 ──
 ```
 
 ```
@@ -56,7 +56,7 @@ library(tidyverse)
 ```
 
 ```
-  ── Conflicts ───────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+  ── Conflicts ────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
   ✖ dplyr::filter() masks stats::filter()
   ✖ dplyr::lag()    masks stats::lag()
 ```
@@ -375,7 +375,7 @@ mean_rnorm(5)
 
 
 ```r
-map_df(1:10, mean_rnorm) %&gt;% rownames_to_column("N")
+map_dfr(1:10, mean_rnorm) %&gt;% rownames_to_column("N")
 ```
 
 ```
@@ -1457,7 +1457,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Attaching packages ───────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
+  ── Attaching packages ────────────────────────────────────────────────────────────────────────────── tidymodels 0.0.1 ──
 ```
 
 ```
@@ -1467,7 +1467,7 @@ library(tidymodels)
 ```
 
 ```
-  ── Conflicts ──────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
+  ── Conflicts ───────────────────────────────────────────────────────────────────────────────── tidymodels_conflicts() ──
   ✖ rsample::fill()    masks tidyr::fill()
   ✖ dplyr::filter()    masks stats::filter()
   ✖ recipes::fixed()   masks stringr::fixed()
@@ -2310,7 +2310,7 @@ df_abund_filtered
 
 &lt;br&gt;
 
-* Between subsites `buccal_mucosa` and `bupragingival_plaque` 
+* Between subsites `buccal_mucosa` and `supragingival_plaque` 
 
 &lt;br&gt;
 
@@ -2318,7 +2318,7 @@ df_abund_filtered
 
 &lt;br&gt;
 
-* Corrected for false discovery rate: `p.adjust(method = "FDR")`
+* Corrected for false discovery rate: `p.adjust(method = "fdr")`
 
 ---
 ## Find differentially abundant genera
