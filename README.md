@@ -37,7 +37,11 @@ Comming soon
 
 ## RStats
 
-* <a href="https://abichat.github.io/Slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html#1" target="_blank">Introduction to the Tidyverse</a>: presentation for <a href="https://stateofther.github.io" target="_blank">State of the R AgroParisTech</a> on May 2, 2018.
+* <a href="https://abichat.github.io/Slides/Modeling/Modeling.html" target="_blank">Modeling in the Tidyverse
+and applications to metagenomics data</a>: presentation for <a href="https://stateofther.github.io" target="_blank">State of the R AgroParisTech</a> on November 23, 2018. Files: <a href="https://abichat.github.io/Slides/Modeling/pines.txt" target="_blank">pines.txt</a>, <a href="https://abichat.github.io/Slides/Modeling/abund_table.txt" target="_blank">abund_table.txt</a>, <a href="https://abichat.github.io/Slides/Modeling/samples_table.txt" target="_blank">samples_table.txt</a>.
+
+
+* <a href="https://abichat.github.io/Slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html" target="_blank">Introduction to the Tidyverse</a>: presentation for <a href="https://stateofther.github.io" target="_blank">State of the R AgroParisTech</a> on May 2, 2018.
 
 
 * <a href="abichat.github.io/Slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html" target="_blank">Science Communication with R</a>: presentation for <a href="https://stateofther.github.io" target="_blank">State of the R AgroParisTech</a> on February 23, 2018.
