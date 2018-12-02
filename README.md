@@ -65,7 +65,7 @@ and applications to metagenomics data</a>: presentation for <a href="https://sta
 
 Exemples de cours : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap1.html#1" target="_blank">Regression linéaire simple</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap2.html#1" target="_blank">Regression linéaire multiple</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap3.html#1" target="_blank">ANOVA à un facteur</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap4.html#1" target="_blank">ANOVA à deux facteurs, cas équilibré</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap5.html#1" target="_blank">ANOVA à deux facteurs, cas BIE</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap6.html#1" target="_blank">Analyse en composantes principales</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/Chap7.html#1" target="_blank">Analyse de la covariance</a>.
 
-Divers : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/TP2.html" target="_blank">TP2</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/ChoixProjet2A.html" target="_blank">Choix des projets</a>.
+Divers : <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/TP2.html" target="_blank">TP2</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/TP3.html" target="_blank">TP3</a>, <a href="https://abichat.github.io/Slides/AgroBasesDuModeleLineaire/ChoixProjet2A.html" target="_blank">Choix des projets</a>.
 
 Références extérieures : <a href="https://youtu.be/aOX0pIwBCvw" target="_blank">facteurs de confusion</a>, <a href="https://youtu.be/xVIt51ybvu0" target="_blank">p-valeur</a>.
 
@@ -90,6 +90,10 @@ Références extérieures : <a href="https://youtu.be/aOX0pIwBCvw" target="_blan
 # Miscellaneous
 
 <div style = "margin-top: -20px"></div>
+
+## SatRday Paris 2019
+
+23 February 2019 at AgroParisTech. <a href="https://paris2019.satrdays.org" target="_blank">Official website</a>.
 
 ## Simulation of Brownian Motion
 

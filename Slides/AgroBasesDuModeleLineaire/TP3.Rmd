@@ -1,0 +1,267 @@
+---
+title: "TD3 <br> Analyse de la variance et Analyse de la covariance"
+author: "Antoine Bichat - Émilie Lebarbier"
+output: 
+  html_document:
+   toc: true
+   toc_float: true
+   number_sections: false
+   highlight: tango
+  pdf_document: default
+---
+
+<style>
+#TOC {
+  background: url("logo_agro.png");
+  background-size: contain;
+  padding-top: 90px !important;
+  background-repeat: no-repeat;
+}
+</style>
+
+<script>
+    $(document).ready(function() {
+      $items = $('div#TOC li');
+      $items.each(function(idx) {
+        num_ul = $(this).parentsUntil('#TOC').length;
+        $(this).css({'text-indent': num_ul * 10, 'padding-left': 10});
+      });
+
+    });
+</script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", 
+                      out.width = "100%")
+```
+
+# Préliminaires
+
+## Librairies
+
+```{r packages, message=FALSE}
+library(ppcor)
+library(car)
+library(lsmeans)
+library(tidyverse)
+theme_set(theme_bw())
+```
+
+
+
+## Chargement des données
+
+```{r}
+myData <- read.table(file = "bats.csv", sep = ";", skip= 3, header = TRUE)
+str(myData)
+```
+
+`Diet` est ici un entier, on va donc changer sa classe en facteur car cette variable est en réalité catégorielle.
+
+```{r}
+myData$Diet <- as.factor(myData$Diet)
+# ou de manière équivalente
+# myData <- mutate(myData, Diet = as.factor(Diet))
+```
+
+## Manipulation des données
+
+```{r}
+with(myData, table(Diet, Clade))
+```
+
+On supprime les chauve-souris vampires qui correspondent à la diète 4.
+
+```{r}
+myData2 <- myData[-which(myData$Diet == 4), ]
+myData2$Diet <- droplevels(myData2$Diet)
+
+# ou de manière équivalente
+# myData2 <-
+#   myData %>%
+#   filter(Diet != 4) %>%
+#   mutate(Diet = fct_drop(Diet))
+```
+
+```{r}
+with(myData2, table(Diet, Clade))
+```
+
+On fusionne les clades II et III.
+
+```{r}
+myData2[myData2$Clade == "III", ]$Clade <- levels(myData2$Clade)[2]
+myData2$Clade <- droplevels(myData2$Clade)
+
+# ou de manière équivalente
+# myData2 <- 
+#   myData2 %>%   
+#   mutate(Clade = fct_collapse(Clade, II = c("II", "III")))
+```
+
+```{r}
+with(myData2, table(Diet, Clade))
+```
+
+
+# Volume de la partie auditive, régime alimentaire, et phylogénie
+
+## Analyse graphique
+
+```{r}
+ggplot(myData2) +
+  aes(x = Clade, y = AUD, fill = Clade) +
+  geom_violin() +
+  geom_boxplot(alpha = 0) +
+  geom_point(alpha = 0.5) +
+  facet_grid(~ Diet)
+```
+
+```{r}
+myData2 %>% 
+  group_by(Diet, Clade) %>% 
+  summarise(`Mean of AUD` = mean(AUD)) %>% 
+  ggplot() +
+  aes(x = Diet, y = `Mean of AUD`, color = Clade) +
+  geom_line(aes(group = Clade, linetype = Clade)) +
+  geom_point()
+```
+
+## Analyse de la variance à deux facteur
+
+### Modèle
+
+On cherche à modéliser le volume de la partie auditive en fonction de l'évolution et du régime aliementaire. On ne peut pas estimer les interactions entre ces variables car le dispositif est incomplet. Le modèle mathématique associé est donc 
+
+$$Y_{i,j,k} = \mu + \alpha_i + \beta_j + E_{i,j,k}$$
+où 
+
+* $Y_{i,k}$ est le volume de la partie auditive du $k^{\text{ème}}$ individu du
+$i^{\text{ème}}$ clade et de la $j^{\text{ème}}$ diète,
+* $\mu$ est l'effet moyen,
+* $\alpha_{i}$ est l'effet spécifique du clade $i$,
+* $\beta{j}$ est l'effet spécifique de la diète $j$,
+* $\left\{E_{i,j,k}\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq I = 3$,
+* $1 \leq j \leq J = 3$,
+* $1 \leq k \leq n_{i,j}$, 
+* $n_{1,1} = 10$, $n_{1,2} = 4$, $n_{1,3} = 7$, $n_{2,1} = 19$, $n_{2,2} = 1$, $n_{2,3} = 2$, $n_{3,1} = n_{3,2} = 0$, $n_{3,3} = 18$. 
+
+```{r}
+anova2 <- lm(AUD ~ Clade + Diet, data = myData2)
+```
+
+
+### Tests
+
+```{r}
+summary(anova2)
+```
+
+La p-valeur associée au modèle est $p =$ `r round(pf(summary(anova2)$fstatistic[[1]], summary(anova2)$fstatistic[[2]], summary(anova2)$fstatistic[[3]], lower.tail = FALSE), 4)` donc il n'est pas significatif. 
+On regarde tout de même l'influence des différentes variables qui ne sont pas significatives non plus, sans surprise. 
+
+```{r}
+anova(anova2)
+Anova(anova2)
+```
+
+
+# Volume de la partie auditive, régime alimentaire et taille du cerveau
+
+## Analyse descriptive
+
+```{r}
+by(myData2$BRW, myData2$Diet, mean)
+by(myData2$AUD, myData2$Diet, mean)
+
+# ou de manière semblable (et même mieux)
+myData2 %>%
+  group_by(Diet) %>%
+  summarise(Effectif = n(),
+            `Mean of AUD` = mean(AUD),
+            `Mean of BRW` = mean(BRW))
+```
+
+## Analyse graphique
+
+```{r}
+ggplot(myData2) +
+  aes(x = AUD, y = BRW, color = Diet, shape = Diet) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+## Analyse de la covariance
+
+### Modèle
+
+On cherche à modéliser le volume de la partie auditive en fonction du régime aliementaire et du poids du cerveau total. Le modèle mathématique associé est donc 
+
+$$Y_{i,k} = \mu + \alpha_i + (\beta + \gamma_i) \times x_{i,k} + E_{i,k}$$
+
+où 
+
+* $Y_{i,k}$ est le volume de la partie auditive du $k^{\text{ème}}$ individu de la $i^{\text{ème}}$ diète,
+* $\mu$ est l'effet moyen,
+* $\alpha_{i}$ est l'effet spécifique de la diète $i$,
+* $\beta$ est la pente commune,
+* $\gamma_{i}$ est la pente spécifique de la diète $i$,
+* $x_{i,k}$ est le poids du cerveau total du $k^{\text{ème}}$ individu de la $i^{\text{ème}}$ diète,
+* $\left\{E_{i,k}\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq I = 3$,
+* $1 \leq k \leq n_{i}$, 
+* $n_{1} = 29$, $n_{2} = 5$, $n_{3} = 27$. 
+
+```{r}
+ancova <- lm(AUD ~ Diet * BRW, data = myData2)
+```
+
+### Graphes de diagnostic
+
+```{r}
+par(mfrow = c(2, 2)) 
+plot(ancova)
+```
+
+Le point 7 est atypique. Dans le cadre formel de ce TP, on continue l'analyse sans le retirer en validant les hypothèses de ce modèle.
+
+### Test du modèle
+
+```{r}
+reg0 <- lm(AUD ~ 1, data = myData2)
+anova(reg0, ancova)
+```
+
+Avec $p=`r round(anova(reg0, ancova)[[6]][2], 3)`$, le modèle est significatif.
+
+On note par ailleurs que 
+
+* la somme des carrés totale vaut `r round(anova(reg0, ancova)[[2]][1], 2)` sur `r round(anova(reg0, ancova)[[1]][1], 2)` degrés de liberté,
+* la somme des carrés résiduelle vaut `r round(anova(reg0, ancova)[[2]][2], 2)` sur `r round(anova(reg0, ancova)[[1]][2], 2)` degrés de liberté,
+* la somme des carrés due au modèle vaut `r round(anova(reg0, ancova)[[4]][2], 2)` sur `r round(anova(reg0, ancova)[[3]][2], 2)` degrés de liberté.
+
+### Test des variables
+
+```{r}
+anova(ancova)
+Anova(ancova)
+```
+
+L'intercation est significative dans le cadre des tests de type I et de type II (on a $p=`r anova(ancova)[[5]][3]` < 0.05 = \alpha$). On conserve donc toutes les varaibles.
+
+### Test des paramètres
+
+```{r}
+summary(ancova)
+```
+
+### Comparaison des modalités
+
+```{r message=FALSE}
+lsmeans(ancova, pairwise ~ Diet, adjust = "none")
+lsmeans(ancova, pairwise ~ Diet, adjust = "bonferroni")
+```
+
+La diète 3 a une influence significativement différente de la diète 1, après correction pour la multiplicité par la méthode de Bonferroni. En revanche, ce n'est pas le cas pour la comparaison entre les diètes 1 et 2, et 2 et 3.
+

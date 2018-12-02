@@ -8,7 +8,6 @@ output:
    number_sections: false
    highlight: tango
   pdf_document: default
-# bibliography: bib.bib
 ---
 
 <style>
@@ -318,6 +317,7 @@ $$Y_{i,k} = \mu + \alpha_i + E_{i,k},$$
 où 
 
 * $Y_{i,k}$ est le volume de la partie auditive du $k^{\text{ème}}$ individu de la $i^{\text{ème}}$ diète,
+* $\mu$ est l'effet moyen,
 * $\alpha_{i}$ est l'effet spécifique de la diète $i$,
 * $\left\{E_{i,k}\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
 * $1 \leq i \leq I = 4$,
