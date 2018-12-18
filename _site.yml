@@ -5,6 +5,7 @@ description: |
   Antoine's site :)
 output_dir: "."
 permalink: /404.html
+google_analytics: "UA-131161788-1"
 navbar:
   left:
     - icon: fa-github
