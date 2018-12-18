@@ -1,0 +1,19 @@
+---
+title: "Talks about R"
+description: |
+  <p align="center"><img src="img/logo_r.png" height="130"></p>
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Metagenomics with R
+
+
+* [Slides](Slides/MetagenomicsRGrenoble/MetagenomicsRGrenoble.html "Modeling in the Tidyverse")
+
+<aside>
+November 23, 2017
+Grenoble
+</aside>

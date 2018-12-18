@@ -1,0 +1,44 @@
+name: "NewPersonalSite"
+title: "Antoine's site"
+favicon: img/favicon.png
+description: |
+  Antoine's site :)
+output_dir: "."
+permalink: /404.html
+navbar:
+  left:
+    - icon: fa-github
+      href: https://github.com/abichat
+    - icon: fa-linkedin
+      href: https://www.linkedin.com/in/antoinebichat/
+    - icon: fa-twitter
+      href: https://twitter.com/_abichat
+    - icon: fa-envelope
+      href: mailto:antoine[dot]bichat[at]univ[dash]evry[dot]fr?subject=From%20website
+  right:
+    - text: "Presentations"
+      menu: 
+      - text: "State of the R"
+        href: sotr.html
+      - text: "RStats"
+        href: talks-r.html
+    - text: "Teaching"
+      menu:
+      - text: "AgroParisTech - Bases du modèle linéaire"
+        href: agro-modlin.html
+      - text: "---"
+      - text: "Mines Nancy - Visualisation with R"
+        href: minesnancy-visu.html
+    - text: "Packages 📦"
+      menu:
+      - text: "rcppclick"
+        href: "https://github.com/abichat/rcppclick"
+      - text: "mytemplatesabichat"
+        href: "https://github.com/abichat/mytemplatesabichat"
+    - text: "Miscellaneous"
+      menu:
+      - text: "Simulation of Brownian motion"
+        href: "https://abichat.shinyapps.io/BrownianMotion/"
+        
+output: 
+  radix::radix_article

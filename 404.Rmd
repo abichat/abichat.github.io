@@ -1,0 +1,14 @@
+---
+title: "Error 404"
+description: |
+  Page not found
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+# Learn more about creating websites with Radix at:
+# https://rstudio.github.io/radix/website.html
+
+```
+
