@@ -8,6 +8,50 @@ description: |
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+# Planning 2018
+
+```{r echo=FALSE, message=FALSE}
+library(tidyverse)
+library(knitr)
+library(kableExtra)
+
+planning <-
+  tribble(~Date, ~Heure, ~Salle, ~`Thème`, ~Travail,
+          "Lundi 10 septembre", "8h30", "Salle 38", "Régression linéaire simple", "",
+          "Lundi 10 septembre", "15h00", "Salle 38", "Régression linéaire simple", "",
+          "Jeudi 13 septembre", "10h15", "Salle 38", "Régression linéaire multiple", "",
+          "Vendredi 14 septembre", "15h00", "Salle 38", "Régression linéaire multiple", "",
+          "Lundi 17 septembre", "8h30", "Salle 38", "ANOVA à un facteur", "",
+          "Vendredi 21 septembre", "8h30", "Salle 38", "ANOVA à un facteur", "",
+          "Lundi 1er octobre", "13h15", "Salle 38", "ANOVA à deux facteurs", "DM1",
+          "Vendredi 5 octobre", "8h30", "Salle 38", "ANOVA à deux facteurs", "",
+          "Lundi 8 octobre", "8h30", "Salle 38", "ANOVA à deux facteurs", "",
+          "Vendredi 12 octobre", "8h30", "I11 - I12", "TP1", "DM2",
+          "Vendredi 12 octobre", "10h15", "I11 - I12", "TP2", "",
+          "Vendredi 19 octobre", "8h30", "Salle 38", "ACP", "",
+          "Vendredi 19 octobre", "10h15", "Salle 38", "Lancement des projets", "Importer les données",
+          "Vendredi 19 octobre", "13h15", "Salle 38", "ACP", "",
+          "Vendredi 19 octobre", "15h00", "Salle 38", "ANCOVA", "",
+          "Vendredi 16 novembre", "8h30", "I11 - I12", "TP3", "DM3",
+          "Lundi 3 décembre", "8h30", "Salle 38", "ANCOVA", "",
+          "Lundi 3 décembre", "15h00", "Salle 38", "Séance de révisions", "",
+          "Lundi 10 décembre", "", "", "", "Partiel",
+          "Lundi 21 janvier", "", "", "", "Rendu des projets")
+```
+
+```{r, echo=FALSE}
+planning %>% 
+  group_by(Date) %>% 
+  mutate(TravailJour = str_c(Travail, collapse = "")) %>% 
+  ungroup() %>% 
+  mutate(Travail = cell_spec(Travail, bold = Travail != ""),
+         Date = cell_spec(Date, bold = TravailJour != "")) %>%
+  select(-TravailJour) %>% 
+  kable(align = "l", escape = FALSE) %>% 
+  kable_styling(bootstrap_options = c("hover", "responsive"), font_size = 10) %>% 
+  collapse_rows(columns = 1, )
+```
+
 
 # Exemples de cours
 
@@ -19,11 +63,6 @@ knitr::opts_chunk$set(echo = FALSE)
 * [ANOVA à deux facteurs, cas BIE](teaching/AgroBasesDuModeleLineaire/Chap5.html "Chapitre 5"),
 * [Analyse de la covariance](teaching/AgroBasesDuModeleLineaire/Chap7.html "Chapitre 7"),
 * [Analyse en composantes principales](teaching/AgroBasesDuModeleLineaire/Chap6.html "Chapitre 6").
-
-<aside>
-Fall 2018 <br>
-AgroParisTech
-</aside>
 
 # TP
 * [TP2](teaching/AgroBasesDuModeleLineaire/TP2.html "TP2"),
