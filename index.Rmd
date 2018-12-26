@@ -17,15 +17,12 @@ knitr::opts_chunk$set(echo = FALSE)
 &emsp; I'm also a big fan of the `r icon::fa_r_project()` programming language and the <a href="https://www.tidyverse.org" target="_blank">tidyverse</a> 😄
 </div>
 
-<aside>
+<aside> 
   <img src="img/pp.png" align="left" width=180 />
 </aside>
 
 
 ## Events
-
-<blockquote class="twitter-tweet" data-cards="hidden" data-lang="fr" align="center"><p lang="fr" dir="ltr">Prochaine séance de notre RUG <a href="https://twitter.com/hashtag/Rstats?src=hash&amp;ref_src=twsrc%5Etfw">#Rstats</a> jeudi prochain 14h, <a href="https://twitter.com/AgroParisTech?ref_src=twsrc%5Etfw">@AgroParisTech</a> : &quot;pimp my exam&quot; <a href="https://t.co/grm9yvIN7u">https://t.co/grm9yvIN7u</a><br><br>Il reste des places <a href="https://t.co/Jrb3mrKf1p">https://t.co/Jrb3mrKf1p</a></p>&mdash; State of the R (@RUG_stateofther) <a href="https://twitter.com/RUG_stateofther/status/1074391148272279554?ref_src=twsrc%5Etfw">16 décembre 2018</a></blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <blockquote class="twitter-tweet" data-lang="fr" align="center"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/RStats?src=hash&amp;ref_src=twsrc%5Etfw">#RStats</a> <a href="https://twitter.com/hashtag/RStatsFR?src=hash&amp;ref_src=twsrc%5Etfw">#RStatsFR</a> <br>satRday Paris will be hosted in AgroParisTech on the 23th of February, 2019 ! <a href="https://t.co/bwPmWyosyl">https://t.co/bwPmWyosyl</a></p>&mdash; satRday Paris (@satRdayParis) <a href="https://twitter.com/satRdayParis/status/1069569698206023680?ref_src=twsrc%5Etfw">3 décembre 2018</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -34,7 +31,7 @@ knitr::opts_chunk$set(echo = FALSE)
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 
-## 
+##
 
 <p align="center">
   <a href="https://xkcd.com/882/" target="_blank">  
