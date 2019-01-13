@@ -1,0 +1,19 @@
+---
+title: "Scientific talks"
+description: |
+  <p align="center"><i class="fas fa-chalkboard-teacher fa-7x"></i></p>
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# About the choice of the tree in metagenomics differential abundance studies
+
+
+* [Séminaire AgroParisTech](talks/impactoftreechoice_agro/impactoftreechoice_agro.html "Impact of tree choice in metagenomics differential abundance studies") (1 hour)
+
+<aside>
+January 14, 2019
+AgroParisTech
+</aside>

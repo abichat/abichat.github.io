@@ -21,6 +21,8 @@ navbar:
       menu: 
       - text: "State of the R"
         href: sotr.html
+      - text: "Science"
+        href: talks-science.html
       - text: "RStats"
         href: talks-r.html
     - text: "Teaching"
