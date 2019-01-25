@@ -566,7 +566,7 @@ We compute all pairwise distances between these trees
 
 * Vaginal microbiome of non pregnant women sequenced by 16S
 
-* 40 different genus after filtering (~&#8239;30&#8239;%)
+* 40 different genera after filtering (~&#8239;30&#8239;%)
 
 * 394 women with various Nugent score
 
