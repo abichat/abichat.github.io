@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Impact of tree choice in metagenomics differential abundance studies</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Antoine Bichat" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="these.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+class: title-slide, center, middle
+count: false
+
+
+
+
+
+
+
+.band[
+# Impact of tree choice in metagenomics differential abundance studies
+
+### Antoine Bichat
+&lt;div style = "margin-top: -30px"&gt;&lt;/div&gt;
+### January 31, 2019 - SMPGD Barcelona
+
+Work in progress - In collaboration with C. Ambroise (LaMME), &lt;br&gt;
+M. Mariadassou (MaIAGE) &amp; J. Plassais (Enterome)
+]
+
+---
+class: center, middle, inverse
+
+# Context
+
+
+---
+## Microbiota
+
+
+_Ecological community of microorganisms that reside in an environmental niche_
+
+--
+
+.footnote[<i class="fas  fa-book "></i> Gut: The Inside Story of Our Body's Most Underrated Organ (Giulia Enders) &lt;br&gt; &amp;emsp;]
+
+.pull-left[
+
+#### Some figures for human gut
+
+* `\(10^{\small{14}}\)` bacterial cells in one gut...
+
+* ... weighing 2 kg 
+
+* More than 1&amp;#8239;500 different species 
+
+* More than 10 millions unique genes
+
+
+&lt;img src="index_files/figure-html/citations-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+.footnote[<i class="fas  fa-book "></i> Gut: The Inside Story of Our Body's Most Underrated Organ  (Giulia Enders) &lt;br&gt; <i class="fas  fa-file-alt "></i> Opstelten et al. (2016), Bokulich et al. (2016), Blander et al. (2017)]
+
+.pull-right[
+
+#### Proven associations
+
+* Immune system
+
+* Crohn's disease
+
+* Vaginosis
+
+* Diabete
+
+* Tobacco
+
+* Diet
+
+* Antibiotics
+
+* Birth mode
+
+]
+
+---
+## Data collection
+
+.footnote[<i class="fas  fa-file-alt "></i> Quince et al. (2017)]
+
+.center[&lt;img src="img/workflow.png" width="650"&gt;]
+
+---
+count: false
+## Data collection
+
+.footnote[<i class="fas  fa-file-alt "></i> Quince et al. (2017)]
+
+.center[&lt;img src="img/workflow_ellipse.png" width="650"&gt;]
+
+---
+## Data - abundances of taxa
+
+.footnote[<i class="fas  fa-file-alt "></i> Ravel et al. (2011)]
+
+
+```
+  # A tibble: 122 x 395
+     Taxa     S001  S002  S003  S004  S005  S006  S007  S008  S009  S010
+     &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+   1 Lactob…  2318  1388  1361  2256    88  1770  1490   119  2136  1790
+   2 Prevot…     0     1     1     0   525     7   134   753     0     0
+   3 Megasp…     0     1     0     0   402     0     4   102     0     0
+   4 Sneath…     0     0     0     0   302     0    35   272     0     0
+   5 Atopob…     0     1     0     0    84     0    12    54     0     0
+   6 Strept…     0     0     3     0     0     0   138     4     0     2
+   7 Dialis…     0     1     0     0   152     4     2   192     0     0
+   8 Anaero…     0     1     3     2     0     9    12    13     0     0
+   9 Pepton…     0     1     0     0     7     2     6    50     0     0
+  10 Eggert…     0     0     0     0     2     0     0     7     0     0
+  # … with 112 more rows, and 384 more variables
+```
+
+--
+
+* Count data (or compositional) data
+
+* Zero-inflated data
+
+* __Correlation between species__
+
+* Counts spanning several orders of magnitude: `\(1 \rightarrow 10^{\small{8}}\)`
+
+---
+## Data - samples information
+
+.footnote[<i class="fas  fa-file-alt "></i> Ravel et al. (2011)]
+
+
+```
+  # A tibble: 394 x 6
+     Sample Ethnic_Group    pH Nugent_Score Nugent_Cat   CST  
+     &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;
+   1 S001   Asian          4              0 low          I    
+   2 S002   White          4              0 low          II   
+   3 S003   Black          4              1 low          III  
+   4 S004   Asian          4.7            0 low          I    
+   5 S005   Black          5              6 intermediate IV   
+   6 S006   White          4              0 low          I    
+   7 S007   White          4.7            1 low          II   
+   8 S008   White          5.8            9 high         IV   
+   9 S009   White          4.4            0 low          III  
+  10 S010   Black          4.4            1 low          I    
+  # … with 384 more rows
+```
+
+---
+## Data - taxonomy
+
+.footnote[<i class="fas  fa-file-alt "></i> Ravel et al. (2011)]
+
+
+```
+  # A tibble: 129 x 5
+    Phylum         Class          Order          Family         Genus        
+    &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;        
+  1 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Actinobaculum
+  2 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Actinomyces  
+  3 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Arcanobacter…
+  4 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Mobiluncus   
+  5 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Varibaculum  
+  # … with 124 more rows
+```
+
+
+---
+class: nologo
+count: false
+## Data - taxonomy
+
+
+```
+  # A tibble: 129 x 5
+    Phylum         Class          Order          Family         Genus        
+    &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;        
+  1 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Actinobaculum
+  2 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Actinomyces  
+  3 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Arcanobacter…
+  4 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Mobiluncus   
+  5 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Varibaculum  
+  # … with 124 more rows
+```
+
+.center[&lt;img src="img/tree_tax.png"/ width="500"&gt;]
+
+---
+class: center, middle, inverse
+
+# Differential abundance studies
+
+---
+## Statistical issue
+
+.center[
+#### Healthy VS Diseased
+&lt;div style = "margin-top: -25px"&gt;&lt;/div&gt;
+.center[&lt;img src="img/cohort.png"/ width="375"&gt;]
+]
+
+Is any bacteria more abundant in one group? 
+
+--
+
+.pull-left[
+#### Goals
+* Biomarker
+
+* Companion Diagnostics 
+
+* Potential targets for drugs
+]
+
+--
+
+.pull-right[
+#### Methods
+* ANOVA / GLM
+
+* Wilcoxon rank sum test
+
+* Mixed model effects
+
+* ...
+]
+
+
+
+---
+## Multiple testing problem
+
+Usual design:
+
+* 1&amp;#8239;500 species in the gut
+
+* Up to hundreds in a single study
+
+Need for a controling procedure!
+
+--
+
+* Bonferroni (FWER)
+
+---
+count: false
+
+## Multiple testing problem
+
+Usual design:
+
+* 1&amp;#8239;500 species in the gut
+
+* Up to hundreds in a single study
+
+Need for a controling procedure!
+
+
+* ~~Bonferroni (FWER)~~ `\(\rightarrow\)` too conservative
+
+--
+
+* Benjamini-Hochberg (FDR)
+
+--
+
+But BH requires independant tests and there is lot of dependancies between species...
+
+.center[
+&lt;img src="img/cor_bact_firm.png" width="300"&gt;
+]
+
+
+---
+## Incorporate taxonomy in the analysis?
+
+.footnote[<i class="fas  fa-file-alt "></i> Philippot et al. (2010), Koeppel &amp; Wu (2012)]
+
+* Taxonomy is a proxy for the structure of the data
+
+
+* Coherent with ecological niches
+
+
+* Independant from count data and metadata
+
+&lt;br&gt;
+
+.center[
+  &lt;img src="img/coherence.png" width="550"&gt;
+]
+
+---
+## Hierarchical FDR
+
+.footnote[<i class="fas  fa-file-alt "></i> Yekutieli (2008)]
+
+`\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)`
+
+Descending method:
+
+* Test the family `\(\mathcal{T}_0\)`
+
+* If node `\(t\)` is rejected, test `\(\mathcal{T}_t\)` with a classical BH procedure at level `\(q\)`
+
+&lt;br&gt;
+
+.center[
+  &lt;img src="img/tree_hyp.png" width="450"&gt;
+]
+
+---
+count: false
+## Hierarchical FDR
+
+.footnote[<i class="fas  fa-file-alt "></i> Yekutieli (2008)]
+
+`\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)`
+
+Descending method:
+
+* Test the family `\(\mathcal{T}_0\)`
+
+* If node `\(t\)` is rejected, test `\(\mathcal{T}_t\)` with a classical BH procedure at level `\(q\)`
+
+&lt;br&gt;
+
+.center[
+  &lt;img src="img/tree_hyp_1.png" width="450"&gt;
+]
+
+---
+count: false
+
+## Hierarchical FDR
+
+.footnote[<i class="fas  fa-file-alt "></i> Yekutieli (2008)]
+
+`\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)`
+
+Descending method:
+
+* Test the family `\(\mathcal{T}_0\)`
+
+* If node `\(t\)` is rejected, test `\(\mathcal{T}_t\)` with a classical BH procedure at level `\(q\)`
+
+&lt;br&gt;
+
+
+.center[
+  &lt;img src="img/tree_hyp_2.png" width="450"&gt;
+]
+
+---
+count: false
+## Hierarchical FDR
+
+.footnote[<i class="fas  fa-file-alt "></i> Yekutieli (2008)]
+
+`\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)`
+
+Descending method:
+
+* Test the family `\(\mathcal{T}_0\)`
+
+* If node `\(t\)` is rejected, test `\(\mathcal{T}_t\)` with a classical BH procedure at level `\(q\)`
+
+&lt;br&gt;
+
+.center[
+  &lt;img src="img/tree_hyp_3.png" width="450"&gt;
+]
+
+--
+
+&lt;br&gt;
+
+.center[
+__This procedure controls the FDR at level__ 
+
+`\(\large{1.44 \times q \times \frac{\#\text{discoveries } +\text{ } \#\text{families tested}}{\#\text{discoveries } +\text{ } 1}}\)`
+]
+
+---
+## Which tree?
+
+
+#### Taxonomic tree?
+
+* Proxy for correlations at high-level niches
+
+* Not so much for subtel niches?
+
+* Non available everytime
+
+
+---
+class: nologo
+count: false
+## Which tree?
+
+
+#### Taxonomic tree?
+
+* Proxy for correlations at high-level niches
+
+* Not so much for subtel niches?
+
+* Non available everytime
+
+#### Correlation tree?
+
+* Actual correlation between taxa
+
+* Computed from data using pairwise correlation
+
+
+.center[
+&lt;img src="img/tree_cor.png" width="350"&gt;
+]
+
+---
+class: center, middle, inverse
+
+# Comparison of trees
+
+---
+## Billera-Holmes-Vogtmann distance on treespace
+
+.footnote[<i class="fas  fa-file-alt "></i> Billera, Holmes &amp; Vogtmann (2001)]
+
+.pull-left[
+  .center[
+    &lt;img src="img/dBHV_4.png" height=300/&gt;
+  ]
+]
+
+--
+
+.pull-right[
+* The treespace is a CAT(0) space so there is a unique shortest path connecting any two trees 
+
+* The BHV distance is the length of the unique shortest path between the trees on treespace
+
+* Solution of a max flow min cut algorithm in `\(O(n_{\text{leaf}}^{\small{4}})\)` 
+
+* Other distances exist like Robison-Foulds (for topology) or Cophenetic (by vectorisation) distances
+]
+
+
+
+---
+## Quantifying distance between trees
+
+
+* __trees of primary interest__
+
+  * correlation tree on original data
+  
+  * taxonomic tree
+  
+--
+
+* __what is the confident region for the correlation tree?__
+
+--
+
+  * `\(N_B\)` correlation trees on boostrapped data (resampling on samples)
+
+--
+
+* __are trees significantly closer than two random trees?__
+
+--
+
+  * `\(N_{R_1}\)` trees created by random shuffling of correlation tree tip labels
+  
+  * `\(N_{R_2}\)` trees created by random shuffling of taxonomic tree tip labels
+
+--
+
+&lt;br&gt;
+
+We compute all pairwise distances between these trees
+
+---
+## Random shuffling
+
+.center[&lt;img src="img/shuffling.png", height="500"&gt;]
+
+---
+## Dataset
+
+.footnote[<i class="fas  fa-file-alt "></i> Ravel et al. (2011)]
+
+* Vaginal microbiome of non pregnant women sequenced by 16S
+
+* 40 different genera after filtering (~&amp;#8239;30&amp;#8239;%)
+
+* 394 women with various Nugent score
+
+&lt;br&gt;
+
+.pull-left[ 
+  &lt;img src="img/tree_tax.png"&gt;
+  .center[Taxonomic tree]
+]
+
+.pull-right[
+  &lt;img src="img/tree_cor.png"&gt;
+  .center[Correlation tree] 
+]
+
+---
+## Pairwise distances
+
+.pull-left[
+#### Distances to the correlation tree
+.center[&lt;img src="img/comp_boxplot.png" width="650"&gt;]
+]
+
+--
+
+.pull-right[
+#### Principal Coordinates Analysis
+.center[&lt;img src="img/comp_pcoa.png" width="650"&gt;]
+]
+
+--
+
+.center[
+__The correlation tree is different from the taxonomic tree__
+]
+
+
+---
+class: center, middle, inverse
+
+# Application
+
+---
+## Dataset
+
+.footnote[<i class="fas  fa-file-alt "></i> Caporaso et al. (2011), Sankaran &amp; Holmes (2014)]
+
+* Small subset of the `GlobalPatterns` dataset narrowed to Chlamydiae phylum
+
+* Sequenced by 454
+
+* 21 different species
+
+* 26 samples representing 7 very different environments: soil, ocean, feces, skin...
+
+* Find which bacteria are differentially abundant between environments
+
+* Association using Fisher statistic
+
+
+---
+## Correlations
+
+.center[&lt;img src="img/cormat.png" height=450/&gt;]
+
+
+---
+## Detected species with different corrections
+
+.center[&lt;img src="img/venn_0.png" height=450/&gt;]
+
+---
+count: false
+## Detected species with different corrections
+
+.center[&lt;img src="img/venn_rand.png" height=450/&gt;]
+
+---
+count: false
+## Detected species with different corrections
+
+.center[&lt;img src="img/venn_phy.png" height=450/&gt;]
+
+---
+count: false
+## Detected species with different corrections
+
+.center[&lt;img src="img/venn_cor.png" height=450/&gt;]
+
+
+---
+## Back to abundances
+
+.center[&lt;img src="img/abundances.png" height=500/&gt;]
+
+
+---
+## Representation of evidences on trees
+
+.center[&lt;img src="img/trees_w_pvalues.png" height=500/&gt;]
+
+---
+class: center, middle, inverse
+
+# Perspectives
+
+
+---
+## Perspectives
+ 
+&lt;br&gt;
+
+.footnote[<i class="fas  fa-file-alt "></i> Xiao et al. (2017)]
+
+* Work with other hierarchical correction methods (bayesian smoothing)
+
+--
+
+&lt;br&gt;
+
+* Test the correlation tree correction on simulated data
+
+--
+
+&lt;br&gt;
+
+* Release an <i class="fab  fa-r-project "></i> package to compute correlation trees and compare distances
+
+
+
+
+---
+class: center, middle, inverse
+count: false
+
+&lt;br&gt;
+
+# Thanks for you attention!
+
+&lt;br&gt;
+
+#### <i class="fab  fa-github "></i> &lt;a href="https://github.com/abichat" target="_blank"&gt;@abichat&lt;/a&gt;
+&lt;div style = "margin-top: -10px"&gt;&lt;/div&gt;
+#### <i class="fab  fa-twitter "></i> &lt;a href="https://twitter.com/_abichat" target="_blank"&gt;@_abichat&lt;/a&gt;
+&lt;div style = "margin-top: -10px"&gt;&lt;/div&gt;
+#### <i class="fab  fa-linkedin "></i> &lt;a href="https://www.linkedin.com/in/antoinebichat" target="_blank"&gt;antoinebichat&lt;/a&gt;
+&lt;div style = "margin-top: -10px"&gt;&lt;/div&gt;
+#### <i class="fas  fa-link "></i> &lt;a href="https://abichat.github.io" target="_blank"&gt;abichat.github.io&lt;/a&gt;
+&lt;div style = "margin-top: -10px"&gt;&lt;/div&gt;
+####<i class="fas  fa-envelope "></i> &lt;a href="mailto:abichat@enterome.com?subject=Presentation"&gt;abichat@enterome.com&lt;/a&gt;
+    </textarea>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current% / %total%"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
