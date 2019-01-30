@@ -223,7 +223,7 @@ Is any bacteria more abundant in one group?
 
 * ANOVA / GLM
 
-* Mixed model effects
+* Mixed effect models
 
 * ...
 ]
@@ -532,8 +532,17 @@ We compute all pairwise distances between these trees
 --
 
 .center[
-__The correlation tree is different from the taxonomic tree__
+__Taxonomy is not in the confident region of the correlation tree__
 ]
+
+--
+
+.center[
+__Taxonomy is no closer from the correlation tree than a random tree__
+]
+
+
+
 
 
 ---
