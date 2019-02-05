@@ -1,0 +1,81 @@
+Tidyverse	.Random.seed
+Anscombe_Data	anscombeL
+Anscombe_Table	
+Anscombe_Lm_Points	
+Anscombe_Lm	
+Pie_Fox_Original	
+Pie_Ggforce_function	pie_stats
+Pie_Fox_Data	data_pie_fox	data_pie_fox_pie
+Pie_Fox_Bad	
+Pie_Fox_Good_Bar	
+Gas_Original	
+Gas_Data	fox_gas
+Gas_Fox	
+Gas_Fox_Good_Scale	
+Gas_Fox_Good_Scale_Missing	
+Venezuela_Original	
+Venezuela_Data	election_venezuela
+Venezuela_Bad_Bar	
+Venezuela_Good_Bar	
+Temperature_Original	
+Temperature_Data	temperature	year_selected
+Temperature_Bad_Top	
+Temperature_Good_Top	
+Temperature_Good_Top_2016	
+Clutter_Original	
+Clutter_Data	canada
+Clutter	
+Clutter_OK	
+Clutter_OK2	
+Energy_Original	
+Energy_Data	energy
+Energy_Radius	
+Energy_Original_Corrected	
+Energy_Area	
+GDP_Original	
+GDP_Data	GDP
+GDP_Radius	
+GDP_Area	
+Ethanol_Data	ethanol
+Ethanol_Unusual	
+Ethanol_Usual	
+Playfair_Balance_Original	
+Playfair_Balance_Data	playfair_balance
+Playfair_Balance	
+Playfair_Balance_DirectLegend	
+Playfair_Balance_Ribbon	
+Playfair_Balance_Balance	
+Playfair_Balance_Balance_Ribbon	
+Playfair_Wheat_Original	
+Playfair_Wheat_Data	
+Playfair_Wheat_Playfair	
+Playfair_Wheat_Ratio	
+Playfair_Wheat_Ratio_Axis	
+Minard_Napoleon_Original	
+Minard_Napoleon_Data	
+Minard_Napoleon	
+Minard_Map_Original	
+Minard_Map_Data	dpt	dpt_centroids	dpt_join	dpt_ori	dpt_production	dpt_production_plot	dpt_seine	plot_pie
+Minard_Map_Nosfyet	dpt	dpt_df	dpt_old
+Minard_Map	
+Nightingale_Original	
+Nightingale_Data	Nightingale2
+Nightingale_Rose_Chart	
+Nightingale_Rose_Chart_Radius_Issue	
+Nightingale_Bar_Plot	
+Nightingale_Summary_Bar_Plot	
+Snow_Original	
+Snow_Data	
+Snow_Map	
+Snow_Map_Density	
+Snow_Deaths_Data	SnowDeath
+Snow_Deaths_Week	
+Snow_Deaths_Day	
+Challenger_Original	
+Challenger_data	challeng
+Challenger_Bad	
+Challenger_Bad_Lm	
+Challenger_Good	
+Challenger_Good_Lm	
+Challenger_Original_Corrected	
+Challenger_Tufte	

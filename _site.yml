@@ -27,6 +27,8 @@ navbar:
         href: talks-r.html
     - text: "Teaching"
       menu:
+      - text: "École Polytechnique - DSSP"
+        href: x-dssp.html
       - text: "AgroParisTech - Bases du modèle linéaire"
         href: agro-modlin.html
       - text: "---"

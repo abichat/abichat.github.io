@@ -1,0 +1,81 @@
+Tidyverse	library
+Anscombe_Data	anscombeL	anscombe	%>%	rownames_to_column	gather	key	value	rowname	separate	c	spread
+Anscombe_Table	ggplot	annotation_custom	tableGrob	anscombe	%>%	select	x1	y1	x2	y2	x3	y3	x4	y4	theme_minimal	labs
+Anscombe_Lm_Points	ggplot	anscombeL	aes	x	y	geom_point	geom_smooth	facet_wrap	example	labs
+Anscombe_Lm	ggplot	anscombeL	aes	x	y	geom_smooth	facet_wrap	example	labs
+Pie_Fox_Original	include_graphics
+Pie_Ggforce_function	library	rlang	pie_stats	x0	enquo	y0	r0	r1	amount	explode	df	%>%	mutate	group_by	cumsum	sum	pi	lag	end	ungroup	label_perc	sin	start	cos
+Pie_Fox_Data	data_pie_fox	tribble	candidate	percent	data_pie_fox_pie	%>%	pie_stats
+Pie_Fox_Bad	ggplot	data_pie_fox_pie	geom_arc_bar	aes	x0	y0	r0	r1	start	end	candidate	geom_text	x_lab	y_lab	glue	guides	scale_fill_hue	theme_void	coord_equal	labs
+Pie_Fox_Good_Bar	ggplot	data_pie_fox	geom_col	aes	candidate	percent	geom_text	glue	guides	theme_void	labs
+Gas_Original	include_graphics
+Gas_Data	fox_gas	tribble	date	price	in_fox	%>%	mutate	dmy
+Gas_Fox	ggplot	fox_gas	%>%	filter	in_fox	geom_line	aes	as.factor	date	price	scale_x_discrete	c	labs
+Gas_Fox_Good_Scale	ggplot	fox_gas	%>%	filter	in_fox	geom_line	aes	date	price	scale_x_date	sort	.	c	scale_y_continuous	theme	element_text	labs
+Gas_Fox_Good_Scale_Missing	ggplot	fox_gas	geom_line	aes	date	price	scale_x_date	sort	%>%	filter	in_fox	.	c	scale_y_continuous	theme	element_text	labs
+Venezuela_Original	include_graphics
+Venezuela_Data	election_venezuela	tribble	candidate	percent	%>%	mutate	as_factor
+Venezuela_Bad_Bar	ggplot	election_venezuela	geom_col	aes	candidate	percent	geom_text	scale_y_continuous	coord_cartesian	c	guides	labs
+Venezuela_Good_Bar	ggplot	election_venezuela	geom_col	aes	candidate	percent	geom_text	scale_y_continuous	guides	labs
+Temperature_Original	include_graphics
+Temperature_Data	temperature	read_csv	cols	col_character	%>%	mutate	str_sub	Date	year_selected	c	%in%
+Temperature_Bad_Top	ggplot	temperature	%>%	filter	is_selected	mutate	fct_reorder	Date	Value	geom_col	aes	coord_cartesian	c	labs
+Temperature_Good_Top	ggplot	temperature	%>%	filter	as.integer	Date	aes	Value	geom_line	geom_point	is_selected	labs
+Temperature_Good_Top_2016	ggplot	temperature	aes	as.integer	Date	Value	geom_line	geom_point	%>%	filter	rank	desc	labs
+Clutter_Original	include_graphics
+Clutter_Data	canada	tribble	state	age	%>%	mutate	as_factor
+Clutter	ggplot	canada	aes	state	age	geom_col	coord_cartesian	c	geom_text	labs
+Clutter_OK	ggplot	canada	aes	state	age	geom_col	coord_cartesian	c	geom_text	theme_void	labs
+Clutter_OK2	ggplot	canada	aes	fct_rev	fct_reorder	state	age	geom_col	coord_cartesian	c	geom_text	coord_flip	theme_void	labs
+Energy_Original	include_graphics
+Energy_Data	energy	tribble	energy_source	amount	%>%	mutate	as_factor
+Energy_Radius	ggplot	energy	aes	energy_source	geom_point	amount	geom_text	c	scale_radius	scale_y_discrete	labs
+Energy_Original_Corrected	include_graphics
+Energy_Area	ggplot	energy	aes	energy_source	geom_point	amount	geom_text	c	scale_size_area	scale_y_discrete	labs
+GDP_Original	include_graphics
+GDP_Data	GDP	tribble	country	%>%	mutate	as_factor
+GDP_Radius	ggplot	GDP	aes	fct_rev	country	geom_point	geom_text	glue	scale_radius	c	guides	theme_void	labs
+GDP_Area	ggplot	GDP	aes	fct_rev	country	geom_point	geom_text	glue	scale_size_area	guides	theme_void	labs
+Ethanol_Data	data	ethanol
+Ethanol_Unusual	ggplot	ethanol	geom_point	aes	NOx	E	labs
+Ethanol_Usual	ggplot	ethanol	geom_point	aes	E	NOx	labs
+Playfair_Balance_Original	include_graphics
+Playfair_Balance_Data	playfair_balance	tribble	year	exports	imports
+Playfair_Balance	ggplot	playfair_balance	%>%	gather	year	aes	amount	`imports/exports`	geom_line	labs
+Playfair_Balance_DirectLegend	ggplot	playfair_balance	%>%	gather	year	aes	amount	`imports/exports`	geom_line	geom_dl	list	labs
+Playfair_Balance_Ribbon	ggplot	playfair_balance	%>%	gather	year	aes	geom_ribbon	imports	exports	geom_line	amount	`imports/exports`	geom_dl	list	guides	labs
+Playfair_Balance_Balance	ggplot	playfair_balance	aes	year	geom_line	exports	imports	geom_hline	labs
+Playfair_Balance_Balance_Ribbon	ggplot	playfair_balance	aes	year	geom_ribbon	exports	imports	geom_line	geom_hline	guides	labs
+Playfair_Wheat_Original	include_graphics
+Playfair_Wheat_Data	library
+Playfair_Wheat_Playfair	ggplot	gather	Wheat	variable	value	Year	aes	geom_step	labs
+Playfair_Wheat_Ratio	ggplot	Wheat	aes	Year	geom_step	Wages	labs
+Playfair_Wheat_Ratio_Axis	ggplot	Wheat	aes	Year	geom_step	Wages	scale_y_continuous	c	labs
+Minard_Napoleon_Original	include_graphics
+Minard_Napoleon_Data	library	HistData
+Minard_Napoleon	ggplot	Minard.troops	aes	long	lat	geom_path	group	survivors	direction	coord_quickmap	geom_text	Minard.cities	city	scale_size	c	comma_format	scale_color_manual	labs
+Minard_Map_Original	include_graphics
+Minard_Map_Data	library	sf	dpt_ori	read_sf	%>%	select	code_insee	nom	geometry	filter	str_detect	dpt_seine	tibble	st_geometry	%in%	c	st_union	st_cast	dpt	rbind	dpt_centroids	st_centroid	st_coordinates	as_data_frame	bind_cols	dpt_production	tribble	noir	rouge	vert	mutate	dpt_join	gather	prod_tot	left_join	plot_pie	pie_df	df	pie_stats	prod	p	ggplot	geom_arc_bar	aes	x0	y0	r0	r1	start	end	prod_type	guides	scale_fill_manual	theme_void	coord_equal	list	sqrt	dpt_production_plot	nest	map	data	unnest	if_else	X	Y
+Minard_Map_Nosfyet	dpt_df	dpt	%>%	as_data_frame	select	geometry	mutate	row_number	dpt_old	st_coordinates	as_integer	L3	left_join	c
+Minard_Map	ggplot	dpt	%>%	left_join	dpt_production	geom_polygon	aes	X	Y	interaction	L1	L2	L3	is.na	prod_tot	geom_subview	dpt_production_plot	mutate	scale	plot	coord_quickmap	guides	scale_fill_manual	c	theme_void	labs
+Nightingale_Original	include_graphics
+Nightingale_Data	Nightingale2	Nightingale	%>%	select	Date	Disease	Wounds	Other	gather	group_by	arrange	desc	variable	mutate	cumsum	value	sqrt	value2	lag	ungroup
+Nightingale_Rose_Chart	ggplot	filter	Nightingale2	Date	aes	as.factor	geom_col	value3	variable	geom_text	%>%	group_by	summarize	max	sqrt	value2	mutate	coord_polar	pi	scale_y_continuous	scale_fill_manual	c	theme	element_blank	labs
+Nightingale_Rose_Chart_Radius_Issue	ggplot	filter	Nightingale2	Date	aes	as.factor	geom_col	value	variable	geom_text	%>%	group_by	summarize	max	value2	mutate	coord_polar	pi	scale_y_continuous	scale_fill_manual	c	theme	element_blank	labs
+Nightingale_Bar_Plot	ggplot	filter	Nightingale2	Date	aes	as.factor	geom_col	value	variable	scale_fill_manual	c	theme	element_text	labs
+Nightingale_Summary_Bar_Plot	ggplot	summarise	Nightingale2	%>%	group_by	variable	sum	value	aes	geom_col	scale_fill_manual	c	labs
+Snow_Original	include_graphics
+Snow_Data	library	HistData
+Snow_Map	ggplot	Snow.deaths2	aes	x	y	geom_path	Snow.streets	street	geom_point	Snow.pumps	scale_color_manual	c	guides	guide_legend	list	theme	element_blank	unit	element_rect	ggtitle
+Snow_Map_Density	ggplot	Snow.deaths2	aes	x	y	geom_path	Snow.streets	street	stat_density_2d	..level..	geom_point	Snow.pumps	scale_color_manual	c	scale_fill_viridis	guides	guide_legend	list	theme	element_blank	unit	element_rect	ggtitle
+Snow_Deaths_Data	SnowDeath	Snow.dates	%>%	mutate	ymd	dweeks	floor	date
+Snow_Deaths_Week	ggplot	SnowDeath	aes	week	deaths	geom_col	geom_segment	as.numeric	ymd	scale_x_date	unique	labs
+Snow_Deaths_Day	ggplot	SnowDeath	aes	date	deaths	geom_col	geom_segment	as.numeric	ymd	scale_x_date	unique	week	labs
+Challenger_Original	include_graphics
+Challenger_data	data	challeng
+Challenger_Bad	ggplot	filter	challeng	Fail	aes	Temp	geom_point	labs
+Challenger_Bad_Lm	ggplot	filter	challeng	Fail	aes	Temp	geom_point	geom_smooth	y	poly	x	labs
+Challenger_Good	ggplot	challeng	aes	Temp	Fail	geom_point	labs
+Challenger_Good_Lm	ggplot	challeng	aes	Temp	Fail	geom_point	geom_smooth	y	poly	x	labs
+Challenger_Original_Corrected	include_graphics
+Challenger_Tufte	ggplot	challeng	aes	Temp	Fail	geom_point	geom_smooth	y	poly	x	geom_vline	scale_x_continuous	c	labs

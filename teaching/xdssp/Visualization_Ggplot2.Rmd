@@ -1,0 +1,904 @@
+---
+title: "Visualization with R (and ggplot2)"
+author: "Antoine Bichat / Erwan Le Pennec"
+date: "Winter 2019"
+output:
+   html_document:
+    code_folding: hide
+    toc: true
+    toc_float: true
+---
+
+```{r Knitr_Global_Options, include=FALSE}
+library("knitr")
+opts_chunk$set(warning = FALSE, message = FALSE, cache = TRUE, autodep = TRUE, tidy = FALSE)
+library("rgl")
+knit_hooks$set(webgl = hook_webgl)
+```
+
+```{r Tidyverse}
+library(tidyverse)
+```
+
+
+# One variable graph
+
+## Bar
+
+```{r Bar}
+ggplot(data = diamonds, aes(x = cut, fill = cut)) +
+  geom_bar()
+```
+
+## Pie plot
+
+```{r Pie}
+ggplot(data = diamonds, aes(x = factor(1), fill = cut)) +
+  geom_bar(width = 1) +
+  coord_polar(theta = "y") +
+  xlab(NULL) + ylab(NULL) +
+  theme(
+    axis.ticks = element_blank(),
+    axis.text.y = element_blank()
+  )
+```
+
+```{r Pie_Ggforce}
+ggplot(data = diamonds %>% count(cut)) +
+  ggforce::geom_arc_bar(
+    aes(
+      x0 = 0, y0 = 0,
+      r0 = 0, r = 1,
+      amount = n, fill = cut
+    ),
+    stat = "pie"
+  ) +
+  coord_equal() + theme_void()
+```
+
+```{r Pie_Ggforce_function}
+library(rlang)
+pie_stats <- function(df, x0, y0, r0, r1, amount, explode, label_perc) {
+  x0 <- enquo(x0)
+  y0 <- enquo(y0)
+  r0 <- enquo(r0)
+  r1 <- enquo(r1)
+  amount <- enquo(amount)
+  explode <- enquo(explode)
+
+  df %>%
+    mutate(
+      `x0` = !! x0,
+      `y0` = !! y0,
+      `r0` = !! r0,
+      `r1` = !! r1,
+      `explode` = !! explode
+    ) %>%
+    group_by(x0, y0) %>%
+    mutate(end = cumsum(!! amount) / sum(!! amount) * 2 * pi) %>%
+    mutate(start = lag(end, default = 0)) %>%
+    ungroup() %>%
+    mutate(
+      x_lab = (!! x0) +
+        ((!! r0) + label_perc * ((!! r1) - (!! r0)) + (!! explode)) *
+          sin((end + start) / 2),
+      y_lab = (!! y0) +
+        ((!! r0) + label_perc * ((!! r1) - (!! r0)) + (!! explode)) *
+          cos((end + start) / 2)
+    )
+}
+```
+
+```{r Pie_Ggforce_Legend}
+ggplot(data = diamonds %>%
+  count(cut) %>%
+  pie_stats(0, 0, 0, 1, n, .2 * (cut == "Fair"), .8)) +
+  ggforce::geom_arc_bar(
+    aes(
+      x0 = x0, y0 = y0, r0 = r0, r = r1,
+      start = start,
+      end = end,
+      explode = explode,
+      fill = cut
+    )
+  ) +
+  geom_text(
+    aes(
+      x = x_lab, y = y_lab,
+      label = scales::percent(n / sum(n))
+    ),
+    size = 3
+  ) +
+  coord_equal() + theme_void()
+```
+
+```{r Col_vs_Pie}
+set <- tibble(cat = c("A", "B", "C", "D", "E"))
+sets <- purrr::map_df(
+  1:5,
+  function(i) {
+    set %>% mutate(
+      val = rpois(5, 50),
+      rep = i
+    )
+  }
+)
+
+p_col <- ggplot(data = sets) +
+  geom_col(
+    aes(x = cat, y = val, fill = cat),
+    show.legend = FALSE
+  ) +
+  facet_wrap(~ rep, ncol = 5)
+
+p_pie <- ggplot(data = sets) +
+  ggforce::geom_arc_bar(
+    aes(
+      x0 = 0, y0 = 0,
+      r0 = 0, r = 1,
+      amount = val, fill = cat
+    ),
+    stat = "pie", show.legend = FALSE
+  ) + facet_wrap(~ rep, ncol = 5) + theme_void()
+
+egg::ggarrange(p_pie, p_col, ncol = 1, 
+               heights = c(.4, 1))
+```
+
+## Cleveland Dot
+
+```{r Cleveland_Dot}
+ggplot(data = diamonds, aes(x = cut)) +
+  geom_point(stat = "count", size = 5) + coord_flip() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(
+      linetype = "dotted",
+      color = "darkgray"
+    )
+  )
+```
+
+```{r Lollipop}
+ggplot(data = diamonds, aes(x = cut, color = cut,
+                            fill = cut)) +
+  geom_point(stat = "count", size = 5) +
+  geom_bar(width = .01) + coord_flip() +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(
+      linetype = "dotted",
+      color = "darkgray"
+    )
+  )
+```
+
+```{r Cleveland_Ordered}
+ggplot(
+  data = rownames_to_column(mtcars),
+  aes(x = fct_reorder(rowname, mpg),
+      y = mpg, color = cyl)) +
+  geom_point(size = 3) + coord_flip() + xlab("") +
+  scale_color_continuous(breaks = c(4, 6, 8)) +
+  guides(color = guide_legend()) +
+  theme(
+    panel.grid.major.x = element_blank(),
+    panel.grid.major.y = element_line(
+      linetype = "dotted",
+      color = "darkgray")
+  )
+```
+
+## Histogram and density
+
+```{r Histogram}
+ggplot(data = diamonds, aes(x = price)) +
+  geom_histogram()
+```
+
+```{r Histogram_Oversmoothing}
+ggplot(data = diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 15)
+```
+
+```{r Histogram_Undersmoothing}
+ggplot(data = diamonds, aes(x = price)) +
+  geom_histogram(binwidth = 100)
+```
+
+```{r Density}
+ggplot(data = diamonds, aes(x = price)) + geom_density()
+```
+
+```{r Density_Oversmooting}
+ggplot(data = diamonds, aes(x = price)) +
+  geom_density(adjust = 4)
+```
+
+
+```{r Density_Undersmooting}
+ggplot(data = diamonds, aes(x = price)) +
+  geom_density(adjust = .01)
+```
+
+## Boxplot and violin plot
+
+```{r Boxplot}
+ggplot(data = diamonds, aes(x = factor(1), y = price)) +
+  geom_boxplot()
+```
+
+```{r Violin}
+ggplot(data = diamonds, aes(x = factor(1), y = price)) +
+  geom_violin()
+```
+
+## Dot plot
+
+```{r Dotplot_Data}
+small_diamonds <- sample_frac(diamonds, .01)
+```
+
+```{r Dotplot}
+ggplot(data = small_diamonds,
+       aes(x = factor(1), y = price)) +
+  geom_dotplot(
+    binaxis = "y", stackdir = "center",
+    stackratio = 1.25, dotsize = .25
+  )
+```
+
+```{r Doplot_Median}
+ggplot(data = small_diamonds,
+       aes(x = factor(1), y = price)) +
+  geom_dotplot(
+    binaxis = "y", stackdir = "center",
+    stackratio = 1.25, dotsize = .25
+  ) +
+  stat_summary(
+    fun.y = median, geom = "point",
+    size = 5, color = "red"
+  )
+```
+
+```{r Quasirandom}
+ggplot(small_diamonds, 
+       aes(x = factor(1), y = price)) +
+  ggbeeswarm::geom_quasirandom()
+```
+
+## Stem
+
+```{r Stem}
+stem(small_diamonds[["price"]], scale = 3)
+```
+
+## Grouping
+
+```{r Grouping_Color}
+ggplot(data = diamonds, aes(x = price, color = cut)) +
+  geom_density()
+```
+
+```{r Grouping_Fill_Stack}
+ggplot(data = diamonds, aes(x = price, fill = cut)) +
+  geom_density(position = "stack")
+```
+
+```{r Grouping_Facet}
+ggplot(data = diamonds, aes(
+  x = price, color = cut,
+  fill = cut
+)) +
+  geom_density() + facet_wrap(~ cut)
+```
+
+```{r Grouping_Violin}
+ggplot(data = diamonds, aes(x = cut, y = price)) +
+  geom_violin()
+```
+
+```{r Grouping_Ridges}
+ggplot(data = diamonds, aes(y = cut, x = price)) +
+  ggridges::geom_density_ridges()
+```
+
+```{r Grouping_Dotplot}
+ggplot(data = small_diamonds, aes(x = cut, y = price)) +
+  geom_dotplot(
+    binaxis = "y", stackdir = "center",
+    stackratio = 1.25, dotsize = .25
+  ) +
+  stat_summary(
+    fun.y = median, geom = "point",
+    size = 5, color = "red"
+  )
+```
+
+```{r Grouping_Dotplot_Color}
+ggplot(
+  data = small_diamonds,
+  aes(x = factor(1), y = price, color = cut)
+) +
+    geom_dotplot(
+      aes(fill = cut),
+      binaxis = "y", stackdir = "center",
+      stackratio = 1.25, dotsize = .25,
+      binpositions = "all", stackgroups = TRUE
+    ) +
+  stat_summary(
+    fun.y = median, geom = "point",
+    size = 5, color = "red",
+    show.legend = FALSE
+  )
+```
+
+# Relationship graph
+
+## Scatter Plots
+
+```{r Scatter_Plot}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+  geom_point()
+```
+
+```{r Scatter_Plot_Alpha}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+  geom_point(alpha = .25)
+```
+
+```{r Scatter_Plot_Color}
+ggplot(data = diamonds, aes(
+  x = carat, y = price,
+  color = cut
+)) +
+  geom_point()
+```
+
+```{r Scatter_Plot_Color_Alpha}
+ggplot(data = diamonds, aes(
+  x = carat, y = price,
+  color = cut
+)) +
+  geom_point(alpha = .25)
+```
+
+```{r Scatter_Plot_Color_Alpha_Facet}
+ggplot(data = diamonds, aes(
+  x = carat, y = price,
+  color = cut
+)) +
+  geom_point(alpha = .25) + facet_wrap(~ cut)
+```
+
+## Smoothing
+
+```{r Smoothing}
+ggplot(data = diamonds, aes(x = carat, y = price)) +
+  geom_point() +
+  geom_smooth()
+```
+
+```{r Smoothing_Group}
+ggplot(data = diamonds, aes(
+  x = carat, y = price,
+  color = cut
+)) +
+  geom_point(alpha = .25) + geom_smooth()
+```
+
+## Symbols
+
+```{r Symbols}
+ggplot(data = mtcars, aes(
+  x = hp, y = mpg,
+  size = gear, color = cyl,
+  shape = factor(am)
+)) +
+  geom_point() +
+  scale_size_continuous(
+    breaks = c(3, 4, 5),
+    limits = c(0, 5)
+  ) +
+  scale_color_continuous(breaks = c(4, 6, 8)) +
+  guides(color = guide_legend())
+```
+
+## Scatter Plot Matrix
+
+```{r Scatter_Plot_Matrix}
+library(GGally)
+ggpairs(mtcars)
+```
+
+## Parallel Coordinates and Radar Plots
+
+```{r Parallel_Coordinates_Data}
+# rescale all variables to lie between 0 and 1
+scaled <- as.data.frame(lapply(mtcars, ggplot2:::rescale01)) %>%
+  mutate(model = row.names(mtcars))
+# add model names as a variable
+mtcarsm <- gather(scaled, variable, value, -model)
+```
+
+```{r Parallel_Coordinates}
+ggplot(mtcarsm, aes(x = variable, y = value)) +
+  geom_line(aes(group = model, color = model), size = 2) +
+  theme(
+    strip.text.x = element_text(size = rel(0.8)),
+    axis.text.x = element_text(size = rel(0.8))
+  ) +
+  guides(color = guide_legend(ncol = 2))
+```
+
+```{r Parallel_Coordinates_Facet}
+ggplot(mtcarsm, aes(x = variable, y = value)) +
+  geom_line(aes(group = model, color = model), size = 2) +
+  theme(
+    strip.text.x = element_text(size = rel(0.8)),
+    axis.text.x = element_blank(),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  ) +
+  guides(color = "none") + facet_wrap(~ model, nrow = 4)
+```
+
+```{r Radar_Plots_Function}
+coord_radar <- function(theta = "x", start = 0, direction = 1) {
+  theta <- match.arg(theta, c("x", "y"))
+  r <- if (theta == "x") {
+    "y"
+  } else {
+    "x"
+  }
+  ggproto(
+    "CordPolar", CoordPolar, theta = theta, r = r, start = start,
+    direction = sign(direction),
+    is_linear = function(coord) TRUE
+  )
+}
+```
+
+```{r, Radar_Plot_Facet}
+ggplot(mtcarsm %>% dplyr::arrange(variable), aes(x = variable, y = value)) +
+  geom_polygon(aes(group = model, color = model), fill = NA, size = 1, show.legend = FALSE) +
+  coord_radar() +
+  facet_wrap(~ model, nrow = 4) +
+  guides(color = guide_legend(ncol = 2)) +
+  theme(
+    strip.text.x = element_text(size = rel(0.8)),
+    axis.text.x = element_text(size = rel(0.8)),
+    axis.ticks.y = element_blank(),
+    axis.text.y = element_blank()
+  )
+```
+
+
+```{r, Radar_Plot}
+ggplot(mtcarsm %>% dplyr::arrange(variable), aes(x = variable, y = value)) +
+  geom_polygon(aes(group = model, color = model), fill = NA, size = 2, show.legend = FALSE) +
+  geom_path(aes(group = model, color = model), size = 2) +
+  coord_radar() +
+  theme(
+    strip.text.x = element_text(size = rel(0.8)),
+    axis.text.x = element_text(size = rel(0.8))
+  ) +
+  guides(color = guide_legend(ncol = 2))
+```
+
+# Time
+
+
+## Time Series
+
+```{r Time_Series_Data}
+tckrs <- c("SPY", "QQQ", "GDX", "DBO", "VWO")
+
+stocks_tbl <- tidyquant::tq_get(tckrs, from = "2007-01-01")
+
+stocks_tbl <- stocks_tbl %>% group_by(symbol) %>%
+  mutate(close_index = close/close[1])
+```
+
+```{r Time_Series}
+ggplot(stocks_tbl, aes(x = date, y = close_index, color = symbol)) +
+  geom_line() +
+  scale_y_continuous(limits = c(0, NA))
+```
+
+```{r Time_Series_Facet}
+ggplot(stocks_tbl, aes(x = date, y = close_index,
+                       color = symbol)) +
+  geom_line() +
+  scale_y_continuous(limits = c(0, NA)) + 
+  facet_wrap(~ symbol)
+```
+
+## Time Line
+
+```{r Time_Line_Data}
+library(timeline)
+data(ww2)
+```
+
+```{r Time_Line}
+timeline(ww2, ww2.events, event.spots = 2, event.label = "", event.above = FALSE)
+```
+
+# Map
+
+## Choroplet
+
+```{r Choroplet_Data}
+st <- map_data("state")
+data(votes.repub)
+colnames(votes.repub) <- paste("Y", colnames(votes.repub), sep = "")
+votes.repub <- mutate(rownames_to_column(as.data.frame(votes.repub), "region"), region = tolower(region))
+st <- left_join(st, votes.repub, by = "region")
+
+st_gather <- gather(
+  st, "year", "value",
+  -long, -lat, -group, -order, -region, -subregion
+)
+```
+
+```{r Choroplet}
+ggplot(st, aes(long, lat, group = group, fill = Y1960)) +
+  geom_polygon() +
+  scale_fill_gradient(limits = c(20, 80), low = "blue", high = "red") +
+  coord_map()
+```
+
+```{r Choroplet_Year}
+ggplot(st_gather, aes(long, lat, group = group, fill = value)) +
+  geom_polygon() +
+  scale_fill_gradient(limits = c(20, 80), low = "blue", high = "red") +
+  facet_wrap(~ year) +
+  coord_map()
+```
+
+```{r Choroplet_Clean}
+pacman::p_unload(maps)
+```
+
+# Graph
+
+## Alluvial
+
+```{r Alluvial}
+library(ggalluvial)
+ggplot(
+  data = as.data.frame(Titanic),
+  aes(
+    weight = Freq, axis1 = Class,
+    axis2 = Sex, axis3 = Age,
+    axis4 = Survived
+  )
+) +
+  scale_x_continuous(breaks = 1:4,
+                     labels = c("Class", "Sex",
+                                "Age", "Survived")) +
+  geom_alluvium(aes(fill = Survived), reverse = FALSE) +
+  geom_stratum(reverse = FALSE) +
+  geom_text(stat = "stratum", label.strata = TRUE, reverse = FALSE)
+```
+
+## Tree
+
+```{r Tree_Data}
+library(rpart)
+data(airquality)
+airq <- subset(airquality, !is.na(Ozone))
+airct <- rpart(Ozone ~ ., data = airq,
+               control = rpart.control(minsplit = 10))
+```
+
+```{r Tree_Rpartplot}
+library(rpart.plot)
+rpart.plot(airct)
+prp(airct, type = 2, extra = 1, nn = TRUE)
+prp(airct, type = 2, extra = 1, nn = TRUE, fallen.leaves = TRUE)
+```
+
+```{r Tree_Ggdendro}
+library(ggdendro)
+airct.data <- dendro_data(airct)
+ggplot() +
+  geom_segment(
+    data = airct.data$segments,
+    aes(x = x, y = y, xend = xend, yend = yend)
+  ) +
+  geom_label(
+    data = airct.data$labels,
+    aes(x = x, y = y, label = label), 
+    size = 3, vjust = .5
+  ) +
+  geom_text(
+    data = airct.data$leaf_labels,
+    aes(x = x, y = y, label = label), size = 3, vjust = 1.5
+  ) +
+  theme_dendro()
+```
+
+## Tree Graph
+
+```{r Tree_Graph_Data}
+data(business, package = "treemap")
+```
+
+```{r Tree_GGraph_Data}
+library(ggraph)
+library(tidygraph)
+edge0 <- business %>% group_by(from = "0", to = NACE1) %>% summarize()
+node0 <- business %>%
+  group_by(name = "0") %>%
+  summarize(employees = sum(employees, na.rm = TRUE))
+edge1 <- business %>% group_by(from = NACE1, to = NACE2) %>% summarize()
+node1 <- business %>%
+  group_by(name = NACE1) %>%
+  summarize(employees = sum(employees, na.rm = TRUE))
+edge2 <- business %>%
+  group_by(from = NACE2, to = NACE3) %>%
+  summarize()
+node2 <- business %>%
+  group_by(name = NACE2) %>%
+  summarize(employees = sum(employees, na.rm = TRUE))
+edge3 <- business %>%
+  group_by(from = NACE3, to = NACE4) %>%
+  summarize()
+node3 <- business %>%
+  group_by(name = NACE3) %>%
+  summarize(employees = sum(employees, na.rm = TRUE))
+node4 <- business %>%
+  group_by(name = NACE4) %>%
+  summarize(employees = sum(employees, na.rm = TRUE))
+business_edge <- bind_rows(edge0, edge1, edge2, edge3)
+business_node <- bind_rows(node0, node1, node2, node3, node4) %>%
+  group_by(name) %>%
+  summarize(employees = 1 + sum(employees, na.rm = TRUE)) %>%
+  mutate(name2 = str_split(name, "-", 2) %>% map_chr(tail, 1))
+business_igraph <- igraph::graph_from_data_frame(
+  business_edge,
+  vertices = business_node
+) %>%
+  as_tbl_graph() %>%
+  activate("nodes") %>%
+  mutate(name3 = if_else(node_is_sink() & (employees > 1000),
+    name2, ""
+  ))
+
+```
+
+```{r Tree_GGraph_Treegraph}
+ggraph(business_igraph, layout = "dendrogram",
+       circular = TRUE) + 
+  geom_edge_fan(alpha = .5) + 
+  geom_node_point(aes(color = name),
+                  show.legend = FALSE) +
+  coord_equal() +
+  theme_graph()
+```
+
+```{r Tree_GGraph_Treemap}
+ggraph(business_igraph, layout = "treemap",
+       weight = "employees") +
+  geom_node_tile(aes(fill = name), show.legend = FALSE) +
+  geom_node_text(
+    aes(label = str_trunc(str_trim(name3), 10)),
+    size = 2,
+    show.legend = FALSE) +
+  theme_graph()
+```
+
+## General Graph
+
+```{r Graph_Data}
+library(tidygraph)
+mis_file <- "lesmiserables.txt"
+mis_graph <- igraph::read_graph(mis_file,
+                                format = "gml") %>%
+  as_tbl_graph()
+
+mis_graph <- mis_graph %>% activate("nodes") %>%
+  mutate(group = as_factor(as.character(group)),
+         degree = centrality_degree()) %>%
+  arrange(group, desc(degree))
+```
+
+```{r GGraph}
+library(ggraph)
+ggraph(mis_graph) + geom_edge_fan(
+  aes(edge_width = value),
+  alpha = .5,
+  show.legend = FALSE
+) +
+  geom_node_point(
+    aes(color = as.factor(group)),
+    size = 5,
+    show.legend = FALSE
+  ) +
+  geom_node_text(aes(label = label)) +
+  scale_x_continuous(expand = c(0.1,0.1)) +
+  coord_equal() +
+  theme_graph()
+
+ggraph(mis_graph, layout = "fr") +
+  geom_edge_fan(
+    aes(edge_width = value),
+    alpha = .5,
+    show.legend = FALSE
+  ) +
+  geom_node_point(
+    aes(color = as.factor(group)),
+    size = 5,
+    show.legend = FALSE
+  ) +
+  geom_node_text(aes(label = label)) +
+  scale_x_continuous(expand = c(0.1,0.1)) +
+  coord_equal() +
+  theme_graph()
+
+ggraph(mis_graph, layout = "circle") +
+  geom_edge_fan(
+    aes(edge_width = value),
+    alpha = .5,
+    show.legend = FALSE
+  ) +
+  geom_node_point(
+    aes(color = as.factor(group)),
+    size = 5,
+    show.legend = FALSE
+  ) +
+  geom_node_text(aes(label = label)) +
+  scale_x_continuous(expand = c(0.1,0.1)) +
+  coord_equal() +
+  theme_graph()
+```
+
+## Arc diagram
+
+```{r GGraph_Arcdiagram}
+ggraph(mis_graph, layout = "linear") +
+  geom_edge_arc(
+    aes(edge_width = value),
+    alpha = .25,
+    show.legend = FALSE
+  ) +
+  geom_node_point(
+    aes(
+      color = as.factor(group),
+      size = degree
+    ),
+    show.legend = FALSE
+  ) +
+  geom_node_text(
+    aes(label = label), angle = 90,
+    hjust = 1
+  ) +
+  scale_y_continuous(limits = c(-10, NA)) +
+  theme_graph()
+```
+
+##  Adjacency Matrix
+
+```{r Adjacency_Matrix_Data}
+edges <- mis_graph %>% activate("edges") %>% as_tibble()
+edges_sym <- edges %>% rename(tmp = from, from = to) %>%
+  rename(to = tmp)
+edges <- bind_rows(edges, edges_sym)
+edges <- edges %>%
+  left_join(mis_graph %>% activate("nodes") %>% as_tibble() %>%
+              select(id, from_label = label),
+            by = c("from" = "id")) %>%
+  left_join(mis_graph %>% activate("nodes") %>% as_tibble() %>%
+              select(id, to_label = label),
+            by = c("to" = "id")) %>%
+  mutate(from_label = fct_reorder(from_label, from),
+         to_label = fct_reorder(to_label, to))
+```
+
+```{r Adjacency_Matrix}
+ggplot(data = edges, aes(
+  x = from_label,
+  y = to_label,
+  fill = value
+)) +
+  geom_raster() + xlab("") + ylab("") +
+  viridis::scale_fill_viridis(trans = "sqrt") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+# Interactivity
+
+
+## OpenGL
+
+```{r 3D, webgl = TRUE}
+library(rgl)
+
+plot3d(small_diamonds[c(1, 2, 7)])
+```
+
+
+## Javascript
+
+### Plotly 
+
+```{r Plotly, cache = FALSE}
+library(plotly)
+gg <- ggplot(data = mtcars, aes(
+  x = hp, y = mpg,
+  size = gear, color = cyl,
+  shape = factor(am)
+)) +
+  geom_point() +
+  scale_size_continuous(
+    breaks = c(3, 4, 5),
+    limits = c(0, 5)
+  ) +
+  scale_color_continuous(breaks = c(4, 6, 8))
+```
+
+```{r Plotly2, cache = FALSE}
+library(plotly)
+ggplotly(gg)
+```
+
+### Bokeh
+
+```{r Bokeh, cache = FALSE}
+library(rbokeh)
+p <- figure() %>% 
+  ly_points(data = dplyr::mutate(mtcars, cyl = factor(cyl)),
+            x = hp, y = mpg, color = cyl,
+            glyph = factor(am), hover = mtcars)
+p
+```
+
+```{r Bokeh_advanced, cache = FALSE}
+p <- figure(data = stocks_tbl) %>%
+  ly_lines(x = date, y = close_index, color = symbol)
+p
+
+ps <- purrr::map(tckrs,
+                 function(tckr) {
+                   figure(data = stocks_tbl %>%
+                            dplyr::filter(symbol == tckr)) %>%
+                     ly_lines(x = date, y = close, color = symbol)
+                 })
+grid_plot(ps, same_axes = c(TRUE,FALSE),
+          ncol = 1)
+```
+
+### visNetwork
+
+```{r visNetwork, cache = FALSE}
+library(visNetwork)
+
+visIgraph(mis_graph, idToLabel = FALSE,
+          physics = TRUE) %>%
+  visOptions(highlightNearest = TRUE) %>%
+  visPhysics(solver = "barnesHut")
+```
+
+# Big Data
+
+```{r BigData}
+library(nycflights13)
+glimpse(flights)
+
+ggplot(data = flights,
+       aes(x = distance, y = air_time)) +
+  geom_point(alpha = .1)
+
+ggplot(data = flights,
+       aes(x = distance, y = air_time)) +
+  geom_hex(bins = 60) +
+  viridis::scale_fill_viridis()
+
+ggplot(data = flights,
+       aes(x = distance, y = air_time)) +
+  stat_density_2d(aes(fill = ..level..),
+                  contour = TRUE, geom = "polygon") +
+  viridis::scale_fill_viridis()
+```

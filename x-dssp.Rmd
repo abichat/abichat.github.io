@@ -1,0 +1,16 @@
+---
+title: "X - Data Science Starter Program"
+description: |
+  <p align="center"><a target="_blank"><img src="img/logo_x.jpg" alt="Mines Nancy" height="130"></a></p>
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+# Table Wrangling & Data Visualization
+
+
+* [Slides](teaching/xdssp/visualization.pdf "Visualisation with R")
+
+* [TP1](teaching/xdssp/Visualization_Ggplot2.html) & [TP2](teaching/xdssp/Visualization_Examples.html)

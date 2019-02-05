@@ -1,0 +1,69 @@
+Tidyverse	
+Bar	
+Pie	
+Pie_Ggforce	
+Pie_Ggforce_function	pie_stats
+Pie_Ggforce_Legend	
+Col_vs_Pie	p_col	p_pie	set	sets
+Cleveland_Dot	
+Lollipop	
+Cleveland_Ordered	
+Histogram	
+Histogram_Oversmoothing	
+Histogram_Undersmoothing	
+Density	
+Density_Oversmooting	
+Density_Undersmooting	
+Boxplot	
+Violin	
+Dotplot_Data	small_diamonds
+Dotplot	
+Doplot_Median	
+Quasirandom	
+Stem	
+Grouping_Color	
+Grouping_Fill_Stack	
+Grouping_Facet	
+Grouping_Violin	
+Grouping_Ridges	
+Grouping_Dotplot	
+Grouping_Dotplot_Color	
+Scatter_Plot	
+Scatter_Plot_Alpha	
+Scatter_Plot_Color	
+Scatter_Plot_Color_Alpha	
+Scatter_Plot_Color_Alpha_Facet	
+Smoothing	
+Smoothing_Group	
+Symbols	
+Scatter_Plot_Matrix	
+Parallel_Coordinates_Data	mtcarsm	scaled
+Parallel_Coordinates	
+Parallel_Coordinates_Facet	
+Radar_Plots_Function	coord_radar
+Radar_Plot_Facet	
+Radar_Plot	
+Time_Series_Data	stocks_tbl	tckrs
+Time_Series	
+Time_Series_Facet	
+Time_Line_Data	ww2	ww2.events
+Time_Line	
+Choroplet_Data	st	st_gather	votes.repub
+Choroplet	
+Choroplet_Year	
+Choroplet_Clean	
+Alluvial	
+Tree_Data	airct	airq	airquality
+Tree_Rpartplot	
+Tree_Ggdendro	airct.data
+Tree_Graph_Data	business
+Tree_GGraph_Data	business_edge	business_igraph	business_node	edge0	edge1	edge2	edge3	node0	node1	node2	node3	node4
+Tree_GGraph_Treegraph	
+Tree_GGraph_Treemap	
+Graph_Data	mis_file	mis_graph
+GGraph	
+GGraph_Arcdiagram	
+Adjacency_Matrix_Data	edges	edges_sym
+Adjacency_Matrix	
+3D	
+BigData	

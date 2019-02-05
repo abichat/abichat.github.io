@@ -1,0 +1,69 @@
+Tidyverse	library	tidyverse
+Bar	ggplot	diamonds	aes	cut	geom_bar
+Pie	ggplot	diamonds	aes	factor	cut	geom_bar	coord_polar	xlab	ylab	theme	element_blank
+Pie_Ggforce	ggplot	diamonds	%>%	count	cut	geom_arc_bar	aes	n	coord_equal	theme_void
+Pie_Ggforce_function	library	rlang	pie_stats	x0	enquo	y0	r0	r1	amount	explode	df	%>%	mutate	group_by	cumsum	sum	pi	lag	end	ungroup	label_perc	sin	start	cos
+Pie_Ggforce_Legend	ggplot	diamonds	%>%	count	cut	pie_stats	n	geom_arc_bar	aes	x0	y0	r0	r1	start	end	explode	geom_text	x_lab	y_lab	percent	sum	coord_equal	theme_void
+Col_vs_Pie	set	tibble	c	sets	map_df	%>%	mutate	rpois	i	p_col	ggplot	geom_col	aes	cat	val	facet_wrap	rep	p_pie	geom_arc_bar	theme_void	ggarrange
+Cleveland_Dot	ggplot	diamonds	aes	cut	geom_point	coord_flip	theme	element_blank	element_line
+Lollipop	ggplot	diamonds	aes	cut	geom_point	geom_bar	coord_flip	theme	element_blank	element_line
+Cleveland_Ordered	ggplot	rownames_to_column	mtcars	aes	fct_reorder	rowname	mpg	cyl	geom_point	coord_flip	xlab	scale_color_continuous	c	guides	guide_legend	theme	element_blank	element_line
+Histogram	ggplot	diamonds	aes	price	geom_histogram
+Histogram_Oversmoothing	ggplot	diamonds	aes	price	geom_histogram
+Histogram_Undersmoothing	ggplot	diamonds	aes	price	geom_histogram
+Density	ggplot	diamonds	aes	price	geom_density
+Density_Oversmooting	ggplot	diamonds	aes	price	geom_density
+Density_Undersmooting	ggplot	diamonds	aes	price	geom_density
+Boxplot	ggplot	diamonds	aes	factor	price	geom_boxplot
+Violin	ggplot	diamonds	aes	factor	price	geom_violin
+Dotplot_Data	small_diamonds	sample_frac	diamonds
+Dotplot	ggplot	small_diamonds	aes	factor	price	geom_dotplot
+Doplot_Median	ggplot	small_diamonds	aes	factor	price	geom_dotplot	stat_summary	median
+Quasirandom	ggplot	small_diamonds	aes	factor	price	geom_quasirandom
+Stem	stem	small_diamonds
+Grouping_Color	ggplot	diamonds	aes	price	cut	geom_density
+Grouping_Fill_Stack	ggplot	diamonds	aes	price	cut	geom_density
+Grouping_Facet	ggplot	diamonds	aes	price	cut	geom_density	facet_wrap
+Grouping_Violin	ggplot	diamonds	aes	cut	price	geom_violin
+Grouping_Ridges	ggplot	diamonds	aes	cut	price	geom_density_ridges
+Grouping_Dotplot	ggplot	small_diamonds	aes	cut	price	geom_dotplot	stat_summary	median
+Grouping_Dotplot_Color	ggplot	small_diamonds	aes	factor	price	cut	geom_dotplot	stat_summary	median
+Scatter_Plot	ggplot	diamonds	aes	carat	price	geom_point
+Scatter_Plot_Alpha	ggplot	diamonds	aes	carat	price	geom_point
+Scatter_Plot_Color	ggplot	diamonds	aes	carat	price	cut	geom_point
+Scatter_Plot_Color_Alpha	ggplot	diamonds	aes	carat	price	cut	geom_point
+Scatter_Plot_Color_Alpha_Facet	ggplot	diamonds	aes	carat	price	cut	geom_point	facet_wrap
+Smoothing	ggplot	diamonds	aes	carat	price	geom_point	geom_smooth
+Smoothing_Group	ggplot	diamonds	aes	carat	price	cut	geom_point	geom_smooth
+Symbols	ggplot	mtcars	aes	hp	mpg	gear	cyl	factor	am	geom_point	scale_size_continuous	c	scale_color_continuous	guides	guide_legend
+Scatter_Plot_Matrix	library	GGally	ggpairs	mtcars
+Parallel_Coordinates_Data	scaled	as.data.frame	lapply	mtcars	rescale01	%>%	mutate	row.names	mtcarsm	gather	variable	value	model
+Parallel_Coordinates	ggplot	mtcarsm	aes	variable	value	geom_line	model	theme	element_text	rel	guides	guide_legend
+Parallel_Coordinates_Facet	ggplot	mtcarsm	aes	variable	value	geom_line	model	theme	element_text	rel	element_blank	guides	facet_wrap
+Radar_Plots_Function	coord_radar	theta	match.arg	c	r	ggproto	CoordPolar	start	sign	direction
+Radar_Plot_Facet	ggplot	mtcarsm	%>%	arrange	variable	aes	value	geom_polygon	model	coord_radar	facet_wrap	guides	guide_legend	theme	element_text	rel	element_blank
+Radar_Plot	ggplot	mtcarsm	%>%	arrange	variable	aes	value	geom_polygon	model	geom_path	coord_radar	theme	element_text	rel	guides	guide_legend
+Time_Series_Data	tckrs	c	stocks_tbl	tq_get	%>%	group_by	symbol	mutate	close
+Time_Series	ggplot	stocks_tbl	aes	date	close_index	symbol	geom_line	scale_y_continuous	c
+Time_Series_Facet	ggplot	stocks_tbl	aes	date	close_index	symbol	geom_line	scale_y_continuous	c	facet_wrap
+Time_Line_Data	library	timeline	data	ww2
+Time_Line	timeline	ww2	ww2.events
+Choroplet_Data	st	map_data	data	votes.repub	colnames	paste	mutate	rownames_to_column	as.data.frame	tolower	region	left_join	st_gather	gather	long	lat	group	order	subregion
+Choroplet	ggplot	st	aes	long	lat	group	Y1960	geom_polygon	scale_fill_gradient	c	coord_map
+Choroplet_Year	ggplot	st_gather	aes	long	lat	group	value	geom_polygon	scale_fill_gradient	c	facet_wrap	year	coord_map
+Choroplet_Clean	p_unload	maps
+Alluvial	library	ggalluvial	ggplot	as.data.frame	Titanic	aes	Freq	Class	Sex	Age	Survived	scale_x_continuous	c	geom_alluvium	geom_stratum	geom_text
+Tree_Data	library	rpart	data	airquality	airq	subset	is.na	Ozone	airct	.	rpart.control
+Tree_Rpartplot	library	rpart.plot	airct	prp
+Tree_Ggdendro	library	ggdendro	airct.data	dendro_data	airct	ggplot	geom_segment	segments	aes	x	y	xend	yend	geom_label	labels	label	geom_text	leaf_labels	theme_dendro
+Tree_Graph_Data	data	business
+Tree_GGraph_Data	library	ggraph	tidygraph	edge0	business	%>%	group_by	NACE1	summarize	node0	sum	employees	edge1	NACE2	node1	edge2	NACE3	node2	edge3	NACE4	node3	node4	business_edge	bind_rows	business_node	name	mutate	str_split	map_chr	tail	business_igraph	graph_from_data_frame	as_tbl_graph	activate	if_else	node_is_sink	name2
+Tree_GGraph_Treegraph	ggraph	business_igraph	geom_edge_fan	geom_node_point	aes	name	coord_equal	theme_graph
+Tree_GGraph_Treemap	ggraph	business_igraph	geom_node_tile	aes	name	geom_node_text	str_trunc	str_trim	name3	theme_graph
+Graph_Data	library	tidygraph	mis_file	mis_graph	read_graph	%>%	as_tbl_graph	activate	mutate	as_factor	as.character	group	centrality_degree	arrange	desc	degree
+GGraph	library	ggraph	mis_graph	geom_edge_fan	aes	value	geom_node_point	as.factor	group	geom_node_text	label	scale_x_continuous	c	coord_equal	theme_graph
+GGraph_Arcdiagram	ggraph	mis_graph	geom_edge_arc	aes	value	geom_node_point	as.factor	group	degree	geom_node_text	label	scale_y_continuous	c	theme_graph
+Adjacency_Matrix_Data	edges	mis_graph	%>%	activate	as_tibble	edges_sym	rename	from	to	tmp	bind_rows	left_join	select	id	label	c	mutate	fct_reorder	from_label	to_label
+Adjacency_Matrix	ggplot	edges	aes	from_label	to_label	value	geom_raster	xlab	ylab	scale_fill_viridis	theme	element_text
+3D	library	rgl	plot3d	small_diamonds	c
+BigData	library	nycflights13	glimpse	flights	ggplot	aes	distance	air_time	geom_point	geom_hex	scale_fill_viridis	stat_density_2d	..level..
