@@ -1,5 +1,5 @@
 ---
-title: "X - Data Science Starter Program"
+title: "Data Science Starter Program"
 description: |
   <p align="center"><a target="_blank"><img src="img/logo_x.jpg" alt="Mines Nancy" height="130"></a></p>
 ---
