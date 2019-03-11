@@ -392,7 +392,7 @@ $\large{1.44 \times q \times \frac{\#\text{discoveries } +\text{ } \#\text{famil
 
 * Proxy for correlations at high-level niches
 
-* Not so much for subtel niches?
+* Not so much for subtle niches?
 
 * Non available everytime
 

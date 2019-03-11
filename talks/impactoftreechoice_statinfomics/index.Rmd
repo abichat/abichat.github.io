@@ -447,7 +447,7 @@ After smoothing, a multiple testing correction could be done on smoothed values
 
 * Proxy for correlations at high-level niches
 
-* Not so much for subtel niches?
+* Not so much for subtle niches?
 
 * Non available everytime
 
