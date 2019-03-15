@@ -46,4 +46,4 @@ navbar:
         href: "https://abichat.shinyapps.io/BrownianMotion/"
         
 output: 
-  radix::radix_article
+  distill::distill_article

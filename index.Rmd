@@ -1,6 +1,6 @@
 ---
 title: "About me"
-site: radix::radix_website
+site: distill::distill_website
 ---
 
 ```{r setup, include=FALSE}
