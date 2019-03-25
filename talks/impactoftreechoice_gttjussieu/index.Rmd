@@ -855,7 +855,7 @@ class: center, middle, inverse
 
 * Release a shiny app to compare trees
 
-* Use completly simulated data (Poisson-Dirichlet-multinomial)
+* Use completely simulated data (Poisson-Dirichlet-multinomial)
 
 
 
