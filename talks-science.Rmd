@@ -11,6 +11,13 @@ knitr::opts_chunk$set(echo = FALSE)
 # About the choice of the tree in metagenomics differential abundance studies
 
 
+* [Groupe de Travail des Thésards de Jussieu](talks/impactoftreechoice_gttjussieu/ "Impact of tree choice in metagenomics differential abundance studies") (1 hour)
+
+<aside>
+March 25, 2019 <br>
+Sorbonne Université
+</aside>
+
 * [Séminaire StatInfOmics](talks/impactoftreechoice_statinfomics/ "Impact of tree choice in metagenomics differential abundance studies") (1 hour)
 
 <aside>
