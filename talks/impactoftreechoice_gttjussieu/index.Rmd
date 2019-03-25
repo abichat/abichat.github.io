@@ -332,7 +332,7 @@ Descending method:
 <br>
 
 .center[
-  <img src="img/tree_hyp.png" width="450">
+  <img src="img/tree_hyp.png" width="430">
 ]
 
 ---
@@ -352,7 +352,7 @@ Descending method:
 <br>
 
 .center[
-  <img src="img/tree_hyp_1.png" width="450">
+  <img src="img/tree_hyp_1.png" width="430">
 ]
 
 ---
@@ -374,7 +374,7 @@ Descending method:
 
 
 .center[
-  <img src="img/tree_hyp_2.png" width="450">
+  <img src="img/tree_hyp_2.png" width="430">
 ]
 
 ---
@@ -394,7 +394,7 @@ Descending method:
 <br>
 
 .center[
-  <img src="img/tree_hyp_3.png" width="450">
+  <img src="img/tree_hyp_3.png" width="430">
 ]
 
 --
