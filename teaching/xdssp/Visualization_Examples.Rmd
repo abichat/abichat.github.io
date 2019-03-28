@@ -1,7 +1,7 @@
 ---
 title: "Visualization Examples"
 author: "Antoine Bichat / Erwan Le Pennec"
-date: "Winter 2019"
+date: "Spring 2019"
 output:
   html_document: 
     code_folding: hide
