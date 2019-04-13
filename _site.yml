@@ -44,7 +44,7 @@ navbar:
         href: "https://github.com/abichat/mytemplatesabichat"
     - text: "Miscellaneous"
       menu:
-      - text: " idyTuesday"
+      - text: "TidyTuesday"
         href: "https://github.com/abichat/tidytuesday"
       - text: "Simulation of Brownian motion"
         href: "https://abichat.shinyapps.io/BrownianMotion/"
