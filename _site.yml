@@ -36,12 +36,16 @@ navbar:
         href: minesnancy-visu.html
     - text: "Packages 📦"
       menu:
+      - text: "yatah"
+        href: "https://abichat.github.io/yatah/"
       - text: "rcppclick"
         href: "https://github.com/abichat/rcppclick"
       - text: "mytemplatesabichat"
         href: "https://github.com/abichat/mytemplatesabichat"
     - text: "Miscellaneous"
       menu:
+      - text: " idyTuesday"
+        href: "https://github.com/abichat/tidytuesday"
       - text: "Simulation of Brownian motion"
         href: "https://abichat.shinyapps.io/BrownianMotion/"
         
