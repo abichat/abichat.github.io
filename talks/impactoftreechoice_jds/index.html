@@ -48,11 +48,11 @@ class: center, middle, inverse
 ## Microbiota
 
 
-_Ecological community of microorganisms that reside in an environmental niche_
+_Ecological community of microorganisms that reside in an environmental niche_ 
 
 --
 
-.footnote[<i class="fas  fa-book "></i> Gut: The Inside Story of Our Body's Most Underrated Organ (Giulia Enders) &lt;br&gt; &amp;emsp;]
+.footnote[📘 Gut: The Inside Story of Our Body's Most Underrated Organ  (Giulia Enders) &lt;br&gt; 📄 Opstelten et al. (2016), Bokulich et al. (2016), Blander et al. (2017)]
 
 .pull-left[
 
@@ -72,7 +72,7 @@ _Ecological community of microorganisms that reside in an environmental niche_
 ]
 
 --
-.footnote[<i class="fas  fa-book "></i> Gut: The Inside Story of Our Body's Most Underrated Organ  (Giulia Enders) &lt;br&gt; <i class="fas  fa-file-alt "></i> Opstelten et al. (2016), Bokulich et al. (2016), Blander et al. (2017)]
+
 
 .pull-right[
 
@@ -96,25 +96,11 @@ _Ecological community of microorganisms that reside in an environmental niche_
 
 ]
 
----
-## Data collection
-
-.footnote[<i class="fas  fa-file-alt "></i> Quince et al. (2017)]
-
-.center[&lt;img src="img/workflow.png" width="650"&gt;]
-
----
-count: false
-## Data collection
-
-.footnote[<i class="fas  fa-file-alt "></i> Quince et al. (2017)]
-
-.center[&lt;img src="img/workflow_ellipse.png" width="650"&gt;]
 
 ---
 ## Data - abundances of taxa
 
-.footnote[<i class="fas  fa-file-alt "></i> Ravel et al. (2011)]
+.footnote[📄 Ravel et al. (2011)]
 
 
 ```
@@ -140,37 +126,15 @@ count: false
 
 * Zero-inflated data
 
-* __Correlation between species__
+* Correlation between species
 
 * Counts spanning several orders of magnitude: `\(1 \rightarrow 10^{\small{8}}\)`
 
----
-## Data - samples information
-
-.footnote[<i class="fas  fa-file-alt "></i> Ravel et al. (2011)]
-
-
-```
-  # A tibble: 394 x 6
-     Sample Ethnic_Group    pH Nugent_Score Nugent_Cat   CST  
-     &lt;chr&gt;  &lt;chr&gt;        &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt;        &lt;chr&gt;
-   1 S001   Asian          4              0 low          I    
-   2 S002   White          4              0 low          II   
-   3 S003   Black          4              1 low          III  
-   4 S004   Asian          4.7            0 low          I    
-   5 S005   Black          5              6 intermediate IV   
-   6 S006   White          4              0 low          I    
-   7 S007   White          4.7            1 low          II   
-   8 S008   White          5.8            9 high         IV   
-   9 S009   White          4.4            0 low          III  
-  10 S010   Black          4.4            1 low          I    
-  # … with 384 more rows
-```
 
 ---
 ## Data - taxonomy
 
-.footnote[<i class="fas  fa-file-alt "></i> Ravel et al. (2011)]
+.footnote[📄 Ravel et al. (2011)]
 
 
 ```
@@ -214,68 +178,39 @@ class: center, middle, inverse
 ---
 ## Statistical issue
 
-.center[
-#### Healthy VS Diseased
-&lt;div style = "margin-top: -25px"&gt;&lt;/div&gt;
-.center[&lt;img src="img/cohort.png"/ width="375"&gt;]
-]
-
-Is any bacteria more abundant in one group? 
+Which taxa are differentially abundant between groups? 
 
 --
 
-.pull-left[
-#### Goals
-* Biomarker
-
-* Companion Diagnostics 
-
-* Potential targets for drugs
-]
-
---
-
-.pull-right[
-#### Methods
 * ANOVA / GLM
 
 * Wilcoxon rank sum test
 
-* Mixed model effects
+--
 
-* ...
-]
+&lt;br&gt;
 
-
-
----
-## Multiple testing problem
-
-Usual design:
-
-* 1&amp;#8239;500 species in the gut
-
-* Up to hundreds in a single study
+But hundreds of taxa in a single study...
 
 Need for a controling procedure!
-
---
 
 * Bonferroni (FWER)
 
 ---
 count: false
+## Statistical issue
 
-## Multiple testing problem
+Which taxa are differentially abundant between groups? 
 
-Usual design:
+* ANOVA / GLM
 
-* 1&amp;#8239;500 species in the gut
+* Wilcoxon rank sum test
 
-* Up to hundreds in a single study
+&lt;br&gt;
+
+But hundreds of taxa in a single study...
 
 Need for a controling procedure!
-
 
 * ~~Bonferroni (FWER)~~ `\(\rightarrow\)` too conservative
 
@@ -283,10 +218,17 @@ Need for a controling procedure!
 
 * Benjamini-Hochberg (FDR)
 
+--
+
+&lt;br&gt;
+
+💪 Is it possible to do better?
+
+
 ---
 ## Incorporate taxonomy in the analysis?
 
-.footnote[<i class="fas  fa-file-alt "></i> Philippot et al. (2010), Koeppel &amp; Wu (2012)]
+.footnote[📄 Philippot et al. (2010), Koeppel &amp; Wu (2012)]
 
 * Taxonomy is a proxy for the structure of the data
 
@@ -305,7 +247,7 @@ Need for a controling procedure!
 ---
 ## Hierarchical FDR
 
-.footnote[<i class="fas  fa-file-alt "></i> Yekutieli (2008)]
+.footnote[📄 Yekutieli (2008)]
 
 `\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)`
 
@@ -325,7 +267,7 @@ Descending method:
 count: false
 ## Hierarchical FDR
 
-.footnote[<i class="fas  fa-file-alt "></i> Yekutieli (2008)]
+.footnote[📄 Yekutieli (2008)]
 
 `\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)`
 
@@ -346,7 +288,7 @@ count: false
 
 ## Hierarchical FDR
 
-.footnote[<i class="fas  fa-file-alt "></i> Yekutieli (2008)]
+.footnote[📄 Yekutieli (2008)]
 
 `\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)`
 
@@ -367,7 +309,7 @@ Descending method:
 count: false
 ## Hierarchical FDR
 
-.footnote[<i class="fas  fa-file-alt "></i> Yekutieli (2008)]
+.footnote[📄 Yekutieli (2008)]
 
 `\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)`
 
@@ -397,7 +339,7 @@ __This procedure controls the FDR at level__
 ---
 ## Bayesian smoothing
 
-.footnote[<i class="fas  fa-file-alt "></i> Xiao et al. (2017)]
+.footnote[📄 Xiao et al. (2017)]
 
 Denote by `\(\mathbf{z}\)` the vector of observed z-values and `\(\mathbf{\mu}\)` the vector of "true" z-values
 
@@ -430,13 +372,13 @@ After smoothing, a multiple testing correction could be done on smoothed values
 ## Which tree?
 
 
-#### Taxonomic tree?
+#### Taxonomy?
 
 * Proxy for correlations at high-level niches
 
-* Not so much for subtel niches?
+* Not so much for low-level niches?
 
-* Non available everytime
+* Not available everytime
 
 
 ---
@@ -445,13 +387,13 @@ count: false
 ## Which tree?
 
 
-#### Taxonomic tree?
+#### Taxonomy?
 
 * Proxy for correlations at high-level niches
 
-* Not so much for subtel niches?
+* Not so much for low-level niches?
 
-* Non available everytime
+* Not available everytime
 
 #### Correlation tree?
 
@@ -472,19 +414,19 @@ class: center, middle, inverse
 ---
 ## Billera-Holmes-Vogtamnn distance
 
-.footnote[<i class="fas  fa-file-alt "></i> Billera, Holmes &amp; Vogtmann (2001)]
+.footnote[📄 Billera, Holmes &amp; Vogtmann (2001)]
 
 The BHV distance is the length of the unique shortest path between the trees on treespace
 
 .pull-left[
   .center[
-&lt;img src="img/dBHV_1.png" height=300/&gt;
+&lt;img src="img/dBHV_2.png" height=300/&gt;
   ]
 ]
 
 .pull-right[
   .center[
-    &lt;img src="img/dBHV_2.png" height=300/&gt;
+    &lt;img src="img/dBHV_4.png" height=300/&gt;
   ]
 ]
 
@@ -495,9 +437,9 @@ The BHV distance is the length of the unique shortest path between the trees on 
 
 * __trees of primary interest__
 
-  * correlation tree on original data
+  * &lt;span style="color:#C77CFF"&gt;correlation tree on original data&lt;/span&gt;
   
-  * taxonomic tree
+  * &lt;span style="color:#F8766D"&gt;taxonomy&lt;/span&gt;
   
 --
 
@@ -505,7 +447,7 @@ The BHV distance is the length of the unique shortest path between the trees on 
 
 --
 
-  * `\(N_B\)` correlation trees on boostrapped data (resampling on samples)
+  * &lt;span style="color:#00BFC4"&gt;correlation trees on boostrapped data (resampling on samples)&lt;/span&gt;
 
 --
 
@@ -513,9 +455,9 @@ The BHV distance is the length of the unique shortest path between the trees on 
 
 --
 
-  * `\(N_{R_1}\)` trees created by random shuffling of correlation tree tip labels
+  * &lt;span style="color:#7CAE00"&gt;trees created by random shuffling of correlation tree tip labels&lt;/span&gt;
   
-  * `\(N_{R_2}\)` trees created by random shuffling of taxonomic tree tip labels
+  * &lt;span style="color:#FFA500"&gt;trees created by random shuffling of taxonomy tip labels&lt;/span&gt;
 
 --
 
@@ -531,19 +473,17 @@ We compute all pairwise distances between these trees
 ---
 ## Dataset
 
-.footnote[<i class="fas  fa-file-alt "></i> Ravel et al. (2011)]
+.footnote[📄 Ravel et al. (2011)]
 
 * Vaginal microbiome of non pregnant women sequenced by 16S
 
 * 40 different genera after filtering (~&amp;#8239;30&amp;#8239;%)
 
-* 394 women with various Nugent score
-
 &lt;br&gt;
 
 .pull-left[ 
   &lt;img src="img/tree_tax.png"&gt;
-  .center[Taxonomic tree]
+  .center[Taxonomy]
 ]
 
 .pull-right[
@@ -568,20 +508,18 @@ We compute all pairwise distances between these trees
 
 &lt;br&gt;
 
-.center[
-__The correlation tree is different from the taxonomic tree__
-]
+😀 The correlation tree is different from the taxonomy
 
 
 ---
 class: center, middle, inverse
 
-# Application
+# Evaluation of hFDR
 
 ---
 ## Dataset
 
-.footnote[<i class="fas  fa-file-alt "></i> Caporaso et al. (2011), Sankaran &amp; Holmes (2014)]
+.footnote[📄 Caporaso et al. (2011), Sankaran &amp; Holmes (2014)]
 
 * Small subset of the `GlobalPatterns` dataset narrowed to Chlamydiae phylum
 
@@ -617,27 +555,36 @@ class: center, middle, inverse
 
 The _a posteriori_ global FDR is:
 
-* `\(\alpha' = 0.32\)` for phylogenetoc correction
+* `\(\alpha' = 0.32\)` for phylogenetic correction
 
 * `\(\alpha' = 0.324\)` for correlation correction
 
-
-&lt;br&gt;
 
 --
 
 A BH procedure at the same global FDR level leads to 15 discoveries (+5)
 
+--
+
+&lt;br&gt;
+
+😀 Using correlation tree instead of taxonomy yields more results
+
+
+☹️ Vanilla FDR beats hFDR for a given level
+
+
+
 ---
 class: center, middle, inverse
 
-# Application bis
+# Evaluation of z-scores smoothing
 
 
 ---
 ## Dataset
 
-.footnote[<i class="fas  fa-file-alt "></i> Zeller et al. (2014)]
+.footnote[📄 Zeller et al. (2014)]
 
 * Dataset from cancer study
 
@@ -659,7 +606,13 @@ class: center, middle, inverse
 ---
 ## Impact of the tree
 
-.center[&lt;img src="img/zeller-lines.png" height=500/&gt;]
+.center[&lt;img src="img/zeller-lines-bold.png" height=430/&gt;]
+
+--
+
+😊 z-scores smoothing is slightly better than vanilla FDR
+
+☹️ All hierachies give highly similar results
 
 ---
 class: center, middle, inverse
@@ -669,9 +622,9 @@ class: center, middle, inverse
 ---
 ## Workflow
 
-.footnote[<i class="fas  fa-file-alt "></i> Brito et al. (2016)]
+.footnote[📄 Brito et al. (2016)]
 
-* Transformation of an existing dataset with 112 samples &amp; 77 genera
+* Simulate DA taxa starting from an homogeneous dataset
 
 * Correction with BH and hierarchical p-value smoothing
 
@@ -681,9 +634,15 @@ class: center, middle, inverse
 ---
 ## Evaluation
 
-&lt;br&gt;
+.center[&lt;img src="img/simu_np_lines_prez.png" height=390/&gt;]
 
-.center[&lt;img src="img/simu_np_lines_prez.png" height=400/&gt;]
+--
+
+😀 Using correlation tree instead of taxonomy yields more results
+
+☹️ Vanilla BH is better 
+
+🤔 Taxonomy is worst than random trees 
 
 
 ---
@@ -693,36 +652,31 @@ class: center, middle, inverse
 
 ---
 
-## Conclusions
+## Conclusions 
 
-* Correlation tree is built to reflect the structure of the data
 
---
+😀 Correlation tree and taxonomy are very different
 
-&lt;br&gt;
-
-* <i class="fab  fa-r-project "></i> packages for correlation tree computation `{correlationtree}`, taxonomy handling `{yatah}` <i class="fab  fa-github "></i>, and evaluation of binary classifiers `{evabic}` <i class="fab  fa-github "></i>
+😀 Replacing taxonomy with correlationn increases the TPR
 
 --
 
 &lt;br&gt;
 
-* Correlation tree and taxonomy are very different
+☹️ Vanilla BH is more powerful than hFDR
 
---
-
-&lt;br&gt;
-
-
-* Using the correlation tree might improve the number of detected species compared to the taxonomy
+☹️ Bayesian smoothing does not really depend on the tree for z-scores smoothing
 
 --
 
 &lt;br&gt;
 
 
-* But classical Benjamini-Hochberg is both more powerful and more respectful for the FDR control than hierarchical methods, with their current implementation
+📦 `correlationtree`
 
+📦 `yatah` <i class="fab  fa-github "></i>
+
+📦 `evabic` <i class="fab  fa-github "></i>
 
 
 ---
@@ -736,6 +690,11 @@ count: false
 &lt;br&gt;
 
 # Des questions ?
+
+
+&lt;br&gt;
+
+#### <i class="fas  fa-link "></i> &lt;a href="https://abichat.github.io" target="_blank"&gt;abichat.github.io&lt;/a&gt; &amp;emsp; <i class="fab  fa-github "></i>  &lt;a href="https://github.com/abichat" target="_blank"&gt;@abichat&lt;/a&gt; &amp;emsp; <i class="fab  fa-twitter "></i> &lt;a href="https://twitter.com/_abichat" target="_blank"&gt;@_abichat&lt;/a&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
