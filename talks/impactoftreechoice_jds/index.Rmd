@@ -179,71 +179,57 @@ class: center, middle, inverse
 ---
 ## Statistical issue
 
-Which taxa are differentially abundant between groups? 
+Univariate tests on hundred of taxa
+
+Need for a multiple testing controling procedure!
 
 --
 
-* ANOVA / GLM
-
-* Wilcoxon rank sum test
-
---
+.footnote[`r emo::ji("page_facing_up")` Philippot et al. (2010)]
 
 <br>
 
-But hundreds of taxa in a single study...
+.pull-left[
+A hierarchy is available
 
-Need for a controling procedure!
+<img src="img/coherence.png" width="400">
+]
 
-* Bonferroni (FWER)
+.pull-right[
+Can we use it to do it better?
+]
 
 ---
 count: false
 ## Statistical issue
 
-Which taxa are differentially abundant between groups? 
+.footnote[`r emo::ji("page_facing_up")` Philippot et al. (2010)]
 
-* ANOVA / GLM
+Univariate tests on hundred of taxa
 
-* Wilcoxon rank sum test
+Need for a multiple testing controling procedure!
+
 
 <br>
 
-But hundreds of taxa in a single study...
+.pull-left[
+A hierarchy is available
 
-Need for a controling procedure!
-
-* ~~Bonferroni (FWER)~~ $\rightarrow$ too conservative
-
---
-
-* Benjamini-Hochberg (FDR)
-
---
-
-<br>
-
-`r emo::ji("muscle")` Is it possible to do better?
-
-
----
-## Incorporate taxonomy in the analysis?
-
-.footnote[`r emo::ji("page_facing_up")` Philippot et al. (2010), Koeppel & Wu (2012)]
-
-* Taxonomy is a proxy for the structure of the data
-
-
-* Coherent with ecological niches
-
-
-* Independant from count data and metadata
-
-<br>
-
-.center[
-  <img src="img/coherence.png" width="550">
+<img src="img/coherence.png" width="400">
 ]
+
+.pull-right[
+
+Can we use it to do it better?
+
+<br> 
+
+* Hierarchical FDR
+
+* z-scores smoothing
+]
+
+
 
 ---
 ## Hierarchical FDR
@@ -338,7 +324,7 @@ $\large{1.44 \times q \times \frac{\#\text{discoveries } +\text{ } \#\text{famil
 
 
 ---
-## Bayesian smoothing
+## z-scores smoothing
 
 .footnote[`r emo::ji("page_facing_up")` Xiao et al. (2017)]
 
@@ -373,7 +359,7 @@ After smoothing, a multiple testing correction could be done on smoothed values
 ## Which tree?
 
 
-#### Taxonomy?
+#### Taxonomy? Phylogeny?
 
 * Proxy for correlations at high-level niches
 
@@ -388,7 +374,7 @@ count: false
 ## Which tree?
 
 
-#### Taxonomy?
+#### Taxonomy? Phylogeny?
 
 * Proxy for correlations at high-level niches
 
@@ -509,7 +495,7 @@ We compute all pairwise distances between these trees
 
 <br>
 
-`r emo::ji("grinning_face")` The correlation tree is different from the taxonomy
+`r emo::ji("grinning_face")` The <span style="color:#C77CFF">correlation tree</span> is different from the <span style="color:#F8766D">taxonomy</span>
 
 
 ---

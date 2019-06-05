@@ -178,71 +178,57 @@ class: center, middle, inverse
 ---
 ## Statistical issue
 
-Which taxa are differentially abundant between groups? 
+Univariate tests on hundred of taxa
+
+Need for a multiple testing controling procedure!
 
 --
 
-* ANOVA / GLM
-
-* Wilcoxon rank sum test
-
---
+.footnote[📄 Philippot et al. (2010)]
 
 &lt;br&gt;
 
-But hundreds of taxa in a single study...
+.pull-left[
+A hierarchy is available
 
-Need for a controling procedure!
+&lt;img src="img/coherence.png" width="400"&gt;
+]
 
-* Bonferroni (FWER)
+.pull-right[
+Can we use it to do it better?
+]
 
 ---
 count: false
 ## Statistical issue
 
-Which taxa are differentially abundant between groups? 
+.footnote[📄 Philippot et al. (2010)]
 
-* ANOVA / GLM
+Univariate tests on hundred of taxa
 
-* Wilcoxon rank sum test
+Need for a multiple testing controling procedure!
+
 
 &lt;br&gt;
 
-But hundreds of taxa in a single study...
+.pull-left[
+A hierarchy is available
 
-Need for a controling procedure!
-
-* ~~Bonferroni (FWER)~~ `\(\rightarrow\)` too conservative
-
---
-
-* Benjamini-Hochberg (FDR)
-
---
-
-&lt;br&gt;
-
-💪 Is it possible to do better?
-
-
----
-## Incorporate taxonomy in the analysis?
-
-.footnote[📄 Philippot et al. (2010), Koeppel &amp; Wu (2012)]
-
-* Taxonomy is a proxy for the structure of the data
-
-
-* Coherent with ecological niches
-
-
-* Independant from count data and metadata
-
-&lt;br&gt;
-
-.center[
-  &lt;img src="img/coherence.png" width="550"&gt;
+&lt;img src="img/coherence.png" width="400"&gt;
 ]
+
+.pull-right[
+
+Can we use it to do it better?
+
+&lt;br&gt; 
+
+* Hierarchical FDR
+
+* z-scores smoothing
+]
+
+
 
 ---
 ## Hierarchical FDR
@@ -337,7 +323,7 @@ __This procedure controls the FDR at level__
 
 
 ---
-## Bayesian smoothing
+## z-scores smoothing
 
 .footnote[📄 Xiao et al. (2017)]
 
@@ -372,7 +358,7 @@ After smoothing, a multiple testing correction could be done on smoothed values
 ## Which tree?
 
 
-#### Taxonomy?
+#### Taxonomy? Phylogeny?
 
 * Proxy for correlations at high-level niches
 
@@ -387,7 +373,7 @@ count: false
 ## Which tree?
 
 
-#### Taxonomy?
+#### Taxonomy? Phylogeny?
 
 * Proxy for correlations at high-level niches
 
@@ -508,7 +494,7 @@ We compute all pairwise distances between these trees
 
 &lt;br&gt;
 
-😀 The correlation tree is different from the taxonomy
+😀 The &lt;span style="color:#C77CFF"&gt;correlation tree&lt;/span&gt; is different from the &lt;span style="color:#F8766D"&gt;taxonomy&lt;/span&gt;
 
 
 ---
