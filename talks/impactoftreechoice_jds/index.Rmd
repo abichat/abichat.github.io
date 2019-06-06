@@ -31,7 +31,7 @@ set.seed(42)
 <br>
 
 
-# Influence du choix de l’arbre dans les études d’abondance différentielle
+# Impact of tree choice in metagenomics differential abundance studies
 
 <br>
 
@@ -39,11 +39,11 @@ set.seed(42)
 <div style = "margin-top: -30px"></div>
 <!-- ### `r icon::ii_social_twitter()` @_abichat -->
 
-### 6 juin 2019 - Journées de Statistique - Nancy
+### June 6, 2019 - Journées de Statistique - Nancy
 
 <br>
 
-#### En collaboration avec C. Ambroise (LaMME), M. Mariadassou (MaIAGE) & J. Plassais (Enterome)
+#### In collaboration with C. Ambroise (LaMME), M. Mariadassou (MaIAGE) & J. Plassais (Enterome)
 
 
 ---
@@ -558,7 +558,7 @@ A BH procedure at the same global FDR level leads to 15 discoveries (+5)
 `r emo::ji("grinning_face")` Using correlation tree instead of taxonomy yields more results
 
 
-`r emo::ji("frowning_face")` Vanilla FDR beats hFDR for a given level
+`r emo::ji("frowning_face")` Vanilla BH beats hFDR for a given level
 
 
 
@@ -597,7 +597,7 @@ class: center, middle, inverse
 
 --
 
-`r emo::ji("blush")` z-scores smoothing is slightly better than vanilla FDR
+`r emo::ji("blush")` z-scores smoothing is slightly better than vanilla BH
 
 `r emo::ji("frowning_face")` All hierachies give highly similar results
 
@@ -672,11 +672,11 @@ count: false
 
 <br>
 
-# Merci pour votre attention !
+# Thanks for your attention!
 
 <br>
 
-# Des questions ?
+# Questions?
 
 
 <br>
