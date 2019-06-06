@@ -538,7 +538,7 @@ class: center, middle, inverse
 ---
 ## But...
 
-$\alpha = 0.05$ is only the family-level FDR.
+$\alpha = 0.10$ is only the family-level FDR.
 
 The _a posteriori_ global FDR is:
 
