@@ -18,7 +18,7 @@ June 6, 2019 <br>
 Nancy
 </aside>
 
-* [Groupe de Travail des Thésards de Jussieu](talks/impactoftreechoice_gttjussieu/ "Impact of tree choice in metagenomics differential abundance studies") (1 hour)
+* [Groupe de Travail des Thésards de Jussieu](talks/impactoftreechoice_gttjussieu/ "Impact of tree choice in metagenomics differential abundance studies") (20 minutes)
 
 <aside>
 March 25, 2019 <br>
