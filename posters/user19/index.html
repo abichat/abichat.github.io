@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="pandoc" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta name="author" content="Antoine Bichat1,2, Mahendra Mariadassou3, Jonathan Plassais2 and Christophe Ambroise1" />
+    <meta name="date" content="2018-11-30" />
+    <title>Quantifying the impact of tree choice in metagenomics differential abundance studies with <i class="fab  fa-r-project "></i></title>
+
+        <link href="index_files/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    
+    
+    
+
+        <link rel="stylesheet" href="useR.css" type="text/css" />
+    
+  </head>
+  <body>
+
+
+<div class="poster-title">
+  <h1 class="title">Quantifying the impact of tree choice in metagenomics differential abundance studies with <i class="fab  fa-r-project "></i></h1>
+  <h2 class="author">Antoine Bichat<sup>1,2</sup>, Mahendra Mariadassou<sup>3</sup>, Jonathan Plassais<sup>2</sup> and Christophe Ambroise<sup>1</sup></h2>
+  <h2 class="institute">1. LaMME - Université d’Évry-Val-d’Essonne; 2. Enterome; 3. MaIAGE - INRA</h2>
+</div>
+
+<div id="microbiota" class="section level1 block">
+<h1>Microbiota</h1>
+<ul>
+<li><strong>Ecological community of microorganisms that resides in an environmental niche</strong></li>
+<li><span class="math inline">\(10^{14}\)</span> bacteria in the gut among 1 500 species</li>
+<li>Associations with:
+<ul>
+<li>metabolism (diet, obesity, drug absorption, …)</li>
+<li>diseases (IBD, allergies, diabete…)</li>
+<li>behavior (smokers, antibiotics, C-section…)</li>
+<li>environment (pet, water…)</li>
+</ul></li>
+</ul>
+</div>
+<div id="data-taxonomy-and-abundance" class="section level1">
+<h1>Data : taxonomy and abundance</h1>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Phylum</th>
+<th align="left">Class</th>
+<th align="left">Order</th>
+<th align="left">Family</th>
+<th align="left">Genus</th>
+<th align="right">S001</th>
+<th align="right">S002</th>
+<th align="right">S003</th>
+<th align="right">S004</th>
+<th align="right">S005</th>
+<th align="left">…</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Actinobacteria</td>
+<td align="left">Coriobacteriia</td>
+<td align="left">Coriobacteriales</td>
+<td align="left">Atopobiaceae</td>
+<td align="left">Atopobium</td>
+<td align="right">84</td>
+<td align="right">0</td>
+<td align="right">12</td>
+<td align="right">54</td>
+<td align="right">0</td>
+<td align="left">…</td>
+</tr>
+<tr class="even">
+<td align="left">Actinobacteria</td>
+<td align="left">Coriobacteriia</td>
+<td align="left">Eggerthellales</td>
+<td align="left">Eggerthellaceae</td>
+<td align="left">Eggerthella</td>
+<td align="right">2</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">7</td>
+<td align="right">0</td>
+<td align="left">…</td>
+</tr>
+<tr class="odd">
+<td align="left">Bacteroidetes</td>
+<td align="left">Bacteroidia</td>
+<td align="left">Bacteroidales</td>
+<td align="left">Prevotellaceae</td>
+<td align="left">Prevotella</td>
+<td align="right">525</td>
+<td align="right">7</td>
+<td align="right">134</td>
+<td align="right">753</td>
+<td align="right">0</td>
+<td align="left">…</td>
+</tr>
+<tr class="even">
+<td align="left">Firmicutes</td>
+<td align="left">Bacilli</td>
+<td align="left">Lactobacillales</td>
+<td align="left">Lactobacillaceae</td>
+<td align="left">Lactobacillus</td>
+<td align="right">88</td>
+<td align="right">1770</td>
+<td align="right">1490</td>
+<td align="right">119</td>
+<td align="right">2136</td>
+<td align="left">…</td>
+</tr>
+<tr class="odd">
+<td align="left">Firmicutes</td>
+<td align="left">Bacilli</td>
+<td align="left">Lactobacillales</td>
+<td align="left">Streptococcaceae</td>
+<td align="left">Streptococcus</td>
+<td align="right">0</td>
+<td align="right">0</td>
+<td align="right">138</td>
+<td align="right">4</td>
+<td align="right">0</td>
+<td align="left">…</td>
+</tr>
+<tr class="even">
+<td align="left">Firmicutes</td>
+<td align="left">Negativicutes</td>
+<td align="left">Veillonellales</td>
+<td align="left">Veillonellaceae</td>
+<td align="left">Dialister</td>
+<td align="right">152</td>
+<td align="right">4</td>
+<td align="right">2</td>
+<td align="right">192</td>
+<td align="right">0</td>
+<td align="left">…</td>
+</tr>
+<tr class="odd">
+<td align="left">Firmicutes</td>
+<td align="left">Negativicutes</td>
+<td align="left">Veillonellales</td>
+<td align="left">Veillonellaceae</td>
+<td align="left">Megasphaera</td>
+<td align="right">402</td>
+<td align="right">0</td>
+<td align="right">4</td>
+<td align="right">102</td>
+<td align="right">0</td>
+<td align="left">…</td>
+</tr>
+<tr class="even">
+<td align="left">Fusobacteria</td>
+<td align="left">Fusobacteriia</td>
+<td align="left">Fusobacteriales</td>
+<td align="left">Leptotrichiaceae</td>
+<td align="left">Sneathia</td>
+<td align="right">302</td>
+<td align="right">0</td>
+<td align="right">35</td>
+<td align="right">272</td>
+<td align="right">0</td>
+<td align="left">…</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="objectives" class="section level1 block">
+<h1>Objectives</h1>
+<ul>
+<li>Find which bacteria are differentially abundant between two or more groups</li>
+<li>Use a FDR multiple testing correction to prevent false positives (one test per bacteria)</li>
+<li>Incorporate hierarchical information to increase power</li>
+<li>Which tree?</li>
+</ul>
+</div>
+<div id="workflow" class="section level1">
+<h1>Workflow</h1>
+<center>
+<img src="data/workflow.png" width="1900">
+</center>
+</div>
+<div id="hierarchical-false-discovery-rate" class="section level1 block">
+<h1>Hierarchical False Discovery Rate</h1>
+<p>The z-scores <span class="math inline">\(\mathbf{z} = \Phi^{-1}(\mathbf{p})\)</span> are smoothed using the following hierarchical model:</p>
+<p><span class="math display">\[\mathbf{z} | \mathbb{\mu} \sim \mathcal{N}_n \left( \mathbb{\mu}, \sigma^2 \mathbf{I}_m \right) \qquad \mathbf{\mu} \sim \mathcal{N}_m\left(\gamma \mathbf{1} , \tau^2 \mathbf{C}_{\rho} \right)\]</span></p>
+<p>where <span class="math inline">\(\mathbf{C}_{\rho} = \left(\text{exp} (−2\rho \mathbf{D}_{i,j} )\right)\)</span> with <span class="math inline">\(\mathbf{D}\)</span> the patristic distance matrix between taxa from the tree. By applying Bayes’s formula:</p>
+<p><span class="math display">\[\mathbf{z} \sim \mathcal{N}_m \left(\gamma \mathbf{1},\tau^2 \mathbf{C}_{\rho} + \sigma^2 \mathbf{I}_m\right)\]</span></p>
+<p><span class="math display">\[\mathbb{\mu}^* = \left(\mathbf{I}_m + \frac{\sigma_0^2}{\tau_0^2} \mathbf{C}_{\rho_0}^{-1}\right)^{-1}\left(\frac{\sigma_0^2}{\tau_0^2} \mathbf{C}_{\rho_0}^{-1}\gamma_0 \mathbf{1} + \mathbf{z}\right)\]</span>
+Finally, a permutation-based FDR control is applied on <span class="math inline">\(\mathbb{\mu}^*\)</span></p>
+</div>
+<div id="take-home-message" class="section level1" data-color="red">
+<h1>Take-home message</h1>
+<ul>
+<li><p>The tree choice has little impact on detection power</p></li>
+<li><p>Benjamini-Hochberg procedure is still the most powerful method and the only one which respects the FDR control</p></li>
+<li><p>The ease of creating R packages greatly increases the reproducibility of analysis</p></li>
+<li><p><strong>tidyverse</strong> and especially list-columns allow to write elegant and efficient R code when manipulating non-standard structures (trees, statistical model outputs…)</p></li>
+</ul>
+</div>
+<div id="results" class="section level1" data-color="red">
+<h1>Results</h1>
+<center>
+<img src="data/simu_np_lines.png" width="1380">
+</center>
+<div align="right">
+<p>Poster made with <b>pagedown</b></p>
+</div>
+</div>
+<div id="references" class="section level1">
+<h1>References</h1>
+<p>📄 Xiao, Jian, Hongyuan Cao, and Jun Chen. <strong>False discovery rate control incorporating phylogenetic tree increases detection power in microbiome-wide multiple testing.</strong> Bioinformatics 33.18 (2017): 2873-2881.</p>
+<p>📄 Bokulich, Nicholas A., et al. <strong>Antibiotics, birth mode, and diet shape microbiome maturation during early life.</strong> Science translational medicine 8.343 (2016): 343ra82-343ra82.</p>
+<p>📄 Opstelten, Jorrit L., et al. <strong>Gut microbial diversity is reduced in smokers with Crohn’s disease.</strong> Inflammatory bowel diseases 22.9 (2016): 2070-2077.</p>
+</div>
+<div id="contact-information" class="section level1">
+<h1>Contact Information</h1>
+<br>
+<div class="row">
+<div class="column3">
+<center>
+<img src="data/logos_rattachement.png" height="200">
+</center>
+</div>
+<div class="column3">
+<center>
+<i class="fas  fa-envelope "></i> <a href="mailto:abichat@enterome.com" class="email">abichat@enterome.com</a>
+<br>
+<i class="fas  fa-link "></i> abichat.github.io
+<br>
+<i class="fab  fa-linkedin "></i> antoinebichat
+<br>
+<i class="fab  fa-twitter "></i> <span class="citation">@_abichat</span>
+<br>
+<i class="fab  fa-github "></i> <span class="citation">@abichat</span>
+</center>
+</div>
+<div class="column3">
+<center>
+<img src="data/abichat.github.io.png" height="200">
+</center>
+</div>
+</div>
+</div>
+
+<script type="text/javascript">
+(function() {
+  // add appropriate classes to h1 and its parent div
+  var i, d, p, s, el, els = document.getElementsByTagName('h1');
+  for (i = 0; i < els.length; i++) {
+    el = els[i]; p = el.parentNode;
+    if (p.className === 'section level1') {
+      el.append(document.createElement('hr'));
+    }
+    p.className += ' section-' + (i + 1);
+    s = p.dataset['color'];
+    if (s) el.style.color = s;
+    s = p.dataset['backgroundColor'];
+    if (s) p.style.backgroundColor = s;
+    s = p.dataset['borderColor'];
+    if (s) {
+      el.style.backgroundColor = s;
+      p.style.borderColor = s;
+    }
+    d = document.createElement('div');
+    d.className = 'content';
+    while (el.nextSibling) {
+      d.append(el.nextSibling);
+    }
+    p.append(d);
+  }
+})();
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:" && /^https?:/.test(src))
+      src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+
+  </body>
+</html>
