@@ -24,11 +24,6 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Events
 
-<blockquote class="twitter-tweet" data-lang="fr" align="center"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/RStats?src=hash&amp;ref_src=twsrc%5Etfw">#RStats</a> <a href="https://twitter.com/hashtag/RStatsFR?src=hash&amp;ref_src=twsrc%5Etfw">#RStatsFR</a> <br>satRday Paris will be hosted in AgroParisTech on the 23th of February, 2019 ! <a href="https://t.co/bwPmWyosyl">https://t.co/bwPmWyosyl</a></p>&mdash; satRday Paris (@satRdayParis) <a href="https://twitter.com/satRdayParis/status/1069569698206023680?ref_src=twsrc%5Etfw">3 décembre 2018</a></blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-<blockquote class="twitter-tweet" data-lang="fr" align="center"><p lang="fr" dir="ltr">L&#39;affiche des <a href="https://twitter.com/hashtag/JdS2019?src=hash&amp;ref_src=twsrc%5Etfw">#JdS2019</a> est disponible :<a href="https://t.co/Hy092RCC9I">https://t.co/Hy092RCC9I</a><a href="https://twitter.com/hashtag/Statistique?src=hash&amp;ref_src=twsrc%5Etfw">#Statistique</a> <a href="https://t.co/hDYGeYpJHM">pic.twitter.com/hDYGeYpJHM</a></p>&mdash; Soc. Fr. Stat (SFdS) (@StatFr) <a href="https://twitter.com/StatFr/status/1098210029369470977?ref_src=twsrc%5Etfw">20 février 2019</a></blockquote>
-<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <blockquote class="twitter-tweet" data-lang="fr" align="center"><p lang="en" dir="ltr">After <a href="https://twitter.com/hashtag/useR2017?src=hash&amp;ref_src=twsrc%5Etfw">#useR2017</a> in Brussel &amp; Brisbane in 2018, we will be hosting <a href="https://twitter.com/hashtag/useR2019?src=hash&amp;ref_src=twsrc%5Etfw">#useR2019</a> in Toulouse. Happy and thrilled by this great honor! <a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/TY?src=hash&amp;ref_src=twsrc%5Etfw">#TY</a> <a href="https://t.co/9vg1uZQzca">pic.twitter.com/9vg1uZQzca</a></p>&mdash; useR! 2019 (@UseR2019_Conf) <a href="https://twitter.com/UseR2019_Conf/status/883323876326887424?ref_src=twsrc%5Etfw">7 juillet 2017</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
