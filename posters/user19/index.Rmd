@@ -36,7 +36,7 @@ Microbiota {.block}
 
 
 
-Data : taxonomy and abundance
+Data: taxonomy and abundance
 ================================================================================
 
 ```{r abund}
