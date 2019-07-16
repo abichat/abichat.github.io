@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = FALSE)
 # About the choice of the tree in metagenomics differential abundance studies
 
 
-* [useR!](posters/user19/index.html "Quantifying the impact of tree choice in metagenomics differential abundance studies with R") (Poster)
+* [useR!](posters/user19/index.html "Quantifying the impact of tree choice in metagenomics differential abundance studies with R") (Poster - Winner of BIM's poster prize)
 
 <aside>
 July 11, 2019 <br>
