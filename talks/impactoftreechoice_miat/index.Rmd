@@ -381,7 +381,7 @@ $\large{1.44 \times q \times \frac{\#\text{discoveries } +\text{ } \#\text{famil
 
 .footnote[`r emo::ji("page_facing_up")` Xiao et al. (2017)]
 
-Denote by $\mathbf{z}$ the vector of observed _z_-values and $\mathbf{\mu}$ the vector of "true" _z_-values
+Denote by $\mathbf{z}$ the vector of observed _z_-scores and $\mathbf{\mu}$ the vector of "true" _z_-scores
 
 --
 
