@@ -10,6 +10,12 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # About the choice of the tree in metagenomics differential abundance studies
 
+* [Séminaire MIAT](talks/impactoftreechoice_miat/ "Impact of tree choice in metagenomics differential abundance studies") (1 hour)
+
+<aside>
+Septembre 13, 2019 <br>
+Toulouse
+</aside>
 
 * [useR!](posters/user19/index.html "Quantifying the impact of tree choice in metagenomics differential abundance studies with R") (Poster - Winner of BIM's poster prize)
 

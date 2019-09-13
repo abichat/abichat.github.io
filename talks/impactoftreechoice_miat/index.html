@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Impact of tree choice in metagenomics differential abundance studies</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Antoine Bichat" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link href="libs/tabwid/tabwid.css" rel="stylesheet" />
+    <script src="libs/tabwid/tabwid.js"></script>
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="these.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+
+class: title-slide, center, middle
+count: false
+
+
+
+
+
+# Impact of tree choice in metagenomics differential abundance studies
+
+&lt;div style = "margin-top: 30px"&gt;&lt;/div&gt;
+
+
+## Antoine Bichat
+&lt;div style = "margin-top: -30px"&gt;&lt;/div&gt;
+
+## September 13, 2019 - MIAT
+
+
+### Work in collaboration with C. Ambroise, M. Mariadassou &amp; J. Plassais 
+
+&lt;div style = "margin-top: 35px"&gt;&lt;/div&gt;
+
+&lt;div class="title-text"&gt;
+  &lt;img src="img/logo_miat.png"/ width="170"&gt;
+&lt;/div&gt;
+
+---
+class: center, middle, inverse
+
+# Context
+
+
+---
+## Microbiota
+
+
+_Ecological community of microorganisms that reside in an environmental niche_ 
+
+--
+
+.footnote[📘 Gut: The Inside Story of Our Body's Most Underrated Organ  (Giulia Enders)]
+
+.pull-left[
+
+#### Some figures for human gut
+
+* `\(10^{\small{14}}\)` bacterial cells in one gut...
+
+* ... weighing 2 kg 
+
+* More than 1&amp;#8239;500 different species 
+
+* More than 10 millions unique genes
+
+
+&lt;img src="index_files/figure-html/citations-1.png" width="288" style="display: block; margin: auto;" /&gt;
+
+]
+
+--
+
+
+.pull-right[
+
+#### Proven associations
+
+* Immune system
+
+* Crohn's disease
+
+* Vaginosis
+
+* Diabete
+
+* Tobacco
+
+* Diet
+
+* Antibiotics
+
+* Birth mode
+
+]
+
+
+---
+## Data - abundances of taxa
+
+.footnote[📄 Ravel et al. (2011)]
+
+
+```
+  # A tibble: 122 x 395
+     Taxa     S001  S002  S003  S004  S005  S006  S007  S008  S009  S010
+     &lt;chr&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+   1 Lactob…  2318  1388  1361  2256    88  1770  1490   119  2136  1790
+   2 Prevot…     0     1     1     0   525     7   134   753     0     0
+   3 Megasp…     0     1     0     0   402     0     4   102     0     0
+   4 Sneath…     0     0     0     0   302     0    35   272     0     0
+   5 Atopob…     0     1     0     0    84     0    12    54     0     0
+   6 Strept…     0     0     3     0     0     0   138     4     0     2
+   7 Dialis…     0     1     0     0   152     4     2   192     0     0
+   8 Anaero…     0     1     3     2     0     9    12    13     0     0
+   9 Pepton…     0     1     0     0     7     2     6    50     0     0
+  10 Eggert…     0     0     0     0     2     0     0     7     0     0
+  # … with 112 more rows, and 384 more variables
+```
+
+--
+
+* Count data (or compositional) data
+
+* Zero-inflated data
+
+* Correlation between species
+
+* Counts spanning several orders of magnitude: `\(1 \rightarrow 10^{\small{8}}\)`
+
+
+---
+## Data - taxonomy
+
+.footnote[📄 Ravel et al. (2011)]
+
+
+```
+  # A tibble: 129 x 5
+    Phylum         Class          Order          Family         Genus        
+    &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;        
+  1 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Actinobaculum
+  2 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Actinomyces  
+  3 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Arcanobacter…
+  4 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Mobiluncus   
+  5 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Varibaculum  
+  # … with 124 more rows
+```
+
+
+---
+class: nologo
+count: false
+## Data - taxonomy
+
+
+```
+  # A tibble: 129 x 5
+    Phylum         Class          Order          Family         Genus        
+    &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;          &lt;chr&gt;        
+  1 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Actinobaculum
+  2 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Actinomyces  
+  3 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Arcanobacter…
+  4 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Mobiluncus   
+  5 Actinobacteria Actinobacteria Actinomycetal… Actinomycetac… Varibaculum  
+  # … with 124 more rows
+```
+
+.center[&lt;img src="img/tree_tax.png"/ width="500"&gt;]
+
+---
+class: center, middle, inverse
+
+# Differential abundance studies
+
+---
+## Evaluation of binary classifiers
+
+<div class="tabwid"><table style='border-collapse:collapse;'><tbody><tr><td colspan="2" rowspan="2" style="width:54px;height:36px;background-color:transparent;vertical-align: middle;transform: rotate(0deg);border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;"></span></p></td><td colspan="2" style="width:54px;height:36px;background-color:transparent;vertical-align: middle;transform: rotate(0deg);border-bottom: 2px solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">True condition</span></p></td></tr><tr><td style="width:54px;height:36px;background-clip: padding-box;background-color:rgba(190, 190, 190, 0.20);vertical-align: middle;transform: rotate(0deg);border-bottom: 1px solid rgba(0, 0, 0, 1.00);border-top: 2px solid rgba(0, 0, 0, 1.00);border-left: 2px solid rgba(0, 0, 0, 1.00);border-right: 1px dashed rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Condition positive</span></p></td><td style="width:54px;height:36px;background-clip: padding-box;background-color:rgba(190, 190, 190, 0.20);vertical-align: middle;transform: rotate(0deg);border-bottom: 1px solid rgba(0, 0, 0, 1.00);border-top: 2px solid rgba(0, 0, 0, 1.00);border-left: 1px dashed rgba(0, 0, 0, 1.00);border-right: 2px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Condition negative</span></p></td></tr><tr><td rowspan="2" style="width:54px;height:36px;background-color:transparent;vertical-align: middle;transform: rotate(0deg);border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 2px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Prediction</span></p></td><td style="width:54px;height:36px;background-clip: padding-box;background-color:rgba(190, 190, 190, 0.20);vertical-align: middle;transform: rotate(0deg);border-bottom: 1px dashed rgba(0, 0, 0, 1.00);border-top: 2px solid rgba(0, 0, 0, 1.00);border-left: 2px solid rgba(0, 0, 0, 1.00);border-right: 1px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Predicted positive</span></p></td><td style="width:54px;height:36px;background-clip: padding-box;background-color:rgba(0, 255, 0, 0.50);vertical-align: middle;transform: rotate(0deg);border-bottom: 1px dashed rgba(0, 0, 0, 1.00);border-top: 1px solid rgba(0, 0, 0, 1.00);border-left: 1px solid rgba(0, 0, 0, 1.00);border-right: 1px dashed rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">TP</span></p></td><td style="width:54px;height:36px;background-clip: padding-box;background-color:rgba(255, 0, 0, 0.50);vertical-align: middle;transform: rotate(0deg);border-bottom: 1px dashed rgba(0, 0, 0, 1.00);border-top: 1px solid rgba(0, 0, 0, 1.00);border-left: 1px dashed rgba(0, 0, 0, 1.00);border-right: 2px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">FP</span></p></td></tr><tr><td style="width:54px;height:36px;background-clip: padding-box;background-color:rgba(190, 190, 190, 0.20);vertical-align: middle;transform: rotate(0deg);border-bottom: 2px solid rgba(0, 0, 0, 1.00);border-top: 1px dashed rgba(0, 0, 0, 1.00);border-left: 2px solid rgba(0, 0, 0, 1.00);border-right: 1px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:right;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">Predicted negative</span></p></td><td style="width:54px;height:36px;background-clip: padding-box;background-color:rgba(255, 0, 0, 0.50);vertical-align: middle;transform: rotate(0deg);border-bottom: 2px solid rgba(0, 0, 0, 1.00);border-top: 1px dashed rgba(0, 0, 0, 1.00);border-left: 1px solid rgba(0, 0, 0, 1.00);border-right: 1px dashed rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">FN</span></p></td><td style="width:54px;height:36px;background-clip: padding-box;background-color:rgba(0, 255, 0, 0.50);vertical-align: middle;transform: rotate(0deg);border-bottom: 2px solid rgba(0, 0, 0, 1.00);border-top: 1px dashed rgba(0, 0, 0, 1.00);border-left: 1px dashed rgba(0, 0, 0, 1.00);border-right: 2px solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;"><p style="margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:2px;padding-top:2px;padding-left:5px;padding-right:5px;background-color:transparent;"><span style="font-family:'Arial';font-size:20px;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(17, 17, 17, 1.00);background-color:transparent;">TN</span></p></td></tr></tbody></table></div>
+
+
+The true condition is usually unknown for real dataset.
+
+The prediction is ususally determined by comparing the _p_-value to `\(\alpha = 0.05\)`.
+--
+
+&lt;br&gt;
+&lt;br&gt;
+
+`$$\text{TPR} = \frac{\text{TP}}{\left(\text{TP} + \text{FN}\right) \wedge 1 }$$`
+
+`$$\text{ACC} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}$$`
+
+`$$\text{FDR} = \frac{\text{FP}}{\left(\text{TP} + \text{FP}\right) \wedge 1 }$$`
+
+
+
+
+---
+## Statistical issue
+
+Univariate tests on hundred of taxa
+
+Need for a multiple testing controling procedure!
+
+--
+
+.footnote[📄 Philippot et al. (2010)]
+
+&lt;br&gt;
+
+.pull-left[
+A hierarchy is available
+
+&lt;img src="img/coherence.png" width="400"&gt;
+]
+
+.pull-right[
+Can we use it to do it better?
+]
+
+---
+count: false
+## Statistical issue
+
+.footnote[📄 Philippot et al. (2010)]
+
+Univariate tests on hundred of taxa
+
+Need for a multiple testing controling procedure!
+
+
+&lt;br&gt;
+
+.pull-left[
+A hierarchy is available
+
+&lt;img src="img/coherence.png" width="400"&gt;
+]
+
+.pull-right[
+
+Can we use it to do it better?
+
+&lt;br&gt; 
+
+* Hierarchical FDR
+
+* _z_-scores smoothing
+]
+
+
+
+---
+## Hierarchical FDR
+
+.footnote[📄 Yekutieli (2008)]
+
+This procedure inscreases statistical power by lessening the number of test to do with a descending method:
+
+* Test the family `\(\mathcal{T}_0\)`
+
+* If node `\(t\)` is rejected, test `\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)` with a BH procedure at level `\(q\)`
+
+&lt;br&gt;
+
+.center[
+  &lt;img src="img/tree_hyp.png" width="420"&gt;
+]
+
+---
+count: false
+## Hierarchical FDR
+
+.footnote[📄 Yekutieli (2008)]
+
+This procedure inscreases statistical power by lessening the number of test to do with a descending method:
+
+* Test the family `\(\mathcal{T}_0\)`
+
+* If node `\(t\)` is rejected, test `\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)` with a BH procedure at level `\(q\)`
+
+&lt;br&gt;
+
+.center[
+  &lt;img src="img/tree_hyp_1.png" width="420"&gt;
+]
+
+---
+count: false
+
+## Hierarchical FDR
+
+.footnote[📄 Yekutieli (2008)]
+
+This procedure inscreases statistical power by lessening the number of test to do with a descending method:
+
+* Test the family `\(\mathcal{T}_0\)`
+
+* If node `\(t\)` is rejected, test `\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)` with a BH procedure at level `\(q\)`
+
+&lt;br&gt;
+
+
+.center[
+  &lt;img src="img/tree_hyp_2.png" width="420"&gt;
+]
+
+---
+count: false
+## Hierarchical FDR
+
+.footnote[📄 Yekutieli (2008)]
+
+This procedure inscreases statistical power by lessening the number of test to do with a descending method:
+
+* Test the family `\(\mathcal{T}_0\)`
+
+* If node `\(t\)` is rejected, test `\(\mathcal{T}_t = \left\{H_i \mid \text{Par}(i) = t\right\}\)` with a BH procedure at level `\(q\)`
+
+&lt;br&gt;
+
+.center[
+  &lt;img src="img/tree_hyp_3.png" width="420"&gt;
+]
+
+--
+
+&lt;br&gt;
+
+.center[
+__This procedure controls the FDR at level__ 
+
+`\(\large{1.44 \times q \times \frac{\#\text{discoveries } +\text{ } \#\text{families tested}}{\#\text{discoveries } +\text{ } 1}}\)`
+]
+
+
+---
+## z-scores smoothing
+
+.footnote[📄 Xiao et al. (2017)]
+
+Denote by `\(\mathbf{z}\)` the vector of observed _z_-values and `\(\mathbf{\mu}\)` the vector of "true" _z_-values
+
+--
+
+&lt;br&gt;
+
+Assume that 
+`\(\mathbf{z} | \mathbb{\mu} \sim \mathcal{N}_n \left( \mathbb{\mu}, \sigma^2 \mathbf{I}_m \right)\)` and `\(\mathbf{\mu} \sim \mathcal{N}_m\left(\gamma \mathbf{1} , \tau^2 \mathbf{C}_{\rho} \right)\)` 
+
+--
+
+then 
+`$$\mathbf{z} \sim \mathcal{N}_m \left(\gamma \mathbf{1},\tau^2 \mathbf{C}_{\rho} + \sigma^2 \mathbf{I}_m\right)$$`
+
+and Bayes formula gives 
+ 
+`$$\mathbb{\mu}^* = \left(\mathbf{I}_m + \frac{\sigma_0^2}{\tau_0^2} \mathbf{C}_{\rho_0}^{-1}\right)^{-1}\left(\frac{\sigma_0^2}{\tau_0^2} \mathbf{C}_{\rho_0}^{-1}\gamma_0 \mathbf{1} + \mathbf{z}\right)$$`
+
+with `\(\sigma_0\)`, `\(\tau_0\)`, `\(\rho_0\)` and `\(\gamma_0\)` hypermarameters
+
+--
+
+&lt;br&gt;
+
+After smoothing, a multiple testing correction could be done on smoothed values
+
+
+---
+## Which tree?
+
+
+#### Taxonomy? Phylogeny?
+
+* Proxy for correlations at high-level niches
+
+* Not so much for low-level niches?
+
+* Not available everytime
+
+
+---
+class: nologo
+count: false
+## Which tree?
+
+
+#### Taxonomy? Phylogeny?
+
+* Proxy for correlations at high-level niches
+
+* Not so much for low-level niches?
+
+* Not available everytime
+
+#### Correlation tree?
+
+* Actual correlation between taxa
+
+* Computed from data using pairwise correlation
+
+
+.center[
+&lt;img src="img/tree_cor.png" width="350"&gt;
+]
+
+---
+class: center, middle, inverse
+
+# Comparison of trees
+
+---
+## Billera-Holmes-Vogtamnn distance
+
+.footnote[📄 Billera, Holmes &amp; Vogtmann (2001)]
+
+The BHV distance is the length of the unique shortest path between the trees on treespace
+
+.pull-left[
+  .center[
+&lt;img src="img/dBHV_2.png" height=300/&gt;
+  ]
+]
+
+.pull-right[
+  .center[
+    &lt;img src="img/dBHV_4.png" height=300/&gt;
+  ]
+]
+
+
+---
+## Quantifying distance between trees
+
+
+* __trees of primary interest__
+
+  * &lt;span style="color:#C77CFF"&gt;correlation tree on original data&lt;/span&gt;
+  
+  * &lt;span style="color:#F8766D"&gt;taxonomy&lt;/span&gt;
+  
+--
+
+* __what is the confident region for the correlation tree?__
+
+--
+
+  * &lt;span style="color:#00BFC4"&gt;correlation trees on boostrapped data (resampling on samples)&lt;/span&gt;
+
+--
+
+* __are trees significantly closer than two random trees?__
+
+--
+
+  * &lt;span style="color:#7CAE00"&gt;trees created by random shuffling of correlation tree tip labels&lt;/span&gt;
+  
+  * &lt;span style="color:#FFA500"&gt;trees created by random shuffling of taxonomy tip labels&lt;/span&gt;
+
+--
+
+&lt;br&gt;
+
+We compute all pairwise distances between these trees
+
+---
+## Random shuffling
+
+.center[&lt;img src="img/shuffling.png", height="500"&gt;]
+
+---
+## Dataset
+
+.footnote[📄 Ravel et al. (2011)]
+
+* Vaginal microbiome of non pregnant women sequenced by 16S
+
+* 40 different genera after filtering (~&amp;#8239;30&amp;#8239;%)
+
+&lt;br&gt;
+
+.pull-left[ 
+  &lt;img src="img/tree_tax.png"&gt;
+  .center[Taxonomy]
+]
+
+.pull-right[
+  &lt;img src="img/tree_cor.png"&gt;
+  .center[Correlation tree] 
+]
+
+---
+## Pairwise distances
+
+.pull-left[
+.center[&lt;img src="img/prez_ravel_comp_box.png" width="650"&gt;]
+]
+
+--
+
+.pull-right[
+.center[&lt;img src="img/prez_ravel_comp_pcoa.png" width="650"&gt;]
+]
+
+
+---
+count: false
+## Pairwise distances
+
+
+.center[&lt;img src="img/comp_cohorts-bhv.jpg" width="800"&gt;]
+
+--
+
+😀 The &lt;span style="color:#C77CFF"&gt;correlation tree&lt;/span&gt; is different from the &lt;span style="color:#F8766D"&gt;taxonomy&lt;/span&gt;
+
+
+---
+class: center, middle, inverse
+
+# Evaluation of hFDR
+
+---
+## Chlamydiae dataset 
+
+.footnote[📄 Caporaso et al. (2011), Sankaran &amp; Holmes (2014)]
+
+* Small subset of the `GlobalPatterns` dataset narrowed to Chlamydiae phylum
+
+* 21 different OTUs
+
+* 26 samples representing 9 very different environments: soil, ocean, feces, skin...
+
+--
+
+## Method
+
+* Find which bacteria are differentially abundant between environments
+
+* Association using Fisher statistic (ANOVA)
+
+* Correction with hierarchical FDR
+
+---
+## Abundances of detected species
+
+.center[&lt;img src="img/realdata_chlamydia_box.png" height=500/&gt;]
+
+
+---
+## Representation of evidences on trees
+
+.center[&lt;img src="img/tree_mirors.png" height=500/&gt;]
+
+---
+## But...
+
+`\(\alpha = 0.10\)` is only the family-level FDR.
+
+The _a posteriori_ global FDR is:
+
+* `\(\alpha' = 0.32\)` for phylogenetic correction
+
+* `\(\alpha' = 0.324\)` for correlation correction
+
+--
+
+A BH procedure at the same global FDR level leads to 15 discoveries (+5)
+
+--
+
+&lt;br&gt;
+
+😀 Using correlation tree instead of taxonomy yields more results
+
+☹️ Vanilla BH beats hFDR for a given level
+
+---
+## Chaillou Dataset
+
+.footnote[📄 Chaillou et al. (2015)]
+
+* Food-associated microbiota of processed meat and seafood products
+
+* 97 different OTUs
+
+* 80 samples across 8 different food type: beef, veal, salmon, shrimp...
+
+---
+## Abundances of detected species
+
+.center[&lt;img src="img/chaillou_abund.png" height=500/&gt;]
+
+---
+## Impact of the test
+
+.pull-left[
+
+.center[
+  Position of selected OTUs on the correlation tree
+  &lt;img src="img/chaillou_tree_abund1.jpeg" height=400/&gt;
+  ]
+]
+
+.pull-right[
+OTUs in red are only detected by phylogeny
+]
+
+---
+count: false
+## Impact of the test
+
+.pull-left[
+
+
+.center[
+  Position of selected OTUs on the correlation tree
+  &lt;img src="img/chaillou_tree_abund2.jpeg" height=400/&gt;
+  ]
+]
+
+
+.pull-right[
+OTUs in red are only detected by phylogeny
+
+&lt;br&gt;
+
+All OTU in the clade are differentially abundant 
+
+Obvious unequal variances between groups
+
+]
+
+
+
+---
+count: false
+## Impact of the test
+
+.pull-left[
+
+
+.center[
+  Position of selected OTUs on the correlation tree
+  &lt;img src="img/chaillou_tree_abund3.jpg" height=400/&gt;
+  ]
+]
+
+
+.pull-right[
+OTUs in red are only detected by phylogeny
+
+&lt;br&gt;
+
+All OTU in the clade are differentially abundant 
+
+Obvious unequal variances between groups
+
+&lt;br&gt;
+
+KW test is more robust than F-test in this setting
+
+☹️ Implemented tests are not appropriate to metagenomic data
+
+]
+
+
+---
+class: center, middle, inverse
+
+# Evaluation of z-scores smoothing
+
+
+---
+## Zeller dataset
+
+.footnote[📄 Zeller et al. (2014)]
+
+* Dataset from cancer study
+
+* 119 different genera (after filtering)
+
+* 199 samples: 42 adenoma, 91 carcinoma and 66 control
+
+--
+
+## Method
+
+* Find which bacteria are differentially abundant between diseases
+
+* Association using Kruskal-Wallis test
+
+* Correction with hierarchical _p_-value smoothing
+
+
+---
+## Impact of the tree
+
+.center[&lt;img src="img/zeller-lines-bold.png" height=430/&gt;]
+
+--
+
+😊 _z_-scores smoothing is slightly better than vanilla BH
+
+☹️ All hierachies give highly similar results
+
+---
+class: center, middle, inverse
+
+# Simulations
+
+---
+## Workflow
+
+.footnote[📄 Brito et al. (2016)]
+
+* Simulate DA taxa starting from an homogeneous dataset
+
+* Correction with BH and hierarchical _p_-value smoothing
+
+
+.center[&lt;img src="img/workflow_simu.png" height=450/&gt;]
+
+---
+## Change in z-scores
+
+`$$\text{Mean z-smoothing} = |z_{\text{raw}} - z_{\text{corrected}}|$$`
+
+
+.center[&lt;img src="img/simu_np_mean_zsmoothing.jpg" height=290/&gt;]
+
+--
+
+☹️ Taxonomy behaves like random tree and has little impact
+
+😩 In most cases, smoothing has absolutely no impact on the result
+
+
+---
+## Evaluation
+
+.center[&lt;img src="img/simu_np_lines_prez.png" height=390/&gt;]
+
+--
+
+😀 Using correlation tree instead of taxonomy yields more results
+
+☹️ Vanilla BH is better 
+
+🤔 Taxonomy is worst than random trees 
+
+
+---
+class: center, middle, inverse
+
+# Conclusions
+
+---
+
+## Conclusions 
+
+
+😀 Correlation tree and taxonomy are very different
+
+😀 Replacing taxonomy with correlationn increases the TPR
+
+--
+
+&lt;br&gt;
+
+☹️ Vanilla BH is more powerful than hFDR
+
+☹️ Bayesian smoothing does not really depend on the tree for _z_-scores smoothing
+
+--
+
+&lt;br&gt;
+
+
+📦 `correlationtree` <i class="fab  fa-github "></i>
+
+📦 `yatah` <i class="fab  fa-github "></i> +  [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/yatah)](https://cran.r-project.org/package=yatah)
+
+📦 `evabic` <i class="fab  fa-github "></i>
+
+
+---
+class: center, middle, inverse
+
+# Further work
+# Evolution of z-scores on a tree
+
+---
+## Motivations
+
+With _z_-scores smoothing procedure form Xiao, there is no mathematical explanatory model to describe the relation between _z_-scores 
+
+--
+
+&lt;br&gt;
+
+We will use proper mathematical formalism to model evolution of _z_-scores on a tree and propose an adapted tree-based smoothing
+
+--
+
+&lt;br&gt;
+
+Similar work has been done by Paul Bastide 
+
+
+---
+## Ornstein–Uhlenbeck process
+
+An Ornstein-Uhlenbeck (OU) process is a Gaussian process that satisfies the SDE:
+
+`$$\text{d}W_t = - \alpha (W_t - \beta) \text{d}t + \sigma \text{d}B_t.$$` 
+
+`\(\beta\)` is the optimum value and `\(\alpha\)` is the rate of convergence
+
+
+.center[&lt;img src="img/plot_OU.png" height=400/&gt;]
+
+---
+## Stochastic process on a tree
+
+.center[&lt;img src="img/OU_tree1.png" height=200/&gt;]
+.center[&lt;img src="img/OU_tree2.png" height=300/&gt;]
+
+.footnote[📄 Bastide et al. (2016)]
+
+---
+## Model
+
+* Each tip `\(i \in \{1, ..., m\}\)` has an associated _p_-value `\(p_i\)` and thus an associated _z_-score `\(z_i\)`
+
+--
+
+&lt;br&gt;
+
+* Under `\(H_0\)`, `\(p_i \sim \mathcal{U}\)` so that  `\(z_i \sim \mathcal{N}(0, 1)\)`
+
+--
+
+&lt;br&gt;
+
+* Under `\(H_1\)`, `\(p_i \leq \mathcal{U}\)` so we can assume `\(z_i \sim \mathcal{N}(\mu_i, 1)\)` with `\(\mu_i \leq 0\)`
+
+--
+
+&lt;br&gt;
+
+* With the tree structure, `\(Z \sim \mathcal{N}_m\left(M, \Sigma \right)\)` where `\(\Sigma_{i, j} = \frac{\sigma^2}{2\alpha}\left(1 - e^{-2\alpha t_{i,j} }\right) e^{-\alpha d_{i,j}}\)` is given by the tree
+
+--
+
+&lt;br&gt; 
+
+* Work remains to be done about estimating `\(M \in \left\{\sum_{i=1}^{m}\mu_i e_i, \mu_i \leq 0\right\} = \mathcal{C}_m\)`
+
+---
+## Decomposition of M
+
+We denote 
+
+* `\(n\)` the number of internal nodes ( `\(n = m-1\)` for binaries trees)
+
+* `\(T \in \{0, 1\}^{m\times (n+m)}\)` the tree incidence matrix _ie_ `\(T_{i,j} = 1\)` iff branch `\(j\)` lies on the path from the root to node `\(i\)`
+
+* `\(\Delta \in \mathcal{C}_{n+m}\)` the vector of shifts on the branches
+
+--
+
+&lt;br&gt;
+
+When a shift occurs on a branch, it is progagates to its descendant, thus
+
+`$$M = T\Delta$$`
+
+--
+
+&lt;br&gt;
+
+Then, if we impose a sparsity condition on `\(\Delta\)`
+
+`$$\widehat{\Delta} \in \text{argmax}_{\Delta \in \mathcal{C}_{n+m}} \left(Z-T\Delta\right)^T\left(\Sigma\right)^{-1}\left(Z-T\Delta\right) +  \lambda \|\Delta\|_1$$`
+
+
+
+---
+## References
+
+* Blander, J. Magarian, et al. "Regulation of inflammation by microbiota interactions with the host." Nature immunology 18.8 (2017): 851.
+
+* Morgan, Xochitl C., et al. “Dysfunction of the intestinal microbiome in inflammatory bowel disease and treatment.” Genome biology 13.9 (2012): R79.
+
+* Ravel, Jacques, et al. “Vaginal microbiome of reproductive-age women.” Proceedings of the National Academy of Sciences 108.Supplement 1 (2011): 4680-4687.
+
+* Qin, Junjie, et al. “A metagenome-wide association study of gut microbiota in type 2 diabetes.” Nature 490.7418 (2012): 55.
+
+* Opstelten, Jorrit L., et al. "Gut microbial diversity is reduced in smokers with Crohn's disease." Inflammatory bowel diseases 22.9 (2016): 2070-2077.
+
+* Bokulich, Nicholas A., et al. “Antibiotics, birth mode, and diet shape microbiome maturation during early life.” Science translational medicine 8.343 (2016): 343ra82-343ra82.
+
+---
+class: title-slide, center, middle
+
+
+&lt;br&gt;
+
+# Thanks for your attention!
+
+&lt;br&gt;
+
+# Questions?
+
+
+&lt;br&gt;
+
+#### <i class="fas  fa-link "></i> &lt;a href="https://abichat.github.io" target="_blank"&gt;abichat.github.io&lt;/a&gt; &amp;emsp; <i class="fab  fa-github "></i>  &lt;a href="https://github.com/abichat" target="_blank"&gt;@abichat&lt;/a&gt; &amp;emsp; <i class="fab  fa-twitter "></i> &lt;a href="https://twitter.com/_abichat" target="_blank"&gt;@_abichat&lt;/a&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "%current% / %total%"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
