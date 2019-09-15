@@ -46,6 +46,8 @@ navbar:
       menu:
       - text: "TidyTuesday"
         href: "https://github.com/abichat/tidytuesday"
+      - text: "My favorite R packages"
+        href: "https://github.com/abichat/favoriteRpackages"
       - text: "Simulation of Brownian motion"
         href: "https://abichat.shinyapps.io/BrownianMotion/"
         
