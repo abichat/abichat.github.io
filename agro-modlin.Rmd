@@ -8,52 +8,53 @@ description: |
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-# Planning 2018
+# Planning 2019
 
 ```{r echo=FALSE, message=FALSE}
 library(tidyverse)
-library(knitr)
-library(kableExtra)
+library(flextable)
 
 planning <-
-  tribble(~Date, ~Heure, ~Salle, ~`Thème`, ~Travail,
-          "Lundi 10 septembre", "8h30", "Salle 38", "Régression linéaire simple", "",
-          "Lundi 10 septembre", "15h00", "Salle 38", "Régression linéaire simple", "",
-          "Jeudi 13 septembre", "10h15", "Salle 38", "Régression linéaire multiple", "",
-          "Vendredi 14 septembre", "15h00", "Salle 38", "Régression linéaire multiple", "",
-          "Lundi 17 septembre", "8h30", "Salle 38", "ANOVA à un facteur", "",
-          "Vendredi 21 septembre", "8h30", "Salle 38", "ANOVA à un facteur", "",
-          "Lundi 1er octobre", "13h15", "Salle 38", "ANOVA à deux facteurs", "DM1",
-          "Vendredi 5 octobre", "8h30", "Salle 38", "ANOVA à deux facteurs", "",
-          "Lundi 8 octobre", "8h30", "Salle 38", "ANOVA à deux facteurs", "",
-          "Vendredi 12 octobre", "8h30", "I11 - I12", "TP1", "DM2",
-          "Vendredi 12 octobre", "10h15", "I11 - I12", "TP2", "",
-          "Vendredi 19 octobre", "8h30", "Salle 38", "ACP", "",
-          "Vendredi 19 octobre", "10h15", "Salle 38", "Lancement des projets", "Importer les données",
-          "Vendredi 19 octobre", "13h15", "Salle 38", "ACP", "",
-          "Vendredi 19 octobre", "15h00", "Salle 38", "ANCOVA", "",
-          "Vendredi 16 novembre", "8h30", "I11 - I12", "TP3", "DM3",
-          "Lundi 3 décembre", "8h30", "Salle 38", "ANCOVA", "",
-          "Lundi 3 décembre", "15h00", "Salle 38", "Séance de révisions", "",
-          "Lundi 10 décembre", "", "", "", "Partiel",
-          "Lundi 21 janvier", "", "", "", "Rendu des projets")
+  tribble(~Date, ~Heure, ~Groupe, ~Salle, ~TP,
+          "Vendredi 27 septembre",  "8h30",  "F2", "i12", "TP1",
+          "Vendredi 27 septembre",  "10h15", "D2", "i12", "TP1",
+          "Vendredi 27 septembre",  "13h15", "H2", "i12", "TP1",
+          "Vendredi 27 septembre",  "15h",   "B2", "i12", "TP1",
+          "Vendredi 25 octobre",    "8h30",  "H2", "i12", "TP2",
+          "Vendredi 25 octobre",    "10h15", "H2", "i12", "TP3",
+          "Vendredi 25 octobre",    "13h15", "D2", "i12", "TP2",
+          "Vendredi 25 octobre",    "15h",   "D2", "i12", "TP3",
+          "Vendredi 29 novembre",   "8h30",  "F2", "i21", "TP2",
+          "Vendredi 29 novembre",   "10h15", "F2", "i21", "TP3",
+          "Vendredi 6 décembre",    "8h30",  "B2", "i21", "TP2",
+          "Vendredi 6 décembre",    "10h15", "B2", "i21", "TP3"
+          )
 ```
 
 ```{r, echo=FALSE}
 planning %>% 
-  group_by(Date) %>% 
-  mutate(TravailJour = str_c(Travail, collapse = "")) %>% 
-  ungroup() %>% 
-  mutate(Travail = cell_spec(Travail, bold = Travail != ""),
-         Date = cell_spec(Date, bold = TravailJour != "")) %>%
-  select(-TravailJour) %>% 
-  kable(align = "l", escape = FALSE) %>% 
-  kable_styling(bootstrap_options = c("hover", "responsive"), font_size = 10) %>% 
-  collapse_rows(columns = 1, )
+  select(Date, Heure, Groupe, TP, Salle) %>%
+  flextable() %>%
+  theme_box() %>% 
+  align(align = "center", part = "all") %>% 
+  fontsize(size = 17) %>%
+  fontsize(size = 19, part = "header") %>%
+  merge_v(j = "Date") %>% 
+  merge_v(j = "TP") %>%
+  merge_v(j = "Groupe") %>%
+  merge_at(i = 1:4, j = "Salle") %>% 
+  merge_at(i = 5:8, j = "Salle") %>% 
+  merge_at(i = 9:10, j = "Salle") %>% 
+  merge_at(i = 11:12, j = "Salle") %>% 
+  bg(i = ~ Groupe == "B2", j = "Groupe", bg = alpha("#82B5C4FF", 0.4)) %>% 
+  bg(i = ~ Groupe == "D2", j = "Groupe", bg = alpha("#C37E90FF", 0.4)) %>% 
+  bg(i = ~ Groupe == "F2", j = "Groupe", bg = alpha("#D0AD4BFF", 0.4)) %>% 
+  bg(i = ~ Groupe == "H2", j = "Groupe", bg = alpha("#B8BE61FF", 0.4)) %>% 
+  autofit()
 ```
 
 
-# Exemples de cours
+# Exemples de cours (2018)
 
 
 * [Regression linéaire simple](teaching/AgroBasesDuModeleLineaire/Chap1.html "Chapitre 1"),
@@ -64,12 +65,11 @@ planning %>%
 * [Analyse de la covariance](teaching/AgroBasesDuModeleLineaire/Chap7.html "Chapitre 7"),
 * [Analyse en composantes principales](teaching/AgroBasesDuModeleLineaire/Chap6.html "Chapitre 6").
 
-# TP
+# TP (2018)
+
 * [TP2](teaching/AgroBasesDuModeleLineaire/TP2.html "TP2"),
 * [TP3](teaching/AgroBasesDuModeleLineaire/TP3.html "TP3").
 
-# Divers
-* [Choix des projets](teaching/AgroBasesDuModeleLineaire/ChoixProjet2A.html "Script").
 
 # Références extérieures
 
