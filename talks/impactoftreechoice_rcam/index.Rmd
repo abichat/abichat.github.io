@@ -37,7 +37,7 @@ set.seed(42)
 ## Antoine Bichat
 <div style = "margin-top: -30px"></div>
 
-## September 30, 2019 - RCAM - Institut Curie
+## September 30, 2019 - RCAM - Institut Pasteur
 
 
 ### Work in collaboration with C. Ambroise, M. Mariadassou & J. Plassais 
