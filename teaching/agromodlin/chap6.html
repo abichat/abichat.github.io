@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Bases du modèle linéaire</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Antoine Bichat - Émilie Lebarbier AgroParisTech" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="default-agro.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Bases du modèle linéaire
+## Chapitre VI - Analyse en composantes principales
+### Antoine Bichat - Émilie Lebarbier<br>AgroParisTech
+
+---
+
+
+
+
+# Chargement des données
+
+
+```r
+budget &lt;- read.table("Etat.don", row.names = 1, sep = "")
+colnames(budget) &lt;- c("PVP", "AGR", "CMI", "TRA", "LOG", 
+                      "EDU", "ACS", "ANC", "DEF", "DET", "DIV")
+head(budget)
+```
+
+```
+      PVP AGR CMI  TRA LOG EDU ACS ANC  DEF  DET DIV
+1872 18.0 0.5 0.1  6.7 0.5 2.1 2.0   0 26.4 41.5 2.1
+1880 14.1 0.8 0.1 15.3 1.9 3.7 0.5   0 29.8 31.3 2.5
+1890 13.6 0.7 0.7  6.8 0.6 7.1 0.7   0 33.8 34.4 1.7
+1900 14.3 1.7 1.7  6.9 1.2 7.4 0.8   0 37.7 26.2 2.2
+1903 10.3 1.5 0.4  9.3 0.6 8.5 0.9   0 38.4 27.2 3.0
+1906 13.4 1.4 0.5  8.1 0.7 8.6 1.8   0 38.5 25.3 1.9
+```
+
+```r
+str(budget)
+```
+
+```
+'data.frame':	24 obs. of  11 variables:
+ $ PVP: num  18 14.1 13.6 14.3 10.3 13.4 13.5 12.9 12.3 7.6 ...
+ $ AGR: num  0.5 0.8 0.7 1.7 1.5 1.4 1.1 1.4 0.3 1.2 ...
+ $ CMI: num  0.1 0.1 0.7 1.7 0.4 0.5 0.5 0.3 0.1 3.2 ...
+ $ TRA: num  6.7 15.3 6.8 6.9 9.3 8.1 9 9.4 11.9 5.1 ...
+ $ LOG: num  0.5 1.9 0.6 1.2 0.6 0.7 0.6 0.6 2.4 0.6 ...
+ $ EDU: num  2.1 3.7 7.1 7.4 8.5 8.6 9 9.3 3.7 5.6 ...
+ $ ACS: num  2 0.5 0.7 0.8 0.9 1.8 3.4 4.3 1.7 1.8 ...
+ $ ANC: num  0 0 0 0 0 0 0 0 1.9 10 ...
+ $ DEF: num  26.4 29.8 33.8 37.7 38.4 38.5 36.8 41.1 42.4 29 ...
+ $ DET: num  41.5 31.3 34.4 26.2 27.2 25.3 23.5 19.4 23.1 35 ...
+ $ DIV: num  2.1 2.5 1.7 2.2 3 1.9 2.6 1.3 0.2 0.9 ...
+```
+
+---
+# Étude descriptive simple
+
+
+```r
+Moyenne &lt;- apply(budget, 2, mean)
+EcartType &lt;- apply(budget, 2, sd)
+data.frame(Moyenne, EcartType)
+```
+
+```
+      Moyenne EcartType
+PVP 12.212500  2.238267
+AGR  1.995833  1.681221
+CMI  3.941667  4.585603
+TRA  8.320833  2.520866
+LOG  3.958333  4.271841
+EDU  9.941667  5.335600
+ACS  4.816667  3.482087
+ANC  4.275000  4.244203
+DEF 30.258333  7.466733
+DET 19.141667 12.455972
+DIV  1.183333  1.047841
+```
+
+---
+# Corrélations
+
+
+```r
+cor(budget)
+```
+
+```
+              PVP         AGR           CMI         TRA         LOG
+PVP  1.0000000000 -0.08456147 -0.0003918372  0.23274025  0.03561605
+AGR -0.0845614667  1.00000000  0.6001369948 -0.27583846  0.43573158
+CMI -0.0003918372  0.60013699  1.0000000000  0.09297364  0.89103331
+TRA  0.2327402544 -0.27583846  0.0929736369  1.00000000  0.16610414
+LOG  0.0356160473  0.43573158  0.8910333053  0.16610414  1.00000000
+EDU -0.1500396685  0.73132063  0.4670513945 -0.21315407  0.23236075
+ACS -0.1314025825  0.80568293  0.6211906273 -0.20307154  0.48776783
+ANC -0.6869011667  0.04428292  0.0225073627 -0.31322317  0.04471192
+DEF  0.1010501404 -0.44836614 -0.5363480862  0.15797549 -0.37856133
+DET  0.0335563384 -0.69491720 -0.8042078286 -0.14834035 -0.75803796
+DIV  0.1493242957 -0.27720187 -0.3480384333  0.11436882 -0.43793515
+           EDU        ACS         ANC         DEF         DET         DIV
+PVP -0.1500397 -0.1314026 -0.68690117  0.10105014  0.03355634  0.14932430
+AGR  0.7313206  0.8056829  0.04428292 -0.44836614 -0.69491720 -0.27720187
+CMI  0.4670514  0.6211906  0.02250736 -0.53634809 -0.80420783 -0.34803843
+TRA -0.2131541 -0.2030715 -0.31322317  0.15797549 -0.14834035  0.11436882
+LOG  0.2323607  0.4877678  0.04471192 -0.37856133 -0.75803796 -0.43793515
+EDU  1.0000000  0.8749779  0.15696654 -0.52405752 -0.67024982 -0.24864596
+ACS  0.8749779  1.0000000  0.28819417 -0.56715016 -0.80819753 -0.52959488
+ANC  0.1569665  0.2881942  1.00000000 -0.41685323 -0.04936630 -0.37746819
+DEF -0.5240575 -0.5671502 -0.41685323  1.00000000  0.26163585  0.02041298
+DET -0.6702498 -0.8081975 -0.04936630  0.26163585  1.00000000  0.55393211
+DIV -0.2486460 -0.5295949 -0.37746819  0.02041298  0.55393211  1.00000000
+```
+
+
+---
+
+# Analyse descriptive _tidy_
+
+
+```r
+library(tidyverse)
+budget_tidy &lt;- budget %&gt;% 
+  rownames_to_column(var = "Année") %&gt;% 
+  mutate(Année = as.numeric(Année)) %&gt;% 
+  gather(key = "Poste", value = "Pourcentage", -Année)
+budget_tidy
+```
+
+```
+    Année Poste Pourcentage
+1    1872   PVP        18.0
+2    1880   PVP        14.1
+3    1890   PVP        13.6
+4    1900   PVP        14.3
+5    1903   PVP        10.3
+6    1906   PVP        13.4
+7    1909   PVP        13.5
+8    1912   PVP        12.9
+9    1920   PVP        12.3
+10   1923   PVP         7.6
+11   1926   PVP        10.5
+12   1929   PVP        10.0
+13   1932   PVP        10.6
+14   1935   PVP         8.8
+15   1938   PVP        10.1
+16   1947   PVP        15.6
+17   1950   PVP        11.2
+18   1953   PVP        12.9
+19   1956   PVP        10.9
+20   1959   PVP        13.1
+21   1962   PVP        12.8
+22   1965   PVP        12.4
+23   1968   PVP        11.4
+24   1971   PVP        12.8
+25   1872   AGR         0.5
+26   1880   AGR         0.8
+27   1890   AGR         0.7
+28   1900   AGR         1.7
+29   1903   AGR         1.5
+30   1906   AGR         1.4
+31   1909   AGR         1.1
+32   1912   AGR         1.4
+33   1920   AGR         0.3
+34   1923   AGR         1.2
+35   1926   AGR         0.3
+36   1929   AGR         0.6
+37   1932   AGR         0.8
+38   1935   AGR         2.6
+39   1938   AGR         1.1
+40   1947   AGR         1.6
+41   1950   AGR         1.3
+42   1953   AGR         1.5
+43   1956   AGR         5.3
+44   1959   AGR         4.4
+45   1962   AGR         4.7
+46   1965   AGR         4.3
+47   1968   AGR         6.0
+48   1971   AGR         2.8
+49   1872   CMI         0.1
+50   1880   CMI         0.1
+51   1890   CMI         0.7
+52   1900   CMI         1.7
+53   1903   CMI         0.4
+54   1906   CMI         0.5
+55   1909   CMI         0.5
+56   1912   CMI         0.3
+57   1920   CMI         0.1
+58   1923   CMI         3.2
+59   1926   CMI         0.4
+60   1929   CMI         0.6
+61   1932   CMI         0.3
+62   1935   CMI         1.4
+63   1938   CMI         1.2
+64   1947   CMI        10.1
+65   1950   CMI        16.5
+66   1953   CMI         7.0
+67   1956   CMI         9.7
+68   1959   CMI         7.3
+69   1962   CMI         7.5
+70   1965   CMI         8.4
+71   1968   CMI         9.5
+72   1971   CMI         7.1
+73   1872   TRA         6.7
+74   1880   TRA        15.3
+75   1890   TRA         6.8
+76   1900   TRA         6.9
+77   1903   TRA         9.3
+78   1906   TRA         8.1
+79   1909   TRA         9.0
+80   1912   TRA         9.4
+81   1920   TRA        11.9
+82   1923   TRA         5.1
+83   1926   TRA         4.5
+84   1929   TRA         9.0
+85   1932   TRA         8.9
+86   1935   TRA         7.8
+87   1938   TRA         5.9
+88   1947   TRA        11.4
+89   1950   TRA        12.4
+90   1953   TRA         7.9
+91   1956   TRA         7.6
+92   1959   TRA         5.7
+93   1962   TRA         6.6
+94   1965   TRA         9.1
+95   1968   TRA         5.9
+96   1971   TRA         8.5
+97   1872   LOG         0.5
+98   1880   LOG         1.9
+99   1890   LOG         0.6
+100  1900   LOG         1.2
+101  1903   LOG         0.6
+102  1906   LOG         0.7
+103  1909   LOG         0.6
+104  1912   LOG         0.6
+105  1920   LOG         2.4
+106  1923   LOG         0.6
+107  1926   LOG         1.8
+108  1929   LOG         1.0
+109  1932   LOG         3.0
+110  1935   LOG         1.4
+111  1938   LOG         1.4
+112  1947   LOG         7.6
+113  1950   LOG        15.8
+114  1953   LOG        12.1
+115  1956   LOG         9.6
+116  1959   LOG         9.8
+117  1962   LOG         6.8
+118  1965   LOG         6.0
+119  1968   LOG         5.0
+120  1971   LOG         4.0
+121  1872   EDU         2.1
+122  1880   EDU         3.7
+123  1890   EDU         7.1
+124  1900   EDU         7.4
+125  1903   EDU         8.5
+126  1906   EDU         8.6
+127  1909   EDU         9.0
+128  1912   EDU         9.3
+129  1920   EDU         3.7
+130  1923   EDU         5.6
+131  1926   EDU         6.6
+132  1929   EDU         8.1
+133  1932   EDU        10.0
+134  1935   EDU        12.4
+135  1938   EDU         9.5
+136  1947   EDU         8.8
+137  1950   EDU         8.1
+138  1953   EDU         8.1
+139  1956   EDU         9.4
+140  1959   EDU        12.5
+141  1962   EDU        15.7
+142  1965   EDU        19.5
+143  1968   EDU        21.1
+144  1971   EDU        23.8
+145  1872   ACS         2.0
+146  1880   ACS         0.5
+147  1890   ACS         0.7
+148  1900   ACS         0.8
+149  1903   ACS         0.9
+150  1906   ACS         1.8
+151  1909   ACS         3.4
+152  1912   ACS         4.3
+153  1920   ACS         1.7
+154  1923   ACS         1.8
+155  1926   ACS         2.1
+156  1929   ACS         3.2
+157  1932   ACS         6.4
+158  1935   ACS         6.2
+159  1938   ACS         6.0
+160  1947   ACS         4.8
+161  1950   ACS         4.9
+162  1953   ACS         5.3
+163  1956   ACS         8.5
+164  1959   ACS         8.0
+165  1962   ACS         9.7
+166  1965   ACS        10.6
+167  1968   ACS        10.7
+168  1971   ACS        11.3
+169  1872   ANC         0.0
+170  1880   ANC         0.0
+171  1890   ANC         0.0
+172  1900   ANC         0.0
+173  1903   ANC         0.0
+174  1906   ANC         0.0
+175  1909   ANC         0.0
+176  1912   ANC         0.0
+177  1920   ANC         1.9
+178  1923   ANC        10.0
+179  1926   ANC        10.1
+180  1929   ANC        11.8
+181  1932   ANC        13.4
+182  1935   ANC        11.3
+183  1938   ANC         5.9
+184  1947   ANC         3.4
+185  1950   ANC         3.4
+186  1953   ANC         3.9
+187  1956   ANC         4.6
+188  1959   ANC         5.0
+189  1962   ANC         5.3
+190  1965   ANC         4.7
+191  1968   ANC         4.2
+192  1971   ANC         3.7
+193  1872   DEF        26.4
+194  1880   DEF        29.8
+195  1890   DEF        33.8
+196  1900   DEF        37.7
+197  1903   DEF        38.4
+198  1906   DEF        38.5
+199  1909   DEF        36.8
+200  1912   DEF        41.1
+201  1920   DEF        42.4
+202  1923   DEF        29.0
+203  1926   DEF        19.9
+204  1929   DEF        28.0
+205  1932   DEF        27.4
+206  1935   DEF        29.3
+207  1938   DEF        40.7
+208  1947   DEF        32.2
+209  1950   DEF        20.7
+210  1953   DEF        36.1
+211  1956   DEF        28.2
+212  1959   DEF        26.7
+213  1962   DEF        24.5
+214  1965   DEF        19.8
+215  1968   DEF        20.0
+216  1971   DEF        18.8
+217  1872   DET        41.5
+218  1880   DET        31.3
+219  1890   DET        34.4
+220  1900   DET        26.2
+221  1903   DET        27.2
+222  1906   DET        25.3
+223  1909   DET        23.5
+224  1912   DET        19.4
+225  1920   DET        23.1
+226  1923   DET        35.0
+227  1926   DET        41.6
+228  1929   DET        25.8
+229  1932   DET        19.2
+230  1935   DET        18.5
+231  1938   DET        18.2
+232  1947   DET         4.6
+233  1950   DET         4.2
+234  1953   DET         5.2
+235  1956   DET         6.2
+236  1959   DET         7.5
+237  1962   DET         6.4
+238  1965   DET         3.5
+239  1968   DET         4.4
+240  1971   DET         7.2
+241  1872   DIV         2.1
+242  1880   DIV         2.5
+243  1890   DIV         1.7
+244  1900   DIV         2.2
+245  1903   DIV         3.0
+246  1906   DIV         1.9
+247  1909   DIV         2.6
+248  1912   DIV         1.3
+249  1920   DIV         0.2
+250  1923   DIV         0.9
+251  1926   DIV         2.3
+252  1929   DIV         2.0
+253  1932   DIV         0.0
+254  1935   DIV         0.4
+255  1938   DIV         0.0
+256  1947   DIV         0.0
+257  1950   DIV         1.5
+258  1953   DIV         0.0
+259  1956   DIV         0.0
+260  1959   DIV         0.0
+261  1962   DIV         0.1
+262  1965   DIV         1.8
+263  1968   DIV         1.9
+264  1971   DIV         0.0
+```
+
+---
+
+```r
+budget_tidy %&gt;% 
+  group_by(Poste) %&gt;% 
+  summarise(Min = min(Pourcentage), Moyenne = mean(Pourcentage), 
+            Max = max(Pourcentage), `Écart-type` = sd(Pourcentage))
+```
+
+```
+# A tibble: 11 x 5
+   Poste   Min Moyenne   Max `Écart-type`
+   &lt;chr&gt; &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;
+ 1 ACS     0.5    4.82  11.3         3.48
+ 2 AGR     0.3    2.00   6           1.68
+ 3 ANC     0      4.28  13.4         4.24
+ 4 CMI     0.1    3.94  16.5         4.59
+ 5 DEF    18.8   30.3   42.4         7.47
+ 6 DET     3.5   19.1   41.6        12.5 
+ 7 DIV     0      1.18   3           1.05
+ 8 EDU     2.1    9.94  23.8         5.34
+ 9 LOG     0.5    3.96  15.8         4.27
+10 PVP     7.6   12.2   18           2.24
+11 TRA     4.5    8.32  15.3         2.52
+```
+
+---
+
+
+```r
+budget_tidy %&gt;% 
+  group_by(Année) %&gt;% 
+  summarise(Total = sum(Pourcentage))
+```
+
+```
+# A tibble: 24 x 2
+   Année Total
+   &lt;dbl&gt; &lt;dbl&gt;
+ 1  1872  99.9
+ 2  1880 100  
+ 3  1890 100. 
+ 4  1900 100. 
+ 5  1903 100. 
+ 6  1906 100. 
+ 7  1909 100  
+ 8  1912 100  
+ 9  1920 100  
+10  1923 100  
+# … with 14 more rows
+```
+
+---
+# Boîtes à moustaches
+
+
+
+```r
+ggplot(budget_tidy) +
+  aes(x = Poste, y = Pourcentage, fill = Poste) +
+  geom_boxplot() +
+  scale_fill_viridis_d() +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+&lt;img src="chap6_files/figure-html/boxplot-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+---
+# Série temporelle
+
+
+```r
+ggplot(budget_tidy) +
+  aes(x = Année, y = Pourcentage, color = Poste) +
+  geom_line(aes(linetype = Poste, group = Poste)) +
+  scale_color_viridis_d() +
+  scale_x_continuous(breaks = seq(1870, 1975, 5)) +
+  theme_minimal()
+```
+
+&lt;img src="chap6_files/figure-html/textplot-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+# Analyse en composantes principales
+
+
+```r
+library(FactoMineR)
+par(mfrow = c(1, 2))
+res_acp &lt;- PCA(budget, scale.unit = TRUE, ncp = 11)
+```
+
+&lt;img src="chap6_files/figure-html/acp-1.png" width="792" style="display: block; margin: auto;" /&gt;
+
+---
+# Valeurs propres
+
+
+```r
+round(res_acp$eig, 4)
+```
+
+```
+        eigenvalue percentage of variance
+comp 1      4.9724                45.2033
+comp 2      2.0506                18.6422
+comp 3      1.2902                11.7288
+comp 4      0.9931                 9.0278
+comp 5      0.7084                 6.4396
+comp 6      0.5581                 5.0741
+comp 7      0.2043                 1.8568
+comp 8      0.1252                 1.1382
+comp 9      0.0628                 0.5710
+comp 10     0.0350                 0.3182
+comp 11     0.0000                 0.0000
+        cumulative percentage of variance
+comp 1                            45.2033
+comp 2                            63.8455
+comp 3                            75.5743
+comp 4                            84.6020
+comp 5                            91.0416
+comp 6                            96.1157
+comp 7                            97.9726
+comp 8                            99.1108
+comp 9                            99.6818
+comp 10                          100.0000
+comp 11                          100.0000
+```
+
+---
+# Scree plot
+
+
+```r
+barplot(res_acp$eig[, 1])
+```
+
+&lt;img src="chap6_files/figure-html/screeplot-1.png" width="720" style="display: block; margin: auto;" /&gt;
+
+---
+# Coordonnées des anciennes variables
+
+```r
+res_acp$var$coord[, 1:3]
+```
+
+```
+         Dim.1        Dim.2      Dim.3
+PVP -0.1733014  0.739752960  0.3417977
+AGR  0.8184263  0.005456946  0.3666890
+CMI  0.8330641  0.341250794 -0.1415737
+TRA -0.1369586  0.630760525 -0.3756538
+LOG  0.7216397  0.397737441 -0.3849194
+EDU  0.7867728 -0.136952321  0.4248170
+ACS  0.9332323 -0.100841264  0.1663739
+ANC  0.2889227 -0.807313867 -0.3750564
+DEF -0.6122032  0.216338862 -0.2595352
+DET -0.8888848 -0.301344901  0.1603550
+DIV -0.5483342  0.112143846  0.5363494
+```
+
+---
+# Contributions des anciennes variables
+
+
+```r
+res_acp$var$contrib[, 1:3]
+```
+
+```
+         Dim.1        Dim.2     Dim.3
+PVP  0.6040060 26.686053774  9.055070
+AGR 13.4708947  0.001452146 10.421958
+CMI 13.9570659  5.678822239  1.553527
+TRA  0.3772386 19.401707169 10.937781
+LOG 10.4731694  7.714430711 11.484003
+EDU 12.4490430  0.914639027 13.988056
+ACS 17.5152669  0.495892444  2.145479
+ANC  1.6788062 31.783063684 10.903019
+DEF  7.5375205  2.282338278  5.220911
+DET 15.8901574  4.428316253  1.993052
+DIV  6.0468314  0.613284274 22.297143
+```
+
+```r
+colSums(res_acp$var$contrib[, 1:3])
+```
+
+```
+Dim.1 Dim.2 Dim.3 
+  100   100   100 
+```
+
+
+---
+# Nouvelles coordonnées des individus
+
+
+```r
+res_acp$ind$coord[, 1:5]
+```
+
+```
+          Dim.1       Dim.2       Dim.3       Dim.4       Dim.5
+1872 -2.9004412  1.02429446  1.56419591  0.48725211 -2.05733909
+1880 -2.7671380  2.01204170 -0.16867655  1.48363180  1.23604848
+1890 -2.4163977  0.22399375  0.76549836 -0.26771722 -0.70960627
+1900 -2.0567917  0.75485866  1.00708899 -0.52319863 -0.50305662
+1903 -2.3380494  0.16694324  0.62262603  0.18085933  1.21337857
+1906 -1.9850718  0.62578832  0.69302799 -0.70999852  0.15170297
+1909 -1.9073089  0.81166027  0.98733211 -0.20092543  0.59515926
+1912 -1.4307977  0.76797327  0.19556195 -1.29023611  0.78144538
+1920 -2.1387261  0.95660042 -1.74582201 -1.06391843  0.62703005
+1923 -1.1436834 -2.88291614 -0.86815228  0.43626965 -0.54206310
+1926 -1.6745515 -2.61049990  0.49637656  1.76239443 -1.19394276
+1929 -1.1735873 -1.83067994 -0.61190346  1.15625184  0.69458371
+1932  0.2708924 -1.95888681 -1.46253819  0.04132425  0.34436726
+1935  0.6589576 -2.29627848 -0.66335015 -0.30717135  0.82323609
+1938 -0.4023531 -1.34280394 -0.84991874 -1.84912354  0.06308464
+1947  1.0889415  2.25682864 -1.27788255 -0.22652682 -0.37665118
+1950  2.3708351  2.17612638 -1.91767059  2.65983353 -0.18484080
+1953  1.2033631  1.13453601 -1.66116711 -0.75364490 -0.96023691
+1956  2.9269811  0.23012624 -0.58914533 -0.44520746 -0.50939381
+1959  2.6856088  0.13932205  0.07215077 -0.69076426 -1.21132090
+1962  3.0540897 -0.11197408  0.58714272 -0.64513145 -0.41926068
+1965  3.1421286  0.30959773  1.41290865  0.76374426  0.93076828
+1968  3.6943677 -0.46869676  2.29717813  0.28211486  0.47549988
+1971  3.2387319 -0.08795507  1.11513879 -0.28011195  0.73140752
+```
+
+---
+# Qualité de la resprésentation des individus
+
+
+```r
+res_acp$ind$cos2[, 1:5]
+```
+
+```
+           Dim.1        Dim.2        Dim.3        Dim.4        Dim.5
+1872 0.465171295 0.0580142168 0.1352904313 0.0131278089 0.2340434785
+1880 0.450978329 0.2384338938 0.0016757277 0.1296421734 0.0899839482
+1890 0.785391875 0.0067487190 0.0788203008 0.0096405578 0.0677305256
+1900 0.604890304 0.0814755431 0.1450212626 0.0391407528 0.0361850951
+1903 0.572626562 0.0029194552 0.0406086629 0.0034264625 0.1542257114
+1906 0.710002588 0.0705606218 0.0865384357 0.0908285492 0.0041466338
+1909 0.601302046 0.1088928084 0.1611302724 0.0066729896 0.0585486675
+1912 0.406684090 0.1171636637 0.0075974778 0.3307037469 0.1213103885
+1920 0.439305553 0.0878855553 0.2927226265 0.1087108847 0.0377600946
+1923 0.107119154 0.6806432562 0.0617230462 0.0155871074 0.0240633016
+1926 0.192670583 0.4682370142 0.0169293743 0.2134148336 0.0979457043
+1929 0.183003318 0.4453003135 0.0497501013 0.1776368371 0.0641028508
+1932 0.008779696 0.4590969322 0.2559175916 0.0002043128 0.0141882692
+1935 0.060749797 0.7376985643 0.0615623916 0.0132005257 0.0948153448
+1938 0.024553266 0.2734763421 0.1095593288 0.5185927066 0.0006035898
+1947 0.124026485 0.5327242776 0.1707997370 0.0053671606 0.0148382943
+1950 0.250426973 0.2109825910 0.1638424412 0.3152007965 0.0015222082
+1953 0.183253021 0.1628899700 0.3492081927 0.0718772256 0.1166848746
+1956 0.734688601 0.0045414624 0.0297651676 0.0169976281 0.0222520885
+1959 0.754563902 0.0020307207 0.0005446185 0.0499195007 0.1535072662
+1962 0.887974643 0.0011936362 0.0328189236 0.0396217274 0.0167342113
+1965 0.726838616 0.0070564393 0.1469664645 0.0429423684 0.0637783415
+1968 0.679824664 0.0109420974 0.2628488137 0.0039643192 0.0112620511
+1971 0.646126659 0.0004765291 0.0765994251 0.0048331575 0.0329523589
+```
+
+---
+# Contributions des individus
+
+
+```r
+res_acp$ind$contrib[, 1:5]
+```
+
+```
+           Dim.1       Dim.2       Dim.3        Dim.4       Dim.5
+1872  7.04943236  2.13181412  7.90177621  0.996145506 24.89716762
+1880  6.41634442  8.22571481  0.09188653  9.235652723  8.98688530
+1890  4.89286093  0.10194630  1.89247853  0.300723888  2.96191828
+1900  3.54492190  1.15779314  3.27550400  1.148546330  1.48857913
+1903  4.58071615  0.05662880  1.25197883  0.137245201  8.66025805
+1906  3.30201065  0.79570960  1.55111494  2.115096613  0.13537123
+1909  3.04837289  1.33859214  3.14824814  0.169388981  2.08355315
+1912  1.71546744  1.19837269  0.12351256  6.984795702  3.59199273
+1920  3.83297828  1.85934863  9.84333720  4.749326109  2.31267656
+1923  1.09606835 16.88743576  2.43407670  0.798592682  1.72837460
+1926  2.34975760 13.84672460  0.79572859 13.032314416  8.38504125
+1929  1.15413560  6.80964602  1.20922815  5.609448973  2.83783654
+1932  0.06149217  7.79683555  6.90807218  0.007165148  0.69756054
+1935  0.36386563 10.71392998  1.42111130  0.395892001  3.98645615
+1938  0.13565655  3.66374217  2.33290604 14.346540219  0.02340914
+1947  0.99365391 10.34896359  5.27380795  0.215305237  0.83448176
+1950  4.71008496  9.62205687 11.87655410 29.684124108  0.20097122
+1953  1.21344305  2.61538879  8.91187491  2.383136152  5.42369147
+1956  7.17903180  0.10760488  1.12095276  0.831649238  1.52631971
+1959  6.04382020  0.03944022  0.01681219  2.002050555  8.63091038
+1962  7.81609123  0.02547620  1.11334508  1.746271463  1.03396649
+1965  8.27320806  0.19475796  6.44719201  2.447435427  5.09590512
+1968 11.43684600  0.44635828 17.04244032  0.333939093  1.32996131
+1971  8.78973987  0.01571888  4.01606078  0.329214234  3.14671225
+```
+
+---
+# Cercle des corrélations
+
+
+```r
+par(mfrow = c(1, 2))
+plot.PCA(res_acp, choix = "var")
+plot.PCA(res_acp, choix = "var", axes = c(1, 3))
+```
+
+&lt;img src="chap6_files/figure-html/cercle-1.png" width="792" style="display: block; margin: auto;" /&gt;
+
+---
+# Projection des individus
+
+
+```r
+par(mfrow = c(1, 2))
+plot.PCA(res_acp, choix = "ind")
+plot.PCA(res_acp, choix = "ind", axes = c(1, 3))
+```
+
+&lt;img src="chap6_files/figure-html/proj-1.png" width="792" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package &lt;b&gt;&lt;a href="https://github.com/yihui/xaringan" target="_blank"&gt;xaringan&lt;/a&gt;&lt;/b&gt;.]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

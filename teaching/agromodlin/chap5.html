@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Bases du modèle linéaire</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Antoine Bichat - Émilie Lebarbier AgroParisTech" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="default-agro.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Bases du modèle linéaire
+## Chapitre V - ANOVA à deux facteurs BIE
+### Antoine Bichat - Émilie Lebarbier<br>AgroParisTech
+
+---
+
+
+
+
+# Chargement des données
+
+
+```r
+champagnes &lt;- read.table('champagnes.txt', header = T)
+str(champagnes)
+```
+
+```
+'data.frame':	42 obs. of  3 variables:
+ $ Juge     : int  1 1 1 2 2 2 3 3 3 4 ...
+ $ Champagne: Factor w/ 7 levels "A","B","C","D",..: 3 4 7 1 4 5 2 4 6 1 ...
+ $ Note     : int  36 16 19 22 25 29 24 19 26 27 ...
+```
+
+--
+
+# Transformation en facteur
+
+
+```r
+champagnes$Juge &lt;- as.factor(champagnes$Juge)
+str(champagnes)
+```
+
+```
+'data.frame':	42 obs. of  3 variables:
+ $ Juge     : Factor w/ 14 levels "1","2","3","4",..: 1 1 1 2 2 2 3 3 3 4 ...
+ $ Champagne: Factor w/ 7 levels "A","B","C","D",..: 3 4 7 1 4 5 2 4 6 1 ...
+ $ Note     : int  36 16 19 22 25 29 24 19 26 27 ...
+```
+
+---
+# Tables
+
+
+```r
+table(champagnes$Juge)
+```
+
+```
+
+ 1  2  3  4  5  6  7  8  9 10 11 12 13 14 
+ 3  3  3  3  3  3  3  3  3  3  3  3  3  3 
+```
+
+```r
+table(champagnes$Champagne)
+```
+
+```
+
+A B C D E F G 
+6 6 6 6 6 6 6 
+```
+
+```r
+table(champagnes$Juge, champagnes$Champagne)
+```
+
+```
+    
+     A B C D E F G
+  1  0 0 1 1 0 0 1
+  2  1 0 0 1 1 0 0
+  3  0 1 0 1 0 1 0
+  4  1 0 0 1 1 0 0
+  5  0 1 0 0 1 0 1
+  6  1 1 1 0 0 0 0
+  7  1 0 0 0 0 1 1
+  8  0 1 0 1 0 1 0
+  9  0 0 1 1 0 0 1
+  10 1 0 0 0 0 1 1
+  11 0 1 0 0 1 0 1
+  12 0 0 1 0 1 1 0
+  13 1 1 1 0 0 0 0
+  14 0 0 1 0 1 1 0
+```
+
+---
+# Note par champagne
+
+
+```r
+by(champagnes$Note, champagnes$Champagne, mean)
+```
+
+```
+champagnes$Champagne: A
+[1] 29.66667
+-------------------------------------------------------- 
+champagnes$Champagne: B
+[1] 28.66667
+-------------------------------------------------------- 
+champagnes$Champagne: C
+[1] 32.83333
+-------------------------------------------------------- 
+champagnes$Champagne: D
+[1] 19.83333
+-------------------------------------------------------- 
+champagnes$Champagne: E
+[1] 26.16667
+-------------------------------------------------------- 
+champagnes$Champagne: F
+[1] 30.83333
+-------------------------------------------------------- 
+champagnes$Champagne: G
+[1] 25.5
+```
+
+---
+# Avec le tidyverse
+
+
+```r
+library(tidyverse)
+champagnes %&gt;% 
+  group_by(Champagne) %&gt;% 
+  summarise(Moyenne = mean(Note), Min = min(Note), 
+            Median = median(Note), Max = max(Note)) %&gt;% 
+  arrange(desc(Moyenne))
+```
+
+```
+# A tibble: 7 x 5
+  Champagne Moyenne   Min Median   Max
+  &lt;fct&gt;       &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;int&gt;
+1 C            32.8    26   35      36
+2 F            30.8    25   31.5    38
+3 A            29.7    22   29.5    37
+4 B            28.7    24   28.5    34
+5 E            26.2    19   24.5    37
+6 G            25.5    19   26.5    33
+7 D            19.8    16   20      25
+```
+
+---
+# Note par juge
+
+
+```r
+ggplot(champagnes) +
+  aes(x = Juge, y = Note, color = Juge) +
+  geom_label(aes(label = Champagne), size = 5) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+&lt;img src="chap5_files/figure-html/unnamed-chunk-5-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Modèle d'ANOVA à deux facteurs sans intercation
+
+
+```r
+modele &lt;- lm(Note ~ Champagne + Juge, data = champagnes)
+modele
+```
+
+```
+
+Call:
+lm(formula = Note ~ Champagne + Juge, data = champagnes)
+
+Coefficients:
+(Intercept)   ChampagneB   ChampagneC   ChampagneD   ChampagneE  
+   26.69048     -2.64286      3.85714     -7.92857     -4.07143  
+ ChampagneF   ChampagneG        Juge2        Juge3        Juge4  
+    2.28571     -5.00000      2.64286     -0.92857     -0.02381  
+      Juge5        Juge6        Juge7        Juge8        Juge9  
+    6.54762      5.57143      6.54762      3.40476      1.33333  
+     Juge10       Juge11       Juge12       Juge13       Juge14  
+   -0.78571      9.21429      3.61905      3.90476     -0.71429  
+```
+
+---
+# Graphes de diagnostic
+
+
+```r
+par(mfrow = c(2, 2))
+plot(modele)
+```
+
+&lt;img src="chap5_files/figure-html/diag-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+# Test du modèle
+
+
+```r
+modele_0 &lt;- lm(Note ~ 1, data = champagnes)
+anova(modele_0, modele)
+```
+
+```
+Analysis of Variance Table
+
+Model 1: Note ~ 1
+Model 2: Note ~ Champagne + Juge
+  Res.Df     RSS Df Sum of Sq      F  Pr(&gt;F)  
+1     41 1585.64                              
+2     22  571.05 19    1014.6 2.0573 0.05296 .
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Test des facteurs
+
+```r
+anova(modele)
+```
+
+```
+Analysis of Variance Table
+
+Response: Note
+          Df Sum Sq Mean Sq F value   Pr(&gt;F)   
+Champagne  6 660.14 110.024  4.2387 0.005529 **
+Juge      13 354.45  27.266  1.0504 0.443958   
+Residuals 22 571.05  25.957                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+--
+
+
+```r
+car::Anova(modele)
+```
+
+```
+Anova Table (Type II tests)
+
+Response: Note
+          Sum Sq Df F value  Pr(&gt;F)  
+Champagne 492.29  6  3.1609 0.02169 *
+Juge      354.45 13  1.0504 0.44396  
+Residuals 571.05 22                  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Coefficients
+
+
+```r
+summary(modele)
+```
+
+```
+
+Call:
+lm(formula = Note ~ Champagne + Juge, data = champagnes)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-7.3333 -2.7440 -0.5357  3.1310  9.9762 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 26.69048    4.00855   6.658 1.08e-06 ***
+ChampagneB  -2.64286    3.33531  -0.792   0.4366    
+ChampagneC   3.85714    3.33531   1.156   0.2599    
+ChampagneD  -7.92857    3.33531  -2.377   0.0266 *  
+ChampagneE  -4.07143    3.33531  -1.221   0.2351    
+ChampagneF   2.28571    3.33531   0.685   0.5003    
+ChampagneG  -5.00000    3.33531  -1.499   0.1481    
+Juge2        2.64286    4.44708   0.594   0.5584    
+Juge3       -0.92857    4.44708  -0.209   0.8365    
+Juge4       -0.02381    4.44708  -0.005   0.9958    
+Juge5        6.54762    4.44708   1.472   0.1551    
+Juge6        5.57143    4.44708   1.253   0.2234    
+Juge7        6.54762    4.44708   1.472   0.1551    
+Juge8        3.40476    4.44708   0.766   0.4520    
+Juge9        1.33333    4.15986   0.321   0.7516    
+Juge10      -0.78571    4.44708  -0.177   0.8614    
+Juge11       9.21429    4.44708   2.072   0.0502 .  
+Juge12       3.61905    4.44708   0.814   0.4245    
+Juge13       3.90476    4.44708   0.878   0.3894    
+Juge14      -0.71429    4.44708  -0.161   0.8739    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.095 on 22 degrees of freedom
+Multiple R-squared:  0.6399,	Adjusted R-squared:  0.3288 
+F-statistic: 2.057 on 19 and 22 DF,  p-value: 0.05296
+```
+
+---
+# Moyennes ajustées des champagnes 
+
+
+```r
+lsmeans &lt;- lsmeans::lsmeans(modele, pairwise ~ Champagne, 
+                            adjust = "bonferroni")
+lsmeans$lsmeans
+```
+
+```
+ Champagne lsmean   SE df lower.CL upper.CL
+ A           29.6 2.32 22     24.8     34.4
+ B           26.9 2.32 22     22.1     31.7
+ C           33.4 2.32 22     28.6     38.2
+ D           21.6 2.32 22     16.8     26.5
+ E           25.5 2.32 22     20.7     30.3
+ F           31.9 2.32 22     27.0     36.7
+ G           24.6 2.32 22     19.8     29.4
+
+Results are averaged over the levels of: Juge 
+Confidence level used: 0.95 
+```
+
+---
+# Comparaison des champagnes 
+
+
+```r
+lsmeans$contrasts
+```
+
+```
+ contrast estimate   SE df t.ratio p.value
+ A - B       2.643 3.34 22  0.792  1.0000 
+ A - C      -3.857 3.34 22 -1.156  1.0000 
+ A - D       7.929 3.34 22  2.377  0.5579 
+ A - E       4.071 3.34 22  1.221  1.0000 
+ A - F      -2.286 3.34 22 -0.685  1.0000 
+ A - G       5.000 3.34 22  1.499  1.0000 
+ B - C      -6.500 3.34 22 -1.949  1.0000 
+ B - D       5.286 3.34 22  1.585  1.0000 
+ B - E       1.429 3.34 22  0.428  1.0000 
+ B - F      -4.929 3.34 22 -1.478  1.0000 
+ B - G       2.357 3.34 22  0.707  1.0000 
+ C - D      11.786 3.34 22  3.534  0.0392 
+ C - E       7.929 3.34 22  2.377  0.5579 
+ C - F       1.571 3.34 22  0.471  1.0000 
+ C - G       8.857 3.34 22  2.656  0.3034 
+ D - E      -3.857 3.34 22 -1.156  1.0000 
+ D - F     -10.214 3.34 22 -3.062  0.1198 
+ D - G      -2.929 3.34 22 -0.878  1.0000 
+ E - F      -6.357 3.34 22 -1.906  1.0000 
+ E - G       0.929 3.34 22  0.278  1.0000 
+ F - G       7.286 3.34 22  2.184  0.8374 
+
+Results are averaged over the levels of: Juge 
+P value adjustment: bonferroni method for 21 tests 
+```
+
+---
+# Avec {broom}
+
+
+```r
+library(broom)
+lsmeans$lsmeans %&gt;% tidy() %&gt;% arrange(desc(estimate))
+```
+
+```
+# A tibble: 7 x 6
+  Champagne estimate std.error    df conf.low conf.high
+  &lt;fct&gt;        &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+1 C             33.4      2.32    22     28.6      38.2
+2 F             31.9      2.32    22     27.0      36.7
+3 A             29.6      2.32    22     24.8      34.4
+4 B             26.9      2.32    22     22.1      31.7
+5 E             25.5      2.32    22     20.7      30.3
+6 G             24.6      2.32    22     19.8      29.4
+7 D             21.6      2.32    22     16.8      26.5
+```
+
+--
+
+
+```r
+lsmeans$contrasts %&gt;% tidy() %&gt;% filter(p.value &lt; 0.05)
+```
+
+```
+# A tibble: 1 x 7
+  level1 level2 estimate std.error    df statistic p.value
+  &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+1 C      D          11.8      3.34    22      3.53  0.0392
+```
+
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package &lt;b&gt;&lt;a href="https://github.com/yihui/xaringan" target="_blank"&gt;xaringan&lt;/a&gt;&lt;/b&gt;.]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

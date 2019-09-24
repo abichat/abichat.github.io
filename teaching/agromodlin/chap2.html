@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Bases du modèle linéaire</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Antoine Bichat - Émilie Lebarbier AgroParisTech" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="default-agro.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Bases du modèle linéaire
+## Chapitre II - Régression linéaire multiple
+### Antoine Bichat - Émilie Lebarbier<br>AgroParisTech
+
+---
+
+
+
+
+# Chargement des données
+
+
+```r
+chenilles &lt;- read.table("chenilles.txt", sep = "", header = TRUE)
+```
+
+
+
+---
+
+# Statistiques descriptives
+
+
+```r
+summary(chenilles)
+```
+
+```
+    Altitude        Pente           NbPins         Hauteur     
+ Min.   :1075   Min.   :15.00   Min.   : 0.00   Min.   :2.400  
+ 1st Qu.:1228   1st Qu.:24.00   1st Qu.: 4.00   1st Qu.:3.700  
+ Median :1309   Median :28.00   Median : 8.00   Median :4.400  
+ Mean   :1315   Mean   :29.03   Mean   :11.45   Mean   :4.452  
+ 3rd Qu.:1396   3rd Qu.:34.00   3rd Qu.:18.00   3rd Qu.:5.300  
+ Max.   :1575   Max.   :46.00   Max.   :32.00   Max.   :6.500  
+    Diametre        Densite          Orient         HautMax      
+ Min.   : 5.80   Min.   :1.000   Min.   :1.100   Min.   : 3.600  
+ 1st Qu.:11.50   1st Qu.:1.200   1st Qu.:1.600   1st Qu.: 5.900  
+ Median :15.70   Median :1.500   Median :1.700   Median : 7.200  
+ Mean   :15.25   Mean   :1.791   Mean   :1.658   Mean   : 7.539  
+ 3rd Qu.:18.30   3rd Qu.:2.400   3rd Qu.:1.800   3rd Qu.: 9.100  
+ Max.   :21.80   Max.   :3.300   Max.   :1.900   Max.   :13.700  
+    NbStrat         Melange          NbNids          LogNids       
+ Min.   :1.100   Min.   :1.300   Min.   :0.0300   Min.   :-3.5066  
+ 1st Qu.:1.500   1st Qu.:1.600   1st Qu.:0.1800   1st Qu.:-1.7148  
+ Median :2.000   Median :1.800   Median :0.6700   Median :-0.4005  
+ Mean   :1.982   Mean   :1.761   Mean   :0.8112   Mean   :-0.8133  
+ 3rd Qu.:2.500   3rd Qu.:2.000   3rd Qu.:1.1300   3rd Qu.: 0.1222  
+ Max.   :2.900   Max.   :2.000   Max.   :3.0000   Max.   : 1.0986  
+```
+
+---
+
+# Nuages de points
+
+
+```r
+plot(chenilles)
+```
+
+&lt;img src="chap2_files/figure-html/plotall-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+
+---
+# Corrélation
+
+
+```r
+cor(chenilles)
+```
+
+```
+           Altitude      Pente     NbPins     Hauteur    Diametre
+Altitude  1.0000000  0.1205209  0.5375645  0.32105284  0.28377386
+Pente     0.1205209  1.0000000  0.3219411  0.13668772  0.11341631
+NbPins    0.5375645  0.3219411  1.0000000  0.41443493  0.29492039
+Hauteur   0.3210528  0.1366877  0.4144349  1.00000000  0.90465522
+Diametre  0.2837739  0.1134163  0.2949204  0.90465522  1.00000000
+Densite   0.5146683  0.3006666  0.9795521  0.43929974  0.30623032
+Orient    0.2684928 -0.1522218  0.1284678  0.05810293 -0.07870719
+HautMax   0.3601466  0.2619061  0.7589609  0.77192534  0.59619783
+NbStrat   0.3637243  0.3256728  0.8767888  0.45958851  0.26746450
+Melange  -0.1276449  0.1280044  0.1870038 -0.12111138 -0.09063278
+NbNids   -0.5302188 -0.4554582 -0.5639008 -0.35790141 -0.15777120
+LogNids  -0.5336138 -0.4294396 -0.5177880 -0.42529455 -0.20093786
+            Densite      Orient     HautMax     NbStrat     Melange
+Altitude  0.5146683  0.26849282  0.36014656  0.36372429 -0.12764490
+Pente     0.3006666 -0.15222176  0.26190610  0.32567283  0.12800444
+NbPins    0.9795521  0.12846781  0.75896092  0.87678882  0.18700384
+Hauteur   0.4392997  0.05810293  0.77192534  0.45958851 -0.12111138
+Diametre  0.3062303 -0.07870719  0.59619783  0.26746450 -0.09063278
+Densite   1.0000000  0.15067805  0.81021606  0.90853190  0.10829434
+Orient    0.1506780  1.00000000  0.06000991  0.06324509  0.13084916
+HautMax   0.8102161  0.06000991  1.00000000  0.85363911  0.00327079
+NbStrat   0.9085319  0.06324509  0.85363911  1.00000000  0.14782424
+Melange   0.1082943  0.13084916  0.00327079  0.14782424  1.00000000
+NbNids   -0.5702405 -0.21174829 -0.55113165 -0.63587161 -0.11276133
+LogNids  -0.5282782 -0.22968178 -0.54137095 -0.59398965 -0.03644182
+             NbNids     LogNids
+Altitude -0.5302188 -0.53361382
+Pente    -0.4554582 -0.42943963
+NbPins   -0.5639008 -0.51778795
+Hauteur  -0.3579014 -0.42529455
+Diametre -0.1577712 -0.20093786
+Densite  -0.5702405 -0.52827817
+Orient   -0.2117483 -0.22968178
+HautMax  -0.5511316 -0.54137095
+NbStrat  -0.6358716 -0.59398965
+Melange  -0.1127613 -0.03644182
+NbNids    1.0000000  0.87615265
+LogNids   0.8761526  1.00000000
+```
+
+---
+# Corrélation partielle
+
+
+```r
+library(ppcor)
+pcor(chenilles)$estimate
+```
+
+```
+             Altitude       Pente      NbPins     Hauteur    Diametre
+Altitude  1.000000000 -0.26009632  0.31794782 -0.22941607  0.32040785
+Pente    -0.260096325  1.00000000  0.14816951 -0.19967515  0.21217545
+NbPins    0.317947820  0.14816951  1.00000000  0.34335104 -0.25143160
+Hauteur  -0.229416069 -0.19967515  0.34335104  1.00000000  0.87615184
+Diametre  0.320407851  0.21217545 -0.25143160  0.87615184  1.00000000
+Densite  -0.111376894 -0.07426884  0.91506636 -0.41859082  0.31040664
+Orient    0.212124771 -0.16077342 -0.32917969  0.38567779 -0.40828972
+HautMax  -0.009889088  0.05751548 -0.35693150  0.60343420 -0.24086221
+NbStrat  -0.213668900 -0.09051463 -0.02545177  0.01211458 -0.18978280
+Melange  -0.375307807 -0.04227593  0.53213399 -0.35008751  0.34547134
+NbNids   -0.230113948 -0.19928141  0.01490487  0.04215984  0.02941938
+LogNids  -0.243445082 -0.22084912  0.11066058 -0.36813458  0.31372475
+             Densite       Orient      HautMax     NbStrat     Melange
+Altitude -0.11137689  0.212124771 -0.009889088 -0.21366890 -0.37530781
+Pente    -0.07426884 -0.160773423  0.057515481 -0.09051463 -0.04227593
+NbPins    0.91506636 -0.329179687 -0.356931501 -0.02545177  0.53213399
+Hauteur  -0.41859082  0.385677793  0.603434199  0.01211458 -0.35008751
+Diametre  0.31040664 -0.408289722 -0.240862212 -0.18978280  0.34547134
+Densite   1.00000000  0.402217980  0.431984664  0.28316189 -0.49084273
+Orient    0.40221798  1.000000000 -0.177011779 -0.25228882  0.38605261
+HautMax   0.43198466 -0.177011779  1.000000000  0.39653322  0.11460045
+NbStrat   0.28316189 -0.252288821  0.396533218  1.00000000  0.16560578
+Melange  -0.49084273  0.386052611  0.114600446  0.16560578  1.00000000
+NbNids    0.04227516 -0.051324563 -0.088471934 -0.14808280 -0.11651361
+LogNids  -0.07389864  0.002488219  0.182970387 -0.13201643 -0.03694391
+              NbNids      LogNids
+Altitude -0.23011395 -0.243445082
+Pente    -0.19928141 -0.220849123
+NbPins    0.01490487  0.110660581
+Hauteur   0.04215984 -0.368134583
+Diametre  0.02941938  0.313724754
+Densite   0.04227516 -0.073898643
+Orient   -0.05132456  0.002488219
+HautMax  -0.08847193  0.182970387
+NbStrat  -0.14808280 -0.132016433
+Melange  -0.11651361 -0.036943905
+NbNids    1.00000000  0.641194407
+LogNids   0.64119441  1.000000000
+```
+
+---
+# Facteur confondant
+
+
+```r
+var &lt;- c("NbNids", "NbStrat", "Densite")
+cor(chenilles)[var, var]
+```
+
+```
+            NbNids    NbStrat    Densite
+NbNids   1.0000000 -0.6358716 -0.5702405
+NbStrat -0.6358716  1.0000000  0.9085319
+Densite -0.5702405  0.9085319  1.0000000
+```
+--
+
+```r
+pcor(chenilles)$estimate[var, var]
+```
+
+```
+             NbNids    NbStrat    Densite
+NbNids   1.00000000 -0.1480828 0.04227516
+NbStrat -0.14808280  1.0000000 0.28316189
+Densite  0.04227516  0.2831619 1.00000000
+```
+
+---
+# Regression linéaire multiple
+
+
+```r
+modele_log &lt;- lm(log(NbNids) ~ Altitude + Pente + NbPins + 
+                   Hauteur + Diametre + Densite + Orient + 
+                   HautMax + NbStrat + Melange, data = chenilles)
+modele_log
+```
+
+```
+
+Call:
+lm(formula = log(NbNids) ~ Altitude + Pente + NbPins + Hauteur + 
+    Diametre + Densite + Orient + HautMax + NbStrat + Melange, 
+    data = chenilles)
+
+Coefficients:
+(Intercept)     Altitude        Pente       NbPins      Hauteur  
+  11.300912    -0.004505    -0.053606     0.074581    -1.328277  
+   Diametre      Densite       Orient      HautMax      NbStrat  
+   0.236101    -0.451118    -0.187810     0.185636    -1.266028  
+    Melange  
+  -0.537203  
+```
+
+---
+# Graphes de diagnostic
+
+```r
+par(mfrow=c(2,2))
+plot(modele_log)
+```
+
+&lt;img src="chap2_files/figure-html/diag-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+summary(modele_log) # Ne s'affiche pas entièrement ici
+```
+
+```
+
+Call:
+lm(formula = log(NbNids) ~ Altitude + Pente + NbPins + Hauteur + 
+    Diametre + Densite + Orient + HautMax + NbStrat + Melange, 
+    data = chenilles)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.69082 -0.27556 -0.02122  0.31358  1.74750 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept) 11.300912   3.156550   3.580  0.00167 **
+Altitude    -0.004505   0.001563  -2.882  0.00865 **
+Pente       -0.053606   0.021843  -2.454  0.02250 * 
+NbPins       0.074581   0.100233   0.744  0.46470   
+Hauteur     -1.328277   0.570061  -2.330  0.02938 * 
+Diametre     0.236101   0.104611   2.257  0.03428 * 
+Densite     -0.451118   1.572916  -0.287  0.77695   
+Orient      -0.187810   1.007950  -0.186  0.85389   
+HautMax      0.185636   0.236344   0.785  0.44057   
+NbStrat     -1.266028   0.861235  -1.470  0.15572   
+Melange     -0.537203   0.773372  -0.695  0.49456   
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.8268 on 22 degrees of freedom
+Multiple R-squared:  0.6968,	Adjusted R-squared:  0.5589 
+F-statistic: 5.055 on 10 and 22 DF,  p-value: 0.0007441
+```
+
+---
+# Modèle nul
+
+
+```r
+modele_log_0 &lt;- lm(log(NbNids) ~ 1, data = chenilles)
+anova(modele_log_0, modele_log)
+```
+
+```
+Analysis of Variance Table
+
+Model 1: log(NbNids) ~ 1
+Model 2: log(NbNids) ~ Altitude + Pente + NbPins + Hauteur + Diametre + 
+    Densite + Orient + HautMax + NbStrat + Melange
+  Res.Df    RSS Df Sum of Sq      F    Pr(&gt;F)    
+1     32 49.596                                  
+2     22 15.039 10    34.557 5.0553 0.0007441 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Anova de type 1
+
+
+```r
+anova(modele_log)
+```
+
+```
+Analysis of Variance Table
+
+Response: log(NbNids)
+          Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+Altitude   1 14.1222 14.1222 20.6589 0.0001593 ***
+Pente      1  6.7095  6.7095  9.8152 0.0048376 ** 
+NbPins     1  1.4175  1.4175  2.0736 0.1639516    
+Hauteur    1  1.8035  1.8035  2.6383 0.1185567    
+Diametre   1  8.0480  8.0480 11.7732 0.0023866 ** 
+Densite    1  0.1353  0.1353  0.1979 0.6608026    
+Orient     1  0.0385  0.0385  0.0563 0.8146664    
+HautMax    1  0.0001  0.0001  0.0001 0.9910625    
+NbStrat    1  1.9528  1.9528  2.8567 0.1051153    
+Melange    1  0.3298  0.3298  0.4825 0.4945619    
+Residuals 22 15.0389  0.6836                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Anova de type 2
+
+
+```r
+library(car)
+Anova(modele_log)
+```
+
+```
+Anova Table (Type II tests)
+
+Response: log(NbNids)
+           Sum Sq Df F value   Pr(&gt;F)   
+Altitude   5.6794  1  8.3082 0.008648 **
+Pente      4.1173  1  6.0231 0.022502 * 
+NbPins     0.3785  1  0.5537 0.464703   
+Hauteur    3.7113  1  5.4292 0.029376 * 
+Diametre   3.4820  1  5.0938 0.034281 * 
+Densite    0.0562  1  0.0823 0.776946   
+Orient     0.0237  1  0.0347 0.853895   
+HautMax    0.4217  1  0.6169 0.440567   
+NbStrat    1.4772  1  2.1609 0.155715   
+Melange    0.3298  1  0.4825 0.494562   
+Residuals 15.0389 22                    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+
+---
+# Stepwise selection
+
+
+```r
+modele_log_stepwise &lt;- 
+  step(modele_log_0, data = chenilles,
+       scope =~ Altitude + Pente + NbPins + 
+                   Hauteur + Diametre + Densite + 
+                   Orient + HautMax + NbStrat + Melange)
+```
+
+```
+Start:  AIC=15.44
+log(NbNids) ~ 1
+
+           Df Sum of Sq    RSS     AIC
++ NbStrat   1   17.4987 32.097  3.0848
++ HautMax   1   14.5358 35.060  5.9985
++ Altitude  1   14.1222 35.474  6.3855
++ Densite   1   13.8412 35.755  6.6459
++ NbPins    1   13.2969 36.299  7.1444
++ Pente     1    9.1464 40.450 10.7171
++ Hauteur   1    8.9707 40.625 10.8602
+&lt;none&gt;                  49.596 15.4443
++ Orient    1    2.6164 46.980 15.6558
++ Diametre  1    2.0025 47.594 16.0842
++ Melange   1    0.0659 49.530 17.4004
+
+Step:  AIC=3.08
+log(NbNids) ~ NbStrat
+
+           Df Sum of Sq    RSS     AIC
++ Altitude  1    5.7642 26.333 -1.4474
++ Pente     1    3.0899 29.007  1.7445
+&lt;none&gt;                  32.097  3.0848
++ Orient    1    1.8378 30.260  3.1390
++ Hauteur   1    1.4585 30.639  3.5501
++ HautMax   1    0.2153 31.882  4.8627
++ Melange   1    0.1338 31.964  4.9470
++ Diametre  1    0.0945 32.003  4.9874
++ Densite   1    0.0368 32.061  5.0469
++ NbPins    1    0.0020 32.095  5.0828
+- NbStrat   1   17.4987 49.596 15.4443
+
+Step:  AIC=-1.45
+log(NbNids) ~ NbStrat + Altitude
+
+           Df Sum of Sq    RSS     AIC
++ Pente     1    3.0701 23.263 -3.5382
++ Densite   1    2.2734 24.060 -2.4269
++ NbPins    1    1.9416 24.392 -1.9749
+&lt;none&gt;                  26.333 -1.4474
++ Hauteur   1    0.6000 25.733 -0.2081
++ Orient    1    0.5599 25.773 -0.1566
++ HautMax   1    0.0482 26.285  0.4922
++ Diametre  1    0.0383 26.295  0.5046
++ Melange   1    0.0119 26.321  0.5376
+- Altitude  1    5.7642 32.097  3.0848
+- NbStrat   1    9.1407 35.474  6.3855
+
+Step:  AIC=-3.54
+log(NbNids) ~ NbStrat + Altitude + Pente
+
+           Df Sum of Sq    RSS     AIC
++ NbPins    1    2.4280 20.835 -5.1757
++ Densite   1    2.3402 20.923 -5.0370
+&lt;none&gt;                  23.263 -3.5382
++ Orient    1    1.2150 22.048 -3.3084
++ Hauteur   1    0.6449 22.618 -2.4660
++ HautMax   1    0.0771 23.186 -1.6477
++ Diametre  1    0.0608 23.202 -1.6246
++ Melange   1    0.0020 23.261 -1.5410
+- Pente     1    3.0701 26.333 -1.4474
+- NbStrat   1    5.5013 28.764  1.4668
+- Altitude  1    5.7445 29.008  1.7445
+
+Step:  AIC=-5.18
+log(NbNids) ~ NbStrat + Altitude + Pente + NbPins
+
+           Df Sum of Sq    RSS     AIC
++ Orient    1    1.3806 19.454 -5.4382
+&lt;none&gt;                  20.835 -5.1757
++ Hauteur   1    0.4769 20.358 -3.9398
+- NbPins    1    2.4280 23.263 -3.5382
++ Melange   1    0.1239 20.711 -3.3725
++ Densite   1    0.1029 20.732 -3.3391
++ HautMax   1    0.0717 20.763 -3.2895
++ Diametre  1    0.0391 20.796 -3.2377
+- Pente     1    3.5565 24.392 -1.9749
+- NbStrat   1    6.5118 27.347  1.7991
+- Altitude  1    8.1380 28.973  3.7054
+
+Step:  AIC=-5.44
+log(NbNids) ~ NbStrat + Altitude + Pente + NbPins + Orient
+
+           Df Sum of Sq    RSS     AIC
+&lt;none&gt;                  19.454 -5.4382
+- Orient    1    1.3806 20.835 -5.1757
++ Hauteur   1    0.5057 18.949 -4.3074
++ Densite   1    0.2830 19.172 -3.9218
++ HautMax   1    0.0867 19.368 -3.5855
++ Melange   1    0.0138 19.441 -3.4616
++ Diametre  1    0.0000 19.454 -3.4382
+- NbPins    1    2.5935 22.048 -3.3084
+- Pente     1    4.3177 23.772 -0.8237
+- Altitude  1    6.4076 25.862  1.9570
+- NbStrat   1    6.6742 26.129  2.2954
+```
+
+---
+# Graphes de diagnostic
+
+```r
+par(mfrow=c(2,2))
+plot(modele_log_stepwise)
+```
+
+&lt;img src="chap2_files/figure-html/diaglog-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+# Résultat de l'analyse avec {broom}
+
+```r
+library(broom)
+tidy(modele_log_stepwise)
+```
+
+```
+# A tibble: 6 x 5
+  term        estimate std.error statistic  p.value
+  &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+1 (Intercept) 11.1       2.48         4.48 0.000122
+2 NbStrat     -1.75      0.573       -3.04 0.00516 
+3 Altitude    -0.00437   0.00147     -2.98 0.00600 
+4 Pente       -0.0544    0.0222      -2.45 0.0212  
+5 NbPins       0.0715    0.0377       1.90 0.0685  
+6 Orient      -1.18      0.849       -1.38 0.178   
+```
+
+```r
+glance(modele_log_stepwise)
+```
+
+```
+# A tibble: 1 x 11
+  r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
+      &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+1     0.608         0.535 0.849      8.37 7.03e-5     6  -38.1  90.2  101.
+# … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;
+```
+
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package &lt;b&gt;&lt;a href="https://github.com/yihui/xaringan" target="_blank"&gt;xaringan&lt;/a&gt;&lt;/b&gt;.]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

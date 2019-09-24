@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Bases du modèle linéaire</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Antoine Bichat - Émilie Lebarbier AgroParisTech" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="default-agro.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Bases du modèle linéaire
+## Chapitre VII - Analyse de la covariance
+### Antoine Bichat - Émilie Lebarbier<br>AgroParisTech
+
+---
+
+
+
+
+# Chargement des données
+
+
+```r
+df_pins &lt;- read.table('PINS.DON', 
+                      col.names = c("variete", "diametre", "hauteur"))
+str(df_pins)
+```
+
+```
+'data.frame':	39 obs. of  3 variables:
+ $ variete : Factor w/ 2 levels "blanc","jaune": 1 1 1 1 1 1 1 1 1 1 ...
+ $ diametre: num  21.2 20.2 24.6 23 27.2 18.6 17.3 10 19.7 22.3 ...
+ $ hauteur : int  127 119 135 132 130 130 110 75 110 124 ...
+```
+
+```r
+summary(df_pins)
+```
+
+```
+  variete      diametre        hauteur      
+ blanc:21   Min.   : 5.60   Min.   : 25.00  
+ jaune:18   1st Qu.:11.75   1st Qu.: 75.50  
+            Median :17.30   Median :107.00  
+            Mean   :16.74   Mean   : 95.59  
+            3rd Qu.:21.15   3rd Qu.:119.50  
+            Max.   :29.50   Max.   :141.00  
+```
+
+---
+# Analyse descriptive
+
+```r
+by(df_pins[, 2:3], df_pins$variete, summary)
+```
+
+```
+df_pins$variete: blanc
+    diametre       hauteur     
+ Min.   : 5.6   Min.   : 51.0  
+ 1st Qu.:11.1   1st Qu.: 95.0  
+ Median :16.9   Median :110.0  
+ Mean   :16.2   Mean   :105.7  
+ 3rd Qu.:21.2   3rd Qu.:127.0  
+ Max.   :27.2   Max.   :141.0  
+-------------------------------------------------------- 
+df_pins$variete: jaune
+    diametre        hauteur      
+ Min.   : 5.70   Min.   : 25.00  
+ 1st Qu.:12.75   1st Qu.: 62.50  
+ Median :17.70   Median : 84.00  
+ Mean   :17.38   Mean   : 83.78  
+ 3rd Qu.:20.82   3rd Qu.:109.00  
+ Max.   :29.50   Max.   :122.00  
+```
+
+---
+
+
+```r
+library(tidyverse)
+df_pins %&gt;% 
+  group_by(variete) %&gt;% 
+  summarise(Effectif = n(), 
+            `Diamètre moyen` = mean(diametre), 
+            `Hauteur moyenne` = mean(hauteur),
+            Corrélation = cor(diametre, hauteur))
+```
+
+```
+# A tibble: 2 x 5
+  variete Effectif `Diamètre moyen` `Hauteur moyenne` Corrélation
+  &lt;fct&gt;      &lt;int&gt;            &lt;dbl&gt;             &lt;dbl&gt;       &lt;dbl&gt;
+1 blanc         21             16.2             106.        0.920
+2 jaune         18             17.4              83.8       0.930
+```
+
+
+---
+# Nuage de points
+
+
+```r
+tp &lt;- rep(0, nrow(df_pins)) 
+tp[df_pins$variete == "jaune"] &lt;- 9
+
+plot(hauteur ~ diametre, data = df_pins, pch = 8 + tp)
+legend("bottomright", legend = c("blanc", "jaune"), pch = c(8, 17))
+```
+
+&lt;img src="chap7_files/figure-html/nuage-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+theme_set(theme_minimal())
+ggplot(df_pins) +
+  aes(x = diametre, y = hauteur, color = variete, shape = variete) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Diamètre", y = "Hauteur", color = "Variété", shape = "Variété")
+```
+
+&lt;img src="chap7_files/figure-html/gg-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+---
+# Régression linéaire simple
+
+
+```r
+reglin &lt;- lm(hauteur ~ diametre, data = df_pins)
+summary(reglin)
+```
+
+```
+
+Call:
+lm(formula = hauteur ~ diametre, data = df_pins)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-31.37 -13.68  -0.53  12.85  35.01 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  28.4607     8.1162   3.507  0.00121 ** 
+diametre      4.0099     0.4543   8.826 1.23e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 17.69 on 37 degrees of freedom
+Multiple R-squared:  0.678,	Adjusted R-squared:  0.6693 
+F-statistic:  77.9 on 1 and 37 DF,  p-value: 1.23e-10
+```
+
+---
+### {broom} et la fonction augment()
+
+
+```r
+library(broom)
+augment(reglin, df_pins)
+```
+
+```
+# A tibble: 39 x 10
+   variete diametre hauteur .fitted .se.fit .resid   .hat .sigma .cooksd
+   &lt;fct&gt;      &lt;dbl&gt;   &lt;int&gt;   &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;
+ 1 blanc       21.2     127   113.     3.48  13.5  0.0388   17.8 1.23e-2
+ 2 blanc       20.2     119   109.     3.24   9.54 0.0335   17.9 5.22e-3
+ 3 blanc       24.6     135   127.     4.56   7.90 0.0664   17.9 7.59e-3
+ 4 blanc       23       132   121.     4.01  11.3  0.0515   17.8 1.17e-2
+ 5 blanc       27.2     130   138.     5.53  -7.53 0.0978   17.9 1.09e-2
+ 6 blanc       18.6     130   103.     2.96  27.0  0.0279   17.3 3.43e-2
+ 7 blanc       17.3     110    97.8    2.84  12.2  0.0258   17.8 6.44e-3
+ 8 blanc       10        75    68.6    4.17   6.44 0.0556   17.9 4.13e-3
+ 9 blanc       19.7     110   107.     3.14   2.55 0.0314   17.9 3.47e-4
+10 blanc       22.3     124   118.     3.80   6.12 0.0460   17.9 3.03e-3
+# … with 29 more rows, and 1 more variable: .std.resid &lt;dbl&gt;
+```
+
+
+---
+
+
+```r
+augment(reglin, df_pins) %&gt;% 
+  ggplot() +
+  aes(x = .fitted, y = .resid, color = variete, shape = variete) +
+  geom_point(size = 3) +
+  geom_hline(yintercept = 0) +
+  labs(x = "Hauteur prédite", y = "Résidus", color = "Variété", shape = "Variété")
+```
+
+&lt;img src="chap7_files/figure-html/unnamed-chunk-6-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+---
+# Régressions séparées
+
+
+```r
+df_2reg &lt;-
+  df_pins %&gt;% 
+  group_by(variete) %&gt;% 
+  nest() %&gt;% 
+  mutate(reg = map(data, ~ lm(hauteur ~ diametre, data = .)),
+         augmented = map2(reg, data, augment)) 
+df_2reg
+```
+
+```
+# A tibble: 2 x 4
+# Groups:   variete [2]
+  variete           data reg    augmented        
+  &lt;fct&gt;   &lt;list&lt;df[,2]&gt;&gt; &lt;list&gt; &lt;list&gt;           
+1 blanc         [21 × 2] &lt;lm&gt;   &lt;tibble [21 × 9]&gt;
+2 jaune         [18 × 2] &lt;lm&gt;   &lt;tibble [18 × 9]&gt;
+```
+
+---
+
+
+```r
+df_2reg %&gt;% 
+  pull(reg) %&gt;% 
+  map(~ coef(summary(.)))
+```
+
+```
+[[1]]
+            Estimate Std. Error   t value     Pr(&gt;|t|)
+(Intercept) 41.27473  6.7788611  6.088741 7.441233e-06
+diametre     3.97892  0.3899834 10.202793 3.805055e-09
+
+[[2]]
+            Estimate Std. Error    t value     Pr(&gt;|t|)
+(Intercept) 5.435713  8.1685308  0.6654456 5.152446e-01
+diametre    4.508175  0.4436777 10.1609236 2.198724e-08
+```
+
+---
+
+
+```r
+df_2reg %&gt;% 
+  unnest(augmented) %&gt;% 
+  ggplot() +
+  aes(x = .fitted, y = .resid, color = variete, shape = variete) +
+  geom_point(size = 3) +
+  geom_hline(yintercept = 0) +
+  facet_wrap(~ variete) +
+  labs(x = "Hauteur prédite", y = "Résidus") +
+  theme(legend.position = "none")
+```
+
+&lt;img src="chap7_files/figure-html/unnamed-chunk-9-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+
+
+---
+# Analyse de la covariance
+
+
+```r
+reg_ancova &lt;- lm(hauteur ~ diametre * variete, data = df_pins)
+reg_ancova
+```
+
+```
+
+Call:
+lm(formula = hauteur ~ diametre * variete, data = df_pins)
+
+Coefficients:
+          (Intercept)               diametre           varietejaune  
+              41.2747                 3.9789               -35.8390  
+diametre:varietejaune  
+               0.5293  
+```
+
+---
+
+
+```r
+par(mfrow = c(2, 2))
+plot(reg_ancova)
+```
+
+&lt;img src="chap7_files/figure-html/diag-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+anova(reg_ancova)
+```
+
+```
+Analysis of Variance Table
+
+Response: hauteur
+                 Df  Sum Sq Mean Sq  F value    Pr(&gt;F)    
+diametre          1 24379.7 24379.7 188.9777 1.133e-15 ***
+variete           1  6960.6  6960.6  53.9542 1.377e-08 ***
+diametre:variete  1   103.9   103.9   0.8051    0.3757    
+Residuals        35  4515.3   129.0                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+library(car)
+Anova(reg_ancova)
+```
+
+```
+Anova Table (Type II tests)
+
+Response: hauteur
+                  Sum Sq Df  F value    Pr(&gt;F)    
+diametre         26676.2  1 206.7790 2.952e-16 ***
+variete           6960.6  1  53.9542 1.377e-08 ***
+diametre:variete   103.9  1   0.8051    0.3757    
+Residuals         4515.3 35                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Réanalyse sans intéraction
+
+
+```r
+reg_ancovaSI &lt;- lm(hauteur ~ diametre + variete, data = df_pins)
+reg_ancovaSI
+```
+
+```
+
+Call:
+lm(formula = hauteur ~ diametre + variete, data = df_pins)
+
+Coefficients:
+ (Intercept)      diametre  varietejaune  
+      37.478         4.213       -26.919  
+```
+
+---
+
+
+```r
+par(mfrow = c(2, 2))
+plot(reg_ancovaSI)
+```
+
+&lt;img src="chap7_files/figure-html/diagSI-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+
+```r
+anova(reg_ancovaSI)
+```
+
+```
+Analysis of Variance Table
+
+Response: hauteur
+          Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+diametre   1 24379.7 24379.7 190.007 6.246e-16 ***
+variete    1  6960.6  6960.6  54.248 1.095e-08 ***
+Residuals 36  4619.2   128.3                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+library(car)
+Anova(reg_ancovaSI)
+```
+
+```
+Anova Table (Type II tests)
+
+Response: hauteur
+           Sum Sq Df F value    Pr(&gt;F)    
+diametre  26676.2  1 207.905 &lt; 2.2e-16 ***
+variete    6960.6  1  54.248 1.095e-08 ***
+Residuals  4619.2 36                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+
+```r
+summary(reg_ancovaSI)
+```
+
+```
+
+Call:
+lm(formula = hauteur ~ diametre + variete, data = df_pins)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-22.081  -8.505  -1.477   7.700  28.809 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   37.4783     5.3391   7.020 3.09e-08 ***
+diametre       4.2133     0.2922  14.419  &lt; 2e-16 ***
+varietejaune -26.9189     3.6548  -7.365 1.10e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 11.33 on 36 degrees of freedom
+Multiple R-squared:  0.8715,	Adjusted R-squared:  0.8644 
+F-statistic: 122.1 on 2 and 36 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+
+```r
+library(lsmeans)
+lsmeans(reg_ancovaSI, pairwise ~ variete, adjust = "none")
+```
+
+```
+$lsmeans
+ variete lsmean   SE df lower.CL upper.CL
+ blanc    108.0 2.48 36    103.0    113.0
+ jaune     81.1 2.68 36     75.7     86.5
+
+Confidence level used: 0.95 
+
+$contrasts
+ contrast      estimate   SE df t.ratio p.value
+ blanc - jaune     26.9 3.65 36 7.365   &lt;.0001 
+```
+
+---
+# Régression quadratique
+
+
+```r
+df_pins &lt;- mutate(df_pins, diametre2 = diametre^2)
+reg_ancova2 &lt;- lm(hauteur ~ (diametre + diametre2) * variete, 
+                  data = df_pins)
+reg_ancova2
+```
+
+```
+
+Call:
+lm(formula = hauteur ~ (diametre + diametre2) * variete, data = df_pins)
+
+Coefficients:
+           (Intercept)                diametre               diametre2  
+              -2.70517                10.58495                -0.20853  
+          varietejaune   diametre:varietejaune  diametre2:varietejaune  
+             -26.75753                -1.53463                 0.07862  
+```
+
+---
+
+
+```r
+par(mfrow = c(2, 2))
+plot(reg_ancova2)
+```
+
+&lt;img src="chap7_files/figure-html/diag2-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+```r
+anova(reg_ancova2)
+```
+
+```
+Analysis of Variance Table
+
+Response: hauteur
+                  Df  Sum Sq Mean Sq  F value    Pr(&gt;F)    
+diametre           1 24379.7 24379.7 307.4661 &lt; 2.2e-16 ***
+diametre2          1  1324.9  1324.9  16.7086 0.0002622 ***
+variete            1  7135.7  7135.7  89.9925  5.96e-11 ***
+diametre:variete   1   401.8   401.8   5.0670 0.0311678 *  
+diametre2:variete  1   100.7   100.7   1.2699 0.2679042    
+Residuals         33  2616.6    79.3                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+Anova(reg_ancova2)
+```
+
+```
+Anova Table (Type II tests)
+
+Response: hauteur
+                  Sum Sq Df F value    Pr(&gt;F)    
+diametre          5482.8  1 69.1469 1.323e-09 ***
+diametre2         1797.9  1 22.6749 3.715e-05 ***
+variete           7135.7  1 89.9925 5.960e-11 ***
+diametre:variete    33.5  1  0.4222    0.5203    
+diametre2:variete  100.7  1  1.2699    0.2679    
+Residuals         2616.6 33                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+# Réanalyse avec une seule intéraction 
+
+
+```r
+reg_ancova2bis &lt;- lm(hauteur ~ variete + diametre + diametre2 
+                    + diametre2:variete, data = df_pins)
+reg_ancova2bis
+```
+
+```
+
+Call:
+lm(formula = hauteur ~ variete + diametre + diametre2 + diametre2:variete, 
+    data = df_pins)
+
+Coefficients:
+           (Intercept)            varietejaune                diametre  
+               2.64100               -38.32943                 9.81926  
+             diametre2  varietejaune:diametre2  
+              -0.18518                 0.03422  
+```
+
+---
+
+
+```r
+par(mfrow = c(2, 2))
+plot(reg_ancova2bis)
+```
+
+&lt;img src="chap7_files/figure-html/diag2bis-1.png" width="504" style="display: block; margin: auto;" /&gt;
+
+---
+
+```r
+augment(reg_ancova2bis, df_pins) %&gt;% 
+  ggplot() +
+  aes(x = .fitted, y = .resid, color = variete, shape = variete) +
+  geom_point(size = 3) +
+  geom_hline(yintercept = 0) +
+  labs(x = "Hauteur prédite", y = "Résidus", color = "Variété", shape = "Variété")
+```
+
+&lt;img src="chap7_files/figure-html/unnamed-chunk-19-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+---
+
+```r
+anova(reg_ancova2bis)
+```
+
+```
+Analysis of Variance Table
+
+Response: hauteur
+                  Df  Sum Sq Mean Sq  F value    Pr(&gt;F)    
+variete            1  4664.0  4664.0  59.8376 5.356e-09 ***
+diametre           1 26676.2 26676.2 342.2444 &lt; 2.2e-16 ***
+diametre2          1  1500.0  1500.0  19.2448 0.0001055 ***
+variete:diametre2  1   469.0   469.0   6.0169 0.0194535 *  
+Residuals         34  2650.1    77.9                       
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+```r
+Anova(reg_ancova2bis)
+```
+
+```
+Anova Table (Type II tests)
+
+Response: hauteur
+                  Sum Sq Df F value    Pr(&gt;F)    
+variete           7135.7  1 91.5481 3.569e-11 ***
+diametre          5482.8  1 70.3422 8.596e-10 ***
+diametre2         1500.0  1 19.2448 0.0001055 ***
+variete:diametre2  469.0  1  6.0169 0.0194535 *  
+Residuals         2650.1 34                      
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+```
+
+---
+
+
+```r
+summary(reg_ancova2bis)
+```
+
+```
+
+Call:
+lm(formula = hauteur ~ variete + diametre + diametre2 + diametre2:variete, 
+    data = df_pins)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-16.583  -5.080  -0.582   4.495  23.030 
+
+Coefficients:
+                        Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)              2.64100    8.87219   0.298   0.7678    
+varietejaune           -38.32943    5.33507  -7.184 2.61e-08 ***
+diametre                 9.81926    1.17077   8.387 8.60e-10 ***
+diametre2               -0.18518    0.03693  -5.014 1.65e-05 ***
+varietejaune:diametre2   0.03422    0.01395   2.453   0.0195 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 8.829 on 34 degrees of freedom
+Multiple R-squared:  0.9263,	Adjusted R-squared:  0.9176 
+F-statistic: 106.8 on 4 and 34 DF,  p-value: &lt; 2.2e-16
+```
+
+---
+
+
+```r
+lsmeans(reg_ancova2bis, pairwise ~ variete, adjust = "none")
+```
+
+```
+$lsmeans
+ variete lsmean   SE df lower.CL upper.CL
+ blanc    107.9 1.93 34    104.0    111.9
+ jaune     80.5 2.09 34     76.3     84.8
+
+Confidence level used: 0.95 
+
+$contrasts
+ contrast      estimate   SE df t.ratio p.value
+ blanc - jaune     27.4 2.85 34 9.616   &lt;.0001 
+```
+
+
+---
+
+
+```r
+reg_ancova2bis %&gt;% 
+  augment(df_pins) %&gt;% 
+  ggplot() +
+  aes(x = diametre, color = variete) +
+  geom_point(aes(y = hauteur, shape = variete), size = 3) +
+  geom_line(aes(y = .fitted, linetype = variete)) +
+  labs(x = "Diamètre", y = "Hauteur", 
+       color = "Variété", shape = "Variété", linetype = "Variété")
+```
+
+&lt;img src="chap7_files/figure-html/pred-1.png" width="648" style="display: block; margin: auto;" /&gt;
+
+
+---
+class: center, middle, inverse
+
+# Des questions ?
+
+.footnote[Slides créées avec le package &lt;b&gt;&lt;a href="https://github.com/yihui/xaringan" target="_blank"&gt;xaringan&lt;/a&gt;&lt;/b&gt;.]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

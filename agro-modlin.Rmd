@@ -57,18 +57,18 @@ planning %>%
 # Exemples de cours (2018)
 
 
-* [Regression linéaire simple](teaching/AgroBasesDuModeleLineaire/Chap1.html "Chapitre 1"),
-* [Regression linéaire multiple](teaching/AgroBasesDuModeleLineaire/Chap2.html "Chapitre 2"),
-* [ANOVA à un facteur](teaching/AgroBasesDuModeleLineaire/Chap3.html "Chapitre 3"),
-* [ANOVA à deux facteurs, cas équilibré](teaching/AgroBasesDuModeleLineaire/Chap4.html "Chapitre 4"),
-* [ANOVA à deux facteurs, cas BIE](teaching/AgroBasesDuModeleLineaire/Chap5.html "Chapitre 5"),
-* [Analyse de la covariance](teaching/AgroBasesDuModeleLineaire/Chap7.html "Chapitre 7"),
-* [Analyse en composantes principales](teaching/AgroBasesDuModeleLineaire/Chap6.html "Chapitre 6").
+* [Regression linéaire simple](teaching/agromodlin/chap1.html "Chapitre 1"),
+* [Regression linéaire multiple](teaching/agromodlin/chap2.html "Chapitre 2"),
+* [ANOVA à un facteur](teaching/agromodlin/chap3.html "Chapitre 3"),
+* [ANOVA à deux facteurs, cas équilibré](teaching/agromodlin/chap4.html "Chapitre 4"),
+* [ANOVA à deux facteurs, cas BIE](teaching/agromodlin/chap5.html "Chapitre 5"),
+* [Analyse de la covariance](teaching/agromodlin/chap7.html "Chapitre 7"),
+* [Analyse en composantes principales](teaching/agromodlin/chap6.html "Chapitre 6").
 
 # TP (2018)
 
-* [TP2](teaching/AgroBasesDuModeleLineaire/TP2.html "TP2"),
-* [TP3](teaching/AgroBasesDuModeleLineaire/TP3.html "TP3").
+* [TP2](teaching/agromodlin/tp2.html "TP2"),
+* [TP3](teaching/agromodlin/tp3.html "TP3").
 
 
 # Références extérieures
