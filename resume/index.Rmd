@@ -158,7 +158,7 @@ Nancy, France
 
 2017
 
-\pagebreak
+<br>
 
 Scientific productions {data-icon=dna}
 --------------------------------------------------------------------------------
