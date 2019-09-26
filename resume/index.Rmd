@@ -1,0 +1,231 @@
+---
+title: "Antoine Bichat's resume"
+author: Antoine Bichat
+date: "`r Sys.Date()`"
+output:
+  pagedown::html_resume:
+    self_contained: true
+    css: bichat_resume.css
+---
+Aside
+================================================================================
+
+
+<img src="https://abichat.github.io/img/pp.png" width=180 />
+
+
+Info {#contact}
+--------------------------------------------------------------------------------
+
+- <i class="fa fa-home"></i> Paris
+- <i class="fa fa-link"></i> <a href="https://abichat.github.io" target="_blank">abichat.github.io</a>
+- <i class="fa fa-linkedin"></i> <a href="https://www.linkedin.com/in/antoinebichat" target="_blank">antoinebichat</a>
+- <i class="fa fa-twitter"></i> <a href="https://twitter.com/_abichat" target="_blank">@_abichat</a>
+- <i class="fa fa-github"></i> <a href="https://github.com/abichat" target="_blank">@abichat</a>
+- <i class="fa fa-birthday-cake"></i> 1993
+
+
+Languages {#language}
+--------------------------------------------------------------------------------
+
+`r emo::ji("fr")` French (mother tongue)
+
+`r emo::ji("us")` English (fluent - C1, IELTS)
+
+`r emo::ji("it")` Italian (proficient - B2, CILS)
+
+`r emo::ji("de")` German (beginner - B1, ZD)
+
+Technical Skills {#skills}
+--------------------------------------------------------------------------------
+
+- Highly skilled in R, tidyverse and visualization
+
+- Skilled in Python, Matlab, LaTeX and Office
+
+- Knowledge in C++, HTML and CSS
+
+
+
+Main
+================================================================================
+
+Antoine Bichat {#title}
+--------------------------------------------------------------------------------
+
+### Mathematical Engineer - PhD Student in biostatistics
+
+<i class="fa fa-envelope"></i> <a href="mailto:antoine.bichat@mines-nancy.org?subject=Resume">antoine.bichat@mines-nancy.org</a>
+
+
+Education {data-icon=graduation-cap data-concise=true}
+--------------------------------------------------------------------------------
+
+
+### PhD
+
+Enterome & LaMME
+
+Paris area, France
+
+2020 - 2018
+
+_Discovering multi-scale metagenomic signatures through hierarchical organization of species_. Tutored by Dr Christophe Ambroise, Dr Mahendra Mariadassou and Mr Jonathan Plassais
+
+### Mathematics of Modelling Master's degree
+
+Sorbonne Université
+
+Paris, France
+
+2017 - 2016
+
+- Applied Mathematics for Biology and Medical Sciences
+- Data Science
+
+### Graduate Engineering School
+
+Mines Nancy
+
+Nancy, France
+
+2017 - 2014
+
+- Mathematical engineering 
+- Bioengineering
+
+### _Classe Préparatoire aux Grandes Écoles_
+
+Lycée du Parc, MP*
+
+Lyon, France
+
+
+
+Professional Experience {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+### Biostatistician intern
+
+Nestlé Research Center
+
+Lausanne, Switzerland
+
+2017
+
+- Data analysis of microbiome 16S sequencing 
+- Implementation of DADA2 pipeline for sample inference
+
+
+### Biostatistician intern
+
+Enterome
+
+Paris, France
+
+2016
+
+- Data analysis of microbiome Illumina next-generation sequencing
+- Writing and automation of bioinformatics quality control report
+
+
+
+Teaching Experience {data-icon=chalkboard-teacher}
+--------------------------------------------------------------------------------
+
+### Data Science Starter Program
+
+École Polytechnique, 14h, continuing education
+
+Paris area, France
+
+2019
+
+
+### An Introduction to the Linear Model
+
+AgroParisTech, 40h, engineering students
+
+Paris, France
+
+2019 - 2018
+
+### Visualization with R
+
+Mines Nancy, 3h, engineering students
+
+Nancy, France
+
+2017
+
+Scientific productions {data-icon=dna}
+--------------------------------------------------------------------------------
+
+### Incorporating phylogenetic information in microbiome abundance studies has no effect on detection power and FDR control
+
+Article submited in *Frontiers in Microbiology*
+
+N/A
+
+2019
+
+**Antoine Bichat**, Jonathan Plassais, Christophe Ambroise and Mahendra Mariadassou
+
+### Quantifying the impact of tree choice in metagenomics differential abundance studies with R
+
+Poster for <a href="http://www.user2019.fr" target="_blank">UseR!</a> 2019 
+
+Toulouse, France
+
+2019
+
+* Winner of Biostatistics poster prize
+
+### Impact of tree choice in metagenomics differential abundance studies
+
+Talk at <a href="https://smpgd2019.sciencesconf.org" target="_blank">SPMGD</a> & <a href="http://www.jds2019.sfds.asso.fr" target="_blank">JdS</a>
+
+Barcelona, Spain & Nancy, France
+
+2019
+
+
+Volunteer Work {data-icon=users}
+--------------------------------------------------------------------------------
+
+### <i class="fab fa-r-project"></i> related activities
+
+Involved in the R community
+
+Paris, France
+
+2020 - 2018
+
+- Treasurer of *MolieR* (French association for the promotion of R)
+- Active member of *<a href="https://stateofther.github.io" target="_blank">State of the R</a>* (AgroParisTech R users group)
+- Organizing Committee for *<a href="https://paris2019.satrdays.org" target="_blank">SatRday Paris</a>* 2019
+- Organizing Committee for *<a href="https://paris2020.rencontresr.fr" target="_blank">Rencontres R</a>* Paris 2020
+
+
+### During Engineering School
+
+Mines Nancy
+
+Nancy, France
+
+2017 - 2014
+
+- Academic year-group representative
+- Student member of the Executive Board of Mines Nancy
+- President of the debating and conference club
+- Communication Officer for the recruitment forum of Mines Nancy
+
+
+### UDPS 69 (first aid association)
+
+First aid worker, lifeguard
+
+Lyon area, France
+
+2014 - 2011
+

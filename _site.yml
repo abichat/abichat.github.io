@@ -37,19 +37,21 @@ navbar:
     - text: "Packages 📦"
       menu:
       - text: "yatah"
-        href: "https://abichat.github.io/yatah/"
+        href: "https://abichat.github.io/yatah"
       - text: "rcppclick"
         href: "https://github.com/abichat/rcppclick"
       - text: "mytemplatesabichat"
         href: "https://github.com/abichat/mytemplatesabichat"
     - text: "Miscellaneous"
       menu:
+      - text: "Resume"
+        href: "https://abichat.github.io/resume"
       - text: "TidyTuesday"
         href: "https://github.com/abichat/tidytuesday"
       - text: "My favorite R packages"
         href: "https://github.com/abichat/favoriteRpackages"
       - text: "Simulation of Brownian motion"
-        href: "https://abichat.shinyapps.io/BrownianMotion/"
+        href: "https://abichat.shinyapps.io/BrownianMotion"
         
 output: 
   distill::distill_article
