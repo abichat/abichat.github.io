@@ -45,7 +45,7 @@ navbar:
     - text: "Miscellaneous"
       menu:
       - text: "Resume"
-        href: "https://abichat.github.io/resume"
+        href: "https://abichat.github.io/resume/bichat.pdf"
       - text: "TidyTuesday"
         href: "https://github.com/abichat/tidytuesday"
       - text: "My favorite R packages"
