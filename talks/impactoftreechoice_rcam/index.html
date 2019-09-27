@@ -62,9 +62,6 @@ _Ecological community of microorganisms that reside in an environmental niche_
 
 * More than 10 millions unique genes
 
-
-&lt;img src="index_files/figure-html/citations-1.png" width="288" style="display: block; margin: auto;" /&gt;
-
 ]
 
 --
@@ -115,16 +112,6 @@ _Ecological community of microorganisms that reside in an environmental niche_
   10 Eggert…     0     0     0     0     2     0     0     7     0     0
   # … with 112 more rows, and 384 more variables
 ```
-
---
-
-* Count data (or compositional) data
-
-* Zero-inflated data
-
-* Correlation between species
-
-* Counts spanning several orders of magnitude: `\(1 \rightarrow 10^{\small{8}}\)`
 
 
 ---
@@ -483,7 +470,7 @@ count: false
 
 --
 
-😀 The &lt;span style="color:#C77CFF"&gt;correlation tree&lt;/span&gt; is different from the &lt;span style="color:#F8766D"&gt;taxonomy&lt;/span&gt;
+### 😀 The &lt;span style="color:#C77CFF"&gt;correlation tree&lt;/span&gt; is different from the &lt;span style="color:#F8766D"&gt;taxonomy&lt;/span&gt;
 
 
 ---
@@ -542,9 +529,9 @@ A BH procedure at the same global FDR level leads to 15 discoveries (+5)
 
 &lt;br&gt;
 
-😀 Using correlation tree instead of taxonomy yields more results
+### 😀 Using correlation tree instead of taxonomy yields more results
 
-☹️ Vanilla BH beats hFDR for a given level
+### ☹️ Vanilla BH beats hFDR for a given level
 
 ---
 ## Chaillou Dataset
@@ -631,7 +618,7 @@ Obvious unequal variances between groups
 
 KW test is more robust than F-test in this setting
 
-☹️ Implemented tests are not appropriate to metagenomic data
+### ☹️ Implemented tests are not appropriate to metagenomic data
 
 ]
 
@@ -667,13 +654,19 @@ class: center, middle, inverse
 ---
 ## Impact of the tree
 
-.center[&lt;img src="img/zeller-lines-bold.png" height=430/&gt;]
+.center[&lt;img src="img/zeller-lines-bold.png" height=400/&gt;]
 
---
+---
+class: nologo
+count: false
+## Impact of the tree
 
-😊 _z_-scores smoothing is slightly better than vanilla BH
+.center[&lt;img src="img/zeller-lines-bold.png" height=400/&gt;]
 
-☹️ All hierachies give highly similar results
+
+### 😊 _z_-scores smoothing is slightly better than vanilla BH
+
+### ☹️ All hierachies give highly similar results
 
 ---
 class: center, middle, inverse
@@ -702,9 +695,9 @@ class: center, middle, inverse
 
 --
 
-☹️ Taxonomy behaves like random tree and has little impact
+### ☹️ Taxonomy behaves like random tree and has little impact
 
-😩 In most cases, smoothing has absolutely no impact on the result
+### 😩 In most cases, smoothing has absolutely no impact on the result
 
 
 ---
@@ -714,11 +707,11 @@ class: center, middle, inverse
 
 --
 
-😀 Using correlation tree instead of taxonomy yields more results
+### 😀 Using correlation tree instead of taxonomy yields more results
 
-☹️ Vanilla BH is better 
+### ☹️ Vanilla BH is better 
 
-🤔 Taxonomy is worst than random trees 
+### 🤔 Taxonomy is worst than random trees 
 
 
 ---
@@ -731,30 +724,30 @@ class: center, middle, inverse
 ## Conclusions 
 
 
-😀 Correlation tree and taxonomy are very different
+#### 😀 Correlation tree and taxonomy are very different
 
-😀 Replacing taxonomy with correlation increases the TPR
-
---
-
-&lt;br&gt;
-
-☹️ Vanilla BH is more powerful than hFDR
-
-☹️ Bayesian smoothing does not really depend on the tree for _z_-scores smoothing
+#### 😀 Replacing taxonomy with correlation increases the TPR
 
 --
 
 &lt;br&gt;
 
+#### ☹️ Vanilla BH is more powerful than hFDR
 
-📄 Paper submitted to _Frontiers in Microbiology_
+#### ☹️ Bayesian smoothing does not really depend on the tree for _z_-scores smoothing
 
-📦 `correlationtree` <i class="fab  fa-github "></i>
+--
 
-📦 `yatah` <i class="fab  fa-github "></i> +  [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/yatah)](https://cran.r-project.org/package=yatah)
+&lt;br&gt;
 
-📦 `evabic` <i class="fab  fa-github "></i>
+
+#### 📄 Paper submitted to _Frontiers in Microbiology_
+
+#### 📦 `correlationtree` <i class="fab  fa-github "></i>
+
+#### 📦 `yatah` <i class="fab  fa-github "></i> +  [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/yatah)](https://cran.r-project.org/package=yatah)
+
+#### 📦 `evabic` <i class="fab  fa-github "></i>
 
 ---
 ## References

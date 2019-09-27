@@ -73,27 +73,6 @@ _Ecological community of microorganisms that reside in an environmental niche_
 
 * More than 10 millions unique genes
 
-
-```{r citations, echo=FALSE, fig.width=4, fig.height=3}
-dfpubli <- 
-  data.frame(
-    Year = 1990:2017,
-    Number = c(727, 748, 844, 782, 918,1030, 1220, 1500, 1900, 2400, 
-               2920, 3230, 3940, 4460, 5660, 7100, 8440, 10600, 12600, 15300, 
-               18600, 23600, 31200, 39100, 46900, 55400, 66600, 63300)
-  )
-ggplot(dfpubli, aes(Year, Number/1000)) + 
-  geom_col(fill = "grey50", color = "black") + 
-  theme_minimal() +
-  scale_x_continuous(breaks = c(1990, 1995, 2000, 2005, 2010, 2015)) +
-  labs(x = "Year of publication", y = bquote("Number ("~10^3*")"),
-       title = "Articles containing 'Microbiome' or 'Microbiota'",
-       caption = "Source: Google Scholar") +
-  theme_minimal() +
-  theme(axis.text = element_text(size = 8), axis.title = element_text(size = 10), 
-        plot.title = element_text(size = 11), plot.caption = element_text(size = 9))
-```
-
 ]
 
 --
@@ -131,16 +110,6 @@ ggplot(dfpubli, aes(Year, Number/1000)) +
 read_csv("data/data_abund.csv", col_types = cols(.default = "d", Taxa = "c")) %>% 
   print(n_extra = 0, width = 70)
 ```
-
---
-
-* Count data (or compositional) data
-
-* Zero-inflated data
-
-* Correlation between species
-
-* Counts spanning several orders of magnitude: $1 \rightarrow 10^{\small{8}}$
 
 
 ---
@@ -487,7 +456,7 @@ count: false
 
 --
 
-`r emo::ji("grinning_face")` The <span style="color:#C77CFF">correlation tree</span> is different from the <span style="color:#F8766D">taxonomy</span>
+### `r emo::ji("grinning_face")` The <span style="color:#C77CFF">correlation tree</span> is different from the <span style="color:#F8766D">taxonomy</span>
 
 
 ---
@@ -546,9 +515,9 @@ A BH procedure at the same global FDR level leads to 15 discoveries (+5)
 
 <br>
 
-`r emo::ji("grinning_face")` Using correlation tree instead of taxonomy yields more results
+### `r emo::ji("grinning_face")` Using correlation tree instead of taxonomy yields more results
 
-`r emo::ji("frowning_face")` Vanilla BH beats hFDR for a given level
+### `r emo::ji("frowning_face")` Vanilla BH beats hFDR for a given level
 
 ---
 ## Chaillou Dataset
@@ -635,7 +604,7 @@ Obvious unequal variances between groups
 
 KW test is more robust than F-test in this setting
 
-`r emo::ji("frowning_face")` Implemented tests are not appropriate to metagenomic data
+### `r emo::ji("frowning_face")` Implemented tests are not appropriate to metagenomic data
 
 ]
 
@@ -671,13 +640,19 @@ class: center, middle, inverse
 ---
 ## Impact of the tree
 
-.center[<img src="img/zeller-lines-bold.png" height=430/>]
+.center[<img src="img/zeller-lines-bold.png" height=400/>]
 
---
+---
+class: nologo
+count: false
+## Impact of the tree
 
-`r emo::ji("blush")` _z_-scores smoothing is slightly better than vanilla BH
+.center[<img src="img/zeller-lines-bold.png" height=400/>]
 
-`r emo::ji("frowning_face")` All hierachies give highly similar results
+
+### `r emo::ji("blush")` _z_-scores smoothing is slightly better than vanilla BH
+
+### `r emo::ji("frowning_face")` All hierachies give highly similar results
 
 ---
 class: center, middle, inverse
@@ -706,9 +681,9 @@ $$\text{Mean z-smoothing} = |z_{\text{raw}} - z_{\text{adjusted}}|$$
 
 --
 
-`r emo::ji("frowning_face")` Taxonomy behaves like random tree and has little impact
+### `r emo::ji("frowning_face")` Taxonomy behaves like random tree and has little impact
 
-`r emo::ji("weary_face")` In most cases, smoothing has absolutely no impact on the result
+### `r emo::ji("weary_face")` In most cases, smoothing has absolutely no impact on the result
 
 
 ---
@@ -718,11 +693,11 @@ $$\text{Mean z-smoothing} = |z_{\text{raw}} - z_{\text{adjusted}}|$$
 
 --
 
-`r emo::ji("grinning_face")` Using correlation tree instead of taxonomy yields more results
+### `r emo::ji("grinning_face")` Using correlation tree instead of taxonomy yields more results
 
-`r emo::ji("frowning_face")` Vanilla BH is better 
+### `r emo::ji("frowning_face")` Vanilla BH is better 
 
-`r emo::ji("thinking")` Taxonomy is worst than random trees 
+### `r emo::ji("thinking")` Taxonomy is worst than random trees 
 
 
 ---
@@ -735,30 +710,30 @@ class: center, middle, inverse
 ## Conclusions 
 
 
-`r emo::ji("grinning_face")` Correlation tree and taxonomy are very different
+#### `r emo::ji("grinning_face")` Correlation tree and taxonomy are very different
 
-`r emo::ji("grinning_face")` Replacing taxonomy with correlation increases the TPR
-
---
-
-<br>
-
-`r emo::ji("frowning_face")` Vanilla BH is more powerful than hFDR
-
-`r emo::ji("frowning_face")` Bayesian smoothing does not really depend on the tree for _z_-scores smoothing
+#### `r emo::ji("grinning_face")` Replacing taxonomy with correlation increases the TPR
 
 --
 
 <br>
 
+#### `r emo::ji("frowning_face")` Vanilla BH is more powerful than hFDR
 
-`r emo::ji("page_facing_up")` Paper submitted to _Frontiers in Microbiology_
+#### `r emo::ji("frowning_face")` Bayesian smoothing does not really depend on the tree for _z_-scores smoothing
 
-`r emo::ji("package")` `correlationtree` `r icon::fa('github')`
+--
 
-`r emo::ji("package")` `yatah` `r icon::fa('github')` +  [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/yatah)](https://cran.r-project.org/package=yatah)
+<br>
 
-`r emo::ji("package")` `evabic` `r icon::fa('github')`
+
+#### `r emo::ji("page_facing_up")` Paper submitted to _Frontiers in Microbiology_
+
+#### `r emo::ji("package")` `correlationtree` `r icon::fa('github')`
+
+#### `r emo::ji("package")` `yatah` `r icon::fa('github')` +  [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/yatah)](https://cran.r-project.org/package=yatah)
+
+#### `r emo::ji("package")` `evabic` `r icon::fa('github')`
 
 ---
 ## References
