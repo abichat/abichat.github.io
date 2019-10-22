@@ -1,0 +1,243 @@
+---
+title: "TP1 <br> Étude de la taille du cerveau des chauves-souris"
+author: "Antoine Bichat - Laure Sansonnet"
+output: 
+  html_document:
+   toc: true
+   toc_float: true
+   number_sections: false
+   highlight: tango
+  pdf_document: default
+---
+
+<style>
+#TOC {
+  background: url("logo_agro.png");
+  background-size: contain;
+  padding-top: 90px !important;
+  background-repeat: no-repeat;
+}
+</style>
+
+<script>
+    $(document).ready(function() {
+      $items = $('div#TOC li');
+      $items.each(function(idx) {
+        num_ul = $(this).parentsUntil('#TOC').length;
+        $(this).css({'text-indent': num_ul * 10, 'padding-left': 10});
+      });
+
+    });
+</script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", 
+                      out.width = "100%")
+```
+
+# Chargement des packages
+
+```{r packages, message=FALSE}
+library(tidyverse)
+library(FactoMineR)
+library(factoextra)
+theme_set(theme_minimal())
+```
+
+
+# Présentation des données
+
+#### 1 
+
+Le jeu de données possède trois lignes de commentaires, que ses colonnes sont nommées et qu'elles sont séparées par un point-virgule.
+
+```{r import}
+df_bats <- read.table("bats.csv", header = TRUE, sep = ";", skip = 3)
+```
+
+
+#### 2
+
+```{r str}
+str(df_bats)
+```
+
+On remarque que la variable `Diet` est numérique, on va la transformer en facteur.
+
+```{r factor}
+df_bats <- mutate(df_bats, Diet = factor(Diet))
+str(df_bats)
+```
+
+
+#### 3
+
+La fonction `count()` permet de compter le nombre d'individus par classe.
+
+```{r counts}
+count(df_bats, Diet)
+count(df_bats, Clade)
+count(df_bats, Diet, Clade, .drop = FALSE) # .drop = FALSE permet de garder les croisements d'effectif nul
+```
+
+`table()` a un format de sortie plus lisible pour un humain ... mais pas pour un ordinateur.
+
+```{r table}
+table(df_bats$Diet, df_bats$Clade) 
+```
+
+
+# Analyse univariée des données
+
+#### 4
+
+
+
+```{r summary}
+summary(df_bats)
+```
+
+`geom_bar()` permet de dessiner des diagrammes en bâton.
+
+```{r barplots}
+ggplot(df_bats) +
+  aes(x = Diet) +
+  geom_bar() 
+```
+
+Mettre une variable sur le remplissage (argument `fill`) adapte automatique le compte par groupe.
+
+```{r barplotscolor}
+ggplot(df_bats) +
+  aes(x = Clade, fill = Diet) +
+  geom_bar(position = "stack") # on peut utiliser "dodge" et "fill"
+```
+
+Quelques histogrammes et densités avec des options.
+
+```{r histograms}
+ggplot(df_bats) +
+  aes(x = BOW) +
+  geom_histogram(bins = 40)
+
+ggplot(df_bats) +
+  aes(x = BRW) +
+  geom_histogram(bins = 40, fill = "lightblue", color = "darkblue")
+
+ggplot(df_bats) +
+  aes(x = AUD) +
+  geom_density(fill = "grey")
+
+ggplot(df_bats) +
+  aes(x = MOB) +
+  geom_histogram(bins = 10) +
+  facet_wrap(~ Clade) +
+  theme_bw()  
+
+ggplot(df_bats) +
+  aes(x = HIP) +
+  geom_histogram(aes(y = ..density..), fill = "grey") +
+  geom_density(bins = 30)
+```
+
+# Analyse bivariée des données
+
+#### 5
+
+```{r scatterplot5}
+ggplot(df_bats) +
+  aes(x = BOW, y = BRW, color = Diet) +
+  geom_point()
+```
+
+
+#### 6 & 7
+
+Représenter une variable numérique par rapport à une variable catégorielle se fait principalement à l'aide de `geom_bowplot()`.
+
+```{r scatterplots6}
+ggplot(df_bats) +
+  aes(x = Diet, y = AUD) +
+  geom_boxplot()
+```
+
+Mais on peut aussi utiliser `geom_violin()` voir `geom_point()`.
+
+```{r scatterplot7}
+ggplot(df_bats) +
+  aes(x = Clade, y = AUD, fill = Clade) +
+  geom_violin() +
+  geom_boxplot(alpha = 0)  +
+  geom_point()
+```
+
+
+# Analyse en composantes principales 
+
+#### 9
+
+On ne sait calculer les corrélations qu'entre variables numériques, on ne va garder que celles-ci dans notre dataframe avant de les calculer.
+
+```{r cor}
+cor_bats <-
+  df_bats %>% 
+  select_if(is.numeric) %>% # select_if() garde les colonnes qui respectent une condition
+  cor()
+cor_bats
+```
+
+La fonction `corrplot()` du package **corrplot** permet de visualiser les corrélations et d'apprécier les relations entre variables bien plus facilement qu'avec la matrice.
+
+```{r corrplot}
+corrplot::corrplot(cor_bats)
+```
+
+
+
+#### 10
+
+On utilise la fonction `PCA()` en précisant quelles sont les variables qualitatives pour les exclure de l'analyse.
+
+```{r pca}
+res_pca <- PCA(df_bats, quali.sup = 1:3, quanti.sup = 4, graph = FALSE)
+```
+
+Valeurs propres.
+
+```{r eig}
+get_eigenvalue(res_pca)
+```
+
+Scree plot.
+
+```{r scree}
+fviz_eig(res_pca, addlabels = TRUE)
+```
+
+#### 11
+
+`fviz_pca_var()` trace le cercle des corrélations.
+
+```{r var}
+fviz_pca_var(res_pca, repel = TRUE) # repel arrange les textes automatiquement
+```
+
+Comme prévu par le calcul des corrélations, `BOW`, `BRW`, `MOB` et `HIP` sont très corrélées.
+
+#### 12
+
+On peut choisir de colorier les individus par une variable catégorielle qu'on a préalablement spécifiée dans l'appel à `PCA()`.
+
+```{r ind}
+fviz_pca_ind(res_pca, habillage = "Diet")
+fviz_pca_ind(res_pca, habillage = "Clade")
+```
+
+Ou on peut aussi les colorier par des statistiques associées aux individus, comme le cos carré.
+
+```{r indcos}
+fviz_pca_ind(res_pca, col.ind = "cos2")
+```
+
+
+<hr>
