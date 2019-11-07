@@ -14,3 +14,8 @@ knitr::opts_chunk$set(echo = FALSE)
 * [Slides](teaching/xdssp/visualization.pdf "Visualisation with R")
 
 * [TP1](teaching/xdssp/Visualization_Ggplot2.html) & [TP2](teaching/xdssp/Visualization_Examples.html)
+
+# Introduction to R
+
+
+* [Slides](teaching/xdssp/intro_r.pdf "Introduction to R")
