@@ -39,7 +39,7 @@ Languages {#language}
 Technical Skills {#skills}
 --------------------------------------------------------------------------------
 
-- Highly skilled in R, tidyverse and visualization
+- Highly skilled in R, tidyverse and <a href="https://github.com/abichat/tidytuesday" target="_blank">visualization</a>
 
 - Skilled in Python, Matlab, LaTeX and Office
 
@@ -135,7 +135,7 @@ Teaching Experience {data-icon=chalkboard-teacher}
 
 ### Data Science Starter Program
 
-École Polytechnique, 14h, continuing education
+École Polytechnique, 21h, continuing education
 
 Paris area, France
 
