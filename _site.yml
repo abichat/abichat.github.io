@@ -17,6 +17,8 @@ navbar:
     - icon: fa-envelope
       href: mailto:antoine[dot]bichat[at]univ[dash]evry[dot]fr?subject=From%20website
   right:
+    - text: "Resume"
+      href: "https://abichat.github.io/resume/bichat.pdf"
     - text: "Presentations"
       menu: 
       - text: "State of the R"
@@ -38,14 +40,14 @@ navbar:
       menu:
       - text: "yatah"
         href: "https://abichat.github.io/yatah"
+      - text: "evabic"
+        href: "https://abichat.github.io/evabic"
       - text: "rcppclick"
         href: "https://github.com/abichat/rcppclick"
       - text: "mytemplatesabichat"
         href: "https://github.com/abichat/mytemplatesabichat"
     - text: "Miscellaneous"
       menu:
-      - text: "Resume"
-        href: "https://abichat.github.io/resume/bichat.pdf"
       - text: "TidyTuesday"
         href: "https://github.com/abichat/tidytuesday"
       - text: "My favorite R packages"

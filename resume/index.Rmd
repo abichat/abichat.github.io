@@ -53,7 +53,7 @@ Main
 Antoine Bichat {#title}
 --------------------------------------------------------------------------------
 
-### Mathematical Engineer - PhD Student in biostatistics
+### Mathematical Engineer - PhD Student in Biostatistics
 
 <i class="fa fa-envelope"></i> <a href="mailto:antoine.bichat@mines-nancy.org?subject=Resume">antoine.bichat@mines-nancy.org</a>
 
