@@ -1,0 +1,484 @@
+---
+title: "TP2-3 <br> Modélisation de la taille du cerveau des chauves-souris"
+author: "Antoine Bichat - Laure Sansonnet"
+output: 
+  html_document:
+   toc: true
+   toc_float: true
+   number_sections: false
+   highlight: tango
+  pdf_document: default
+---
+
+<style>
+#TOC {
+  background: url("logo_agro.png");
+  background-size: contain;
+  padding-top: 90px !important;
+  background-repeat: no-repeat;
+}
+</style>
+
+<script>
+    $(document).ready(function() {
+      $items = $('div#TOC li');
+      $items.each(function(idx) {
+        num_ul = $(this).parentsUntil('#TOC').length;
+        $(this).css({'text-indent': num_ul * 10, 'padding-left': 10});
+      });
+
+    });
+</script>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center", 
+                      out.width = "100%")
+```
+
+# Chargement des packages
+
+```{r packages, message=FALSE}
+library(tidyverse)
+library(corrplot)
+library(emmeans)
+library(ppcor)
+library(car)
+theme_set(theme_minimal())
+```
+
+
+# Étude du lien entre le poids du cerveau et la masse corporelle
+
+#### 1
+
+```{r import}
+df_bats <- 
+  read.table("bats.csv", header = TRUE, sep = ";", skip = 3) %>%
+  mutate(Diet = factor(Diet))
+
+df_phyto <- filter(df_bats, Diet == "1")
+```
+
+
+#### 2
+
+```{r plot}
+ggplot(df_phyto) +
+   aes(x = BOW, y = BRW) +
+   geom_point() +
+   labs(x = "Masse totale du cerveau", y = "Masse corporelle")
+```
+
+#### 3
+
+On cherche à modéliser la masse du cerveau en fonction de la masse corporelle. Le modèle mathématique associé est donc 
+
+$$Y_i = a + b x_i + E_i,$$
+
+où 
+
+* $Y_i$ est la masse du cerveau de l'individu $i$,
+* $x_i$ est la masse corporelle de l'individu $i$,
+* $\left\{E_i\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq n = 29$.
+
+#### 4
+
+
+```{r}
+reg_simple <- lm(BRW ~ BOW, data = df_phyto)
+reg_simple
+```
+
+
+```{r}
+par(mfrow = c(2, 2)) 
+plot(reg_simple)
+```
+
+#### 5
+
+On observe que le point 7 est atypique avec une distance de Cook supérieure à 1. En vérifiant avec `cooks.distance(reg_simple)`, on s'aperçoit qu'elle vaut `r round(cooks.distance(reg_simple)[7], 2)`. On décide donc de la retirer des observations.
+
+```{r}
+df_phyto2 <- df_phyto[-7, ]
+reg_simple2 <- lm(BRW ~ BOW, data = df_phyto2)
+par(mfrow = c(2, 2)) 
+plot(reg_simple2)
+```
+
+Les graphes sont nettement plus proches de ce que l'on peut attendre lorsqu'on a des hypothèses respectées. Notons toutefois qu'on observe une tendance dans la moyenne (premier graphe) et une tendance dans la variance (troisième graphe) pour les petites valeurs ajustées. La normalité est validée et le point $6$ est atypique mais nous allons le garder pour la suite de l'analyse.
+
+Dans une analyse réelle qui sort du cadre formel de ce TP, on retirerait itérativement les points atypiques, à commencer par le point $6$.
+
+#### 6
+
+```{r}
+summary(reg_simple2)
+```
+
+On effectue le test $H_0 = \{b = 0\}$ contre $H_1 = \{b \neq 0\}$. La statistique de test est $F_{obs}= 1146.5$ et on a $p<0.05$. On peut donc rejeter l'hypothèse nulle : notre modèle est significatif.
+
+L'ordonnée à l'origine vaut $346.5452$ et la pente $14.5099>0$ donc plus la masse corporelle augmente, plus la masse totale du cerveau augmente.
+
+On note que le coefficient de determination $R^2$ vaut $0.9778$ donc le modèle a un fort pouvoir prédictif.
+
+# Étude de la contribution des différentes parties du cerveau à sa masse totale
+
+
+#### 1
+
+```{r}
+df_phyto_num <- select_if(df_phyto2, is.numeric)
+df_phyto_num %>% 
+  cor() %>% 
+  corrplot()
+```
+
+Toutes les variables sont positivement corrélées entre elles.
+
+```{r pcor}
+df_phyto_num %>% 
+  pcor() %>% 
+  getElement("estimate") %>% 
+  # `$`(estimate) %>% # alternative à getElement()
+  corrplot()
+```
+
+Cependant, si on s'intéresse à la corrélation partielle (quand on prend en compte l'effet des autres variables), le sens de la corrélation s'inverse entre plusieurs couples.
+
+#### 2 
+
+On cherche à modéliser la masse du cerveau en fonction d'autres variables quantitatives. Le modèle mathématique associé est donc 
+
+$$Y_i = \beta_0 + \beta_1 x_{i,1} + \beta_2 x_{i,2} + \beta_3 x_{i,3} + E_i,$$
+
+où 
+
+* $Y_i$ est la masse du cerveau de l'individu $i$,
+* $x_{i,1}$ est le volume de la partie auditive de l'individu $i$,
+* $x_{i,2}$ est le volume de la zone olfactive de l'individu $i$,
+* $x_{i,3}$ est le volume de l’hippocampe de l'individu $i$,
+* $\left\{E_i\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq n = 29$.
+
+
+```{r}
+reg_multiple <- lm(BRW ~ AUD + MOB + HIP, data = df_phyto2)
+```
+
+```{r}
+par(mfrow = c(2, 2)) 
+plot(reg_multiple)
+```
+
+* On observe une tendance dans la moyenne.
+* On valide la normalité.
+   * De plus, on ne peut pas rejeter l'hypothèse nulle du test de Shapiro `shapiro.test(reg_multiple$residuals)`.
+* On observe une tendance dans la variance.
+* Le point 6 est atypique.
+
+#### 3
+
+```{r}
+reg_0 <- lm(BRW ~ 1, data = df_phyto2)
+anova(reg_0, reg_multiple)
+```
+
+On effectue le test $H_0 = \{\forall i\geq1, \beta_i = 0\}$ contre $H_1 = \{\exists i\geq1, \beta_i \neq 0\}$. La statistique de test est $F_{obs}= 304.47$ et on a $p<0.05$. On peut donc rejeter l'hypothèse nulle : notre modèle est significatif et au moins une des variables a de l'influence.
+
+On note par ailleurs que 
+
+* la somme des carrés totale vaut 23 562 448 sur 27 degrés de liberté,
+* la somme des carrés résiduelle vaut 603 265 sur 24 degrés de liberté,
+* la somme des carrés due au modèle vaut 22 959 183 sur 3 degrés de liberté.
+
+#### 4
+
+```{r}
+anova(reg_multiple) # Type I
+```
+
+* `AUD` apporte de l'information de manière significative sur `BRW`,
+* `MOB` apporte de l'information de manière significative en plus de `AUD` sur `BRW`,
+* `HIP` apporte de l'information de manière significative en plus de `AUD` et `MOB` sur `BRW`.
+
+```{r}
+Anova(reg_multiple) # Type II
+```
+
+* l'effet marginal de `AUD` (en plus de `MOB` et `HIP`) sur `BRW` est significatif,
+* l'effet marginal de `MOB` (en plus de `AUD` et `HIP`) sur `BRW` n'est pas significatif,
+* l'effet marginal de `HIP` (en plus de `AUD` et `MOB`) sur `BRW` est significatif.
+
+
+```{r}
+summary(reg_multiple)
+```
+
+Les p-valeurs de cette table sont les mêmes que celles de l'instruction `Anova()` (type II).
+
+Le coeffidient associé à `AUD` est $`r round(summary(reg_multiple)$coeff[2,1], 3)`>0$, celui de `MOB` est $`r round(summary(reg_multiple)$coeff[3,1], 3)`<0$ et celui de `HIP` est $`r round(summary(reg_multiple)$coeff[4,1], 3)`>0$.
+
+`MOB` est négativement associé à `BRW`, ce qui est logique car le coefficient de corrélation partiel obtenu plus tôt l'était aussi. 
+
+
+#### 5
+
+Selection _forward_
+
+```{r}
+step(reg_0, scope = BRW ~ AUD + MOB + HIP, direction = "forward")
+```
+
+Le modèle selectionné est le modèle sans la vafiable `MOB`.
+
+Selection _stepwise_
+
+```{r}
+step(reg_0, scope = BRW ~ AUD + MOB + HIP, direction = "both")
+```
+
+On sélectionne le même modèle.
+
+# Étude du lien entre le volume de la partie auditive et le régime alimentaire
+
+#### 1
+
+```{r}
+ggplot(df_bats) +
+  aes(x = Diet, y = AUD, fill = Diet) +
+  geom_violin() +
+  geom_boxplot(alpha = 0) +
+  geom_point() +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+
+#### 2
+
+On cherche à modéliser le volume de la partie auditive en fonction régime alimentaire, une variable qualitative. Le modèle mathématique associé est donc 
+
+$$Y_{i,k} = \mu + \alpha_i + E_{i,k},$$
+où 
+
+* $Y_{i,k}$ est le volume de la partie auditive du $k^{\text{ème}}$ individu de la $i^{\text{ème}}$ diète,
+* $\mu$ est l'effet moyen,
+* $\alpha_{i}$ est l'effet spécifique de la diète $i$,
+* $\left\{E_{i,k}\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq I = 4$,
+* $1 \leq k \leq n_i$, 
+* $n_1 = 29$, $n_2 = 5$, $n_3 = 27$, $n_4 = 2$. 
+
+
+#### 3
+
+```{r}
+reg_anova <- lm(AUD ~ Diet, data = df_bats)
+par(mfrow = c(2, 2)) 
+plot(reg_anova)
+```
+
+On valide toutes les hypothèses du modèle.
+
+#### 4
+
+
+```{r}
+reg_0 <- lm(AUD ~ 1, data = df_bats)
+anova(reg_0, reg_anova)
+```
+
+On effectue le test $H_0 = \{\alpha_1 = \alpha_2 = \alpha_3 = \alpha_4 = 0\}$ contre $H_1 = \{\exists i, \alpha_i \neq 0\}$. La statistique de test est $F_{obs}= 0.9293$ et on a $p>0.05$. On ne peut donc pas rejeter l'hypothèse nulle : notre modèle n'est pas significatif.
+
+
+#### 5
+
+On peut effectuer une analyse de la variance à un facteur pour modéliser le volume de la partie auditive en fonction de la variable `Clade`.
+
+```{r}
+summary(lm(AUD ~ Clade, data = df_bats))
+```
+
+La p-valeur associée à cette modélisation est $p=0.1971>0.05$ donc le modèle n'est pas significatif.
+
+
+# Étude du lien entre le volume de la partie auditive, le régime alimentaire et le clade
+
+#### 1
+
+```{r}
+table(df_bats$Clade, df_bats$Diet)
+```
+
+Le plan d'experience comporte des 0, il n'est ni orthogonal, ni équilibré, ni complet. On ne pourra pas estimer les effets d'interactions.
+
+
+#### 2
+
+```{r}
+df_bats_merged <- 
+  df_bats %>% 
+  filter(Diet != 4) %>% 
+  mutate(Diet = fct_drop(Diet),
+         Clade = fct_collapse(Clade, II = c("II", "III")))
+```
+
+```{r}
+table(df_bats_merged$Clade, df_bats_merged$Diet)
+```
+
+Il y a toujours des zéros, on ne pourra pas estimer les effets d'interaction.
+
+#### 3
+
+```{r}
+ggplot(df_bats_merged) +
+  aes(x = Clade, y = AUD, fill = Clade) +
+  geom_violin() +
+  geom_boxplot(alpha = 0) +
+  geom_point(alpha = 0.5) +
+  facet_grid(~ Diet)
+```
+
+```{r}
+df_bats_merged %>% 
+  group_by(Diet, Clade) %>% 
+  summarise(`Mean of AUD` = mean(AUD)) %>% 
+  ggplot() +
+  aes(x = Diet, y = `Mean of AUD`, color = Clade) +
+  geom_line(aes(group = Clade, linetype = Clade)) +
+  geom_point()
+```
+
+#### 4
+
+On cherche à modéliser le volume de la partie auditive en fonction de l'évolution et du régime aliementaire. On ne peut pas estimer les interactions entre ces variables car le dispositif est incomplet. Le modèle mathématique associé est donc 
+
+$$Y_{i,j,k} = \mu + \alpha_i + \beta_j + E_{i,j,k}$$
+où 
+
+* $Y_{i,k}$ est le volume de la partie auditive du $k^{\text{ème}}$ individu du
+$i^{\text{ème}}$ clade et de la $j^{\text{ème}}$ diète,
+* $\mu$ est l'effet moyen,
+* $\alpha_{i}$ est l'effet spécifique du clade $i$,
+* $\beta{j}$ est l'effet spécifique de la diète $j$,
+* $\left\{E_{i,j,k}\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq I = 3$,
+* $1 \leq j \leq J = 3$,
+* $1 \leq k \leq n_{i,j}$, 
+* $n_{1,1} = 10$, $n_{1,2} = 4$, $n_{1,3} = 7$, $n_{2,1} = 19$, $n_{2,2} = 1$, $n_{2,3} = 2$, $n_{3,1} = n_{3,2} = 0$, $n_{3,3} = 18$. 
+
+#### 5
+
+```{r}
+reg_anova2 <- lm(AUD ~ Clade + Diet, data = df_bats_merged)
+```
+
+```{r}
+par(mfrow = c(2, 2)) 
+plot(reg_anova2)
+```
+
+On valide toutes les hypothèses.
+
+```{r}
+summary(reg_anova2)
+anova(reg_anova2)
+Anova(reg_anova2)
+```
+
+Le modèle n'est pas significatif.
+
+# Volume de la partie auditive, régime alimentaire et masse du cerveau
+
+
+#### 1
+
+```{r}
+ggplot(df_bats_merged) +
+  aes(x = BRW, y = AUD, color = Diet, shape = Diet) +
+  geom_point() +
+  geom_smooth(method = "lm", se = FALSE)
+```
+
+
+
+#### 2
+
+On cherche à modéliser le volume de la partie auditive en fonction du régime aliementaire et du poids du cerveau total. Le modèle mathématique associé est donc 
+
+$$Y_{i,k} = \mu + \alpha_i + (\beta + \gamma_i) \times x_{i,k} + E_{i,k}$$
+
+où 
+
+* $Y_{i,k}$ est le volume de la partie auditive du $k^{\text{ème}}$ individu de la $i^{\text{ème}}$ diète,
+* $\mu$ est l'effet moyen,
+* $\alpha_{i}$ est l'effet spécifique de la diète $i$,
+* $\beta$ est la pente commune,
+* $\gamma_{i}$ est la pente spécifique de la diète $i$,
+* $x_{i,k}$ est le poids du cerveau total du $k^{\text{ème}}$ individu de la $i^{\text{ème}}$ diète,
+* $\left\{E_{i,k}\right\} \overset{iid}{\sim} \mathcal{N}\left(0, \sigma^2\right)$,
+* $1 \leq i \leq I = 3$,
+* $1 \leq k \leq n_{i}$, 
+* $n_{1} = 29$, $n_{2} = 5$, $n_{3} = 27$. 
+
+#### 3
+
+```{r}
+reg_ancova <- lm(AUD ~ Diet * BRW, data = df_bats_merged)
+par(mfrow = c(2, 2)) 
+plot(reg_ancova)
+```
+
+Le point 7 est atypique. Dans le cadre formel de ce TP, on continue l’analyse sans le retirer en validant les hypothèses de ce modèle.
+
+
+#### 4
+
+
+```{r}
+reg_0 <- lm(AUD ~ 1, data = df_bats_merged)
+anova(reg_0, reg_ancova)
+```
+
+Le modèle est significatif. 
+
+On note par ailleurs que
+
+* la somme des carrés totale vaut 1457.76 sur 60 degrés de liberté,
+* la somme des carrés résiduelle vaut 661.21 sur 55 degrés de liberté,
+* la somme des carrés due au modèle vaut 796.55 sur 5 degrés de liberté.
+
+```{r}
+anova(reg_ancova)
+Anova(reg_ancova)
+```
+
+Dans les deux cas, les effets d'intercation sont significatifs, ont conserve alors le modèle complet avec interactions.
+
+```{r}
+summary(reg_ancova)
+```
+
+
+#### 5
+
+
+```{r}
+df_bats_merged %>%
+  group_by(Diet) %>%
+  summarise(Effectif = n(),
+            `Mean of BRW` = mean(BRW),
+            `Mean of AUD` = mean(AUD))
+```
+
+```{r}
+lsmeans(reg_ancova, pairwise ~ Diet, adjust = "bonferroni")
+```
+
+La diète 3 a une influence significativement différente de la diète 1, après correction pour la multiplicité par la méthode de Bonferroni. En revanche, les diètes 1 et 2 ne sont pas significativement différentes, ni les diètes et 2 et 3.
+
+
+<hr>

@@ -67,9 +67,8 @@ planning %>%
 
 # TP
 
-* [TP1](teaching/agromodlin/tp1.html "TP1").
-<!-- * [TP2](teaching/agromodlin/tp2.html "TP2"), -->
-<!-- * [TP3](teaching/agromodlin/tp3.html "TP3"). -->
+* [TP1](teaching/agromodlin/tp1.html "TP1"),
+* [TP2-3](teaching/agromodlin/tp23.html "TP1").
 
 
 # Références extérieures
