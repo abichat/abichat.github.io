@@ -61,7 +61,7 @@ library(tidyverse)
   ✖ dplyr::lag()    masks stats::lag()
 ```
 
-.footnote[&lt;a href="https://abichat.github.io/slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html#1" target="_blank"&gt;<i class="fas  fa-clone "></i> Introduction to the Tidyverse&lt;/a&gt;]
+.footnote[&lt;a href="https://abichat.github.io/slides/introtidyverse" target="_blank"&gt;<i class="fas  fa-clone "></i> Introduction to the Tidyverse&lt;/a&gt;]
 
 --
 
@@ -353,7 +353,7 @@ map(1:100, rnorm) %&gt;%
     geom_line()
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-9-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## A better way with `compose()` and `map_df()`
@@ -719,7 +719,7 @@ imap(swiss, ~ ggplot(swiss, aes(x = Fertility, y = .x)) +
   gridExtra::grid.arrange(grobs = ., ncol = 3)
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-29-1.png" width="720" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-29-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 ---
 count:false
@@ -736,7 +736,7 @@ swiss %&gt;%
   gridExtra::grid.arrange(grobs = ., ncol = 3)
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-30-1.png" width="720" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-30-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -1335,7 +1335,7 @@ tibble(N = 1:50) %&gt;%
     theme(legend.position = "none")
 ```
 
-&lt;img src="Modeling_files/figure-html/listcolumnplot-1.png" width="720" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/listcolumnplot-1.png" width="720" style="display: block; margin: auto;" /&gt;
 
 ---
 # `nest()`
@@ -1687,7 +1687,7 @@ augmented %&gt;%
     labs(x = "Fitted values", y = "Residuals")
 ```
 
-&lt;img src="Modeling_files/figure-html/resid-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/resid-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Quantile-quantile plot
@@ -1701,7 +1701,7 @@ ggplot(augmented) +
   labs(x = "Theoretical quantiles", y = "Standardized residuals")
 ```
 
-&lt;img src="Modeling_files/figure-html/qq-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/qq-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Leverage
@@ -1720,7 +1720,7 @@ augmented %&gt;%
     labs(x = "Leverage", y = "Standardized residuals")
 ```
 
-&lt;img src="Modeling_files/figure-html/cook-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/cook-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Cook's distances
@@ -1735,7 +1735,7 @@ augmented %&gt;%
     labs(x = "Observation", y = "Cook's Distance")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-67-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-67-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Wilcoxon test
@@ -2038,7 +2038,7 @@ bootstrap_pins %&gt;%
     theme(legend.position = "none")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-80-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-80-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Other resampling techniques
@@ -2625,7 +2625,7 @@ ggplot(df_PCA) +
   geom_point(alpha = 0.6)
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-98-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-98-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 count: false
@@ -2639,7 +2639,7 @@ ggplot(df_PCA) +
   geom_point(alpha = 0.6)
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-99-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-99-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Compute k-means for several K
@@ -2766,7 +2766,7 @@ ggplot(df_kmeans) +
   geom_point(color = "tomato")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-104-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-104-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Plots of k-means on the principal plane
@@ -2833,7 +2833,7 @@ ggplot(df_clust) +
   theme(legend.position = "bottom")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-107-1.png" width="792" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-107-1.png" width="792" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -3149,7 +3149,7 @@ ggplot(df_phylum_transp_stool) +
   geom_smooth(method = "lm")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-117-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-117-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---
@@ -3325,7 +3325,7 @@ ggplot(df_cor) +
   geom_vline(xintercept = 0, color = "grey")
 ```
 
-&lt;img src="Modeling_files/figure-html/unnamed-chunk-124-1.png" width="576" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/unnamed-chunk-124-1.png" width="576" style="display: block; margin: auto;" /&gt;
 
 
 ---

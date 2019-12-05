@@ -11,14 +11,14 @@ knitr::opts_chunk$set(echo = FALSE)
 # Modeling in the Tidyverse and applications to metagenomics data
 
 
-* [Slides](slides/Modeling/Modeling.html "Modeling in the Tidyverse")
+* [Slides](slides/modelingtidyverse/ "Modeling in the Tidyverse")
 
 <aside>
 November 23, 2018
 AgroParisTech 
 </aside>
 
-Files: [pines.txt](slides/Modeling/pines.txt), [abund_table.txt](slides/Modeling/abund_table.txt), [samples_table.txt](slides/Modeling/samples_table.txt).
+Files: [pines.txt](slides/modelingtidyverse/pines.txt), [abund_table.txt](slides/modelingtidyverse/abund_table.txt), [samples_table.txt](slides/modelingtidyverse/samples_table.txt).
 
 
 <blockquote class="twitter-tweet" data-lang="fr" align="center"><p lang="fr" dir="ltr">3h30 plus tard, il est toujours là, avec 5 nouvelles fonctions du tidyverse par slide. <a href="https://t.co/9Bzyzxeg5x">pic.twitter.com/9Bzyzxeg5x</a></p>&mdash; State of the R (@RUG_stateofther) <a href="https://twitter.com/RUG_stateofther/status/1066005405451649026?ref_src=twsrc%5Etfw">23 novembre 2018</a></blockquote>
@@ -29,7 +29,7 @@ Files: [pines.txt](slides/Modeling/pines.txt), [abund_table.txt](slides/Modeling
 
 # Introduction to the Tidyverse 
 
-* [Slides](slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html "Introduction to the Tidyverse")
+* [Slides](slides/introtidyverse "Introduction to the Tidyverse")
 
 <aside>
 May 2, 2018
@@ -42,7 +42,7 @@ AgroParisTech
 
 # Science Communication with R
 
-* [Slides](slides/ScienceCommunicationSOTR/ScienceCommunicationSOTR.html "Science Communication with R")
+* [Slides](slides/sciencecommunication "Science Communication with R")
 
 <aside>
 February 23, 2018

@@ -48,7 +48,7 @@ class: center, middle, inverse
 library(tidyverse)
 ```
 
-.footnote[<a href="https://abichat.github.io/slides/IntroTidyverseSOTR/IntroTidyverseSOTR.html#1" target="_blank">`r icon::fa("clone", size = 1)` Introduction to the Tidyverse</a>]
+.footnote[<a href="https://abichat.github.io/slides/introtidyverse" target="_blank">`r icon::fa("clone", size = 1)` Introduction to the Tidyverse</a>]
 
 --
 
