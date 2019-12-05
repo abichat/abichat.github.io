@@ -11,11 +11,11 @@ knitr::opts_chunk$set(echo = FALSE)
 # Visualisation and other cool things with R
 
 
-* [Slides](teaching/FormationRMines/FormationRMines.html "Visualisation with R")
+* [Slides](teaching/minesvisu/ "Visualisation with R")
 
 <aside>
 Decembre 15, 2017 <br>
 Mines Nancy
 </aside>
 
-Files: [Glucose.txt](teaching/FormationRMines/Glucose.txt), [Pokemon.txt](teaching/FormationRMines/Pokemon.txt).
+Files: [Glucose.txt](teaching/minesvisu/Glucose.txt), [Pokemon.txt](teaching/minesvisu/Pokemon.txt).

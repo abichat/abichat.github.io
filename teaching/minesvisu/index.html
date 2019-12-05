@@ -49,7 +49,7 @@ hist(x, col = "grey", border = "black", breaks = 30,
      main = "Normal distribution", xlab = "", ylab = "Frequency")
 ```
 
-&lt;img src="FormationRMines_files/figure-html/writing-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/writing-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Pipe operator %&gt;%
@@ -243,7 +243,7 @@ library(ggplot2)
 ggplot(iris) + geom_point(aes(x = Sepal.Length, y = Petal.Length))
 ```
 
-&lt;img src="FormationRMines_files/figure-html/iris2-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/iris2-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ##Scatterplot with legend
@@ -257,7 +257,7 @@ ggplot(iris) +
   theme_bw()
 ```
 
-&lt;img src="FormationRMines_files/figure-html/iris3-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/iris3-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Histogram
@@ -271,7 +271,7 @@ ggplot(iris) +
   theme_bw()
 ```
 
-&lt;img src="FormationRMines_files/figure-html/iris4-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/iris4-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Histogram with facetting
@@ -286,7 +286,7 @@ ggplot(iris) +
   theme_bw()
 ```
 
-&lt;img src="FormationRMines_files/figure-html/iris5-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/iris5-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Boxplot
@@ -301,7 +301,7 @@ p &lt;- ggplot(iris) +
 p + theme_bw()
 ```
 
-&lt;img src="FormationRMines_files/figure-html/iris6-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/iris6-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ##Theory of data visualisation
@@ -649,7 +649,7 @@ ggplot(color_cut, aes(x = color, y = price)) +
   theme_bw()
 ```
 
-&lt;img src="FormationRMines_files/figure-html/diamonds5-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/diamonds5-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -669,7 +669,7 @@ ggplot() +
   labs(y = "Count")
 ```
 
-&lt;img src="FormationRMines_files/figure-html/diamonds6-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/diamonds6-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Tidy data
@@ -788,7 +788,7 @@ ggplot(grades_gather) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-&lt;img src="FormationRMines_files/figure-html/grades5-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/grades5-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 class: middle, center, inverse
@@ -807,7 +807,7 @@ Glucose &lt;- read.table("Glucose.txt")
 
 ---
 
-&lt;img src="FormationRMines_files/figure-html/glucose3-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/glucose3-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -823,10 +823,10 @@ Glucose %&gt;%
     labs(x = "Time", y = "Concentration")
 ```
 
-&lt;img src="FormationRMines_files/figure-html/glucose3c-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/glucose3c-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
-&lt;img src="FormationRMines_files/figure-html/glucose4-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/glucose4-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -849,7 +849,7 @@ ggplot(Glucose_stat, aes(x = Time)) +
        caption = "5th and 95th percentile are in black, median is in red and mean in blue.")
 ```
 
-&lt;img src="FormationRMines_files/figure-html/glucose4c-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/glucose4c-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 ## Pokemon dataset
@@ -959,7 +959,7 @@ Pokemon %&lt;&gt;% mutate(Generation = as.factor(Generation))
 
 ---
 
-&lt;img src="FormationRMines_files/figure-html/pkmn3-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pkmn3-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -974,12 +974,12 @@ ggplot(Pokemon, aes(x = Generation, y = Total, fill = Generation)) +
   theme_bw()
 ```
 
-&lt;img src="FormationRMines_files/figure-html/pkmn3c-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pkmn3c-1.svg" style="display: block; margin: auto;" /&gt;
 
 
 ---
 
-&lt;img src="FormationRMines_files/figure-html/pkmn4-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pkmn4-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -997,11 +997,11 @@ ggplot(Pokemon_poison, aes(x = Attack, y = Sp..Atk)) +
   labs(y = "Special attack")
 ```
 
-&lt;img src="FormationRMines_files/figure-html/pkmn4c-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pkmn4c-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
-&lt;img src="FormationRMines_files/figure-html/pkmn5-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pkmn5-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1014,12 +1014,12 @@ ggplot(Pokemon, aes(x = 1, fill = Legendary)) +
   labs(x = NULL, y = NULL)
 ```
 
-&lt;img src="FormationRMines_files/figure-html/pkmn5c-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pkmn5c-1.svg" style="display: block; margin: auto;" /&gt;
 
 
 ---
 
-&lt;img src="FormationRMines_files/figure-html/pkmn6-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pkmn6-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -1042,7 +1042,7 @@ ggplot() +
   theme_bw()
 ```
 
-&lt;img src="FormationRMines_files/figure-html/pkmn6c-1.svg" style="display: block; margin: auto;" /&gt;
+&lt;img src="index_files/figure-html/pkmn6c-1.svg" style="display: block; margin: auto;" /&gt;
 
 ---
 class: middle, center, inverse
