@@ -1,0 +1,2393 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+  <head>
+    <title>Manipulating objects in the Tidyverse</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Antoine Bichat" />
+    <meta name="date" content="2019-12-13" />
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <link href="libs/str_view/str_view.css" rel="stylesheet" />
+    <script src="libs/str_view-binding/str_view.js"></script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        TeX: { equationNumbers: { autoNumber: "AMS" } },
+      });
+    </script>
+    <style>
+    .mjx-mrow a {
+      color: black;
+      pointer-events: none;
+      cursor: default;
+    }
+    </style>
+    <link rel="stylesheet" href="libs_sotr/sotr.css" type="text/css" />
+    <link rel="stylesheet" href="libs_sotr/sotr-fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Manipulating objects in the Tidyverse
+## Factors, dates and strings
+### Antoine Bichat
+### AgroParisTech
+### December 13, 2019
+
+---
+
+
+
+
+
+
+# Configuration <i class="fas  fa-cog fa-spin fa-pull-right "></i>
+
+
+```r
+library(tidyverse)
+library(lubridate)
+library(tidytuesdayR)
+
+set.seed(42)
+theme_set(theme_minimal())
+Sys.setlocale("LC_TIME", "C")
+```
+
+
+```
+  # A tibble: 9 x 2
+    Package      Version
+    &lt;chr&gt;        &lt;chr&gt;  
+  1 dplyr        0.8.3  
+  2 forcats      0.4.0  
+  3 ggexpanse    0.1.0  
+  4 gghalves     0.0.1  
+  5 ggplot2      3.2.1  
+  6 lubridate    1.7.4  
+  7 stringr      1.4.0  
+  8 tidyr        1.0.0  
+  9 tidytuesdayR 0.2.2
+```
+
+
+
+---
+# Disclaimer <i class="fas  fa-exclamation fa-pull-right "></i>
+
+Almost every functions presented in these slides could be replaced by (ugly?) portions of code.
+
+As always, there is a trade-off between simplicity and readability (and consistency for R) on one side, and speed and dependencies to other packages on the other side.
+
+&lt;br&gt;
+
+- lubridate: &lt;img src="https://tinyverse.netlify.com/badge/lubridate"&gt;
+- stringr: &lt;img src="https://tinyverse.netlify.com/badge/stringr"&gt;
+- forcats: &lt;img src="https://tinyverse.netlify.com/badge/forcats"&gt;
+- ggplot2: &lt;img src="https://tinyverse.netlify.com/badge/ggplot2"&gt;
+- dplyr: &lt;img src="https://tinyverse.netlify.com/badge/dplyr"&gt;
+- tidyr: &lt;img src="https://tinyverse.netlify.com/badge/tidyr"&gt;
+- tidyverse: &lt;img src="https://tinyverse.netlify.com/badge/tidyverse"&gt;
+
+
+
+
+---
+class: inverse, center, middle
+background-image: url(img/hex_tidytuesday.png)
+background-size: 15%
+background-position: right 20px bottom 20px
+
+.slide-in-right[
+# TidyTuesday
+]
+
+---
+# A weekly social data project in R
+
+* Every Monday, a dataset is proposed on <i class="fab  fa-github "></i>  [rfordatascience/tidytuesday](https://github.com/rfordatascience/tidytuesday).
+
+* Every Tuesday (or after), everyone could post their visualizations on Twitter <i class="fab  fa-twitter "></i> with the hashtag `#TidyTuesday`.
+
+* There is a package to download proposed datasets: **tidytuesdayR**.
+
+* And a shiny app to see previous contributions: [tidytuesdayrocks](https://nsgrantham.shinyapps.io/tidytuesdayrocks/).
+
+* It's a great way to learn and discover new possibilities.
+
+&lt;br&gt;
+
+
+### .center[.cursive[Practice makes perfect.]]
+
+
+---
+class: noslidenumber
+# Some submissions 
+
+.scroll-output[
+.pull-left[
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;&lt;a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#TidyTuesday&lt;/a&gt; Week 2019-42 - Updates: More car racing, more fun!&lt;br&gt;&lt;br&gt;Here is an animation showing energy efficiency on highways with a starting sequence and start line plus the suggested change of title and axis, thx &lt;a href="https://twitter.com/JonTheGeek?ref_src=twsrc%5Etfw"&gt;@JonTheGeek&lt;/a&gt;!&lt;a href="https://twitter.com/R4DScommunity?ref_src=twsrc%5Etfw"&gt;@R4DScommunity&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/ggplot2?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#ggplot2&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/dataviz?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#dataviz&lt;/a&gt; &lt;a href="https://t.co/Hooej9MXnF"&gt;pic.twitter.com/Hooej9MXnF&lt;/a&gt;&lt;/p&gt;&amp;mdash; Cédric Scherer (@CedScherer) &lt;a href="https://twitter.com/CedScherer/status/1186335139925757952?ref_src=twsrc%5Etfw"&gt;October 21, 2019&lt;/a&gt;&lt;/blockquote&gt; 
+]
+
+.pull-right[
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;&lt;a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#TidyTuesday&lt;/a&gt; contribution for this week required patience and perseverance but I did it 💪🏻🐦&lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/tidyverse?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#tidyverse&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/dataviz?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#dataviz&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/birds?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#birds&lt;/a&gt; &lt;a href="https://t.co/8P7Zjgvw0e"&gt;pic.twitter.com/8P7Zjgvw0e&lt;/a&gt;&lt;/p&gt;&amp;mdash; Antoine (@_abichat) &lt;a href="https://twitter.com/_abichat/status/1123214724928241665?ref_src=twsrc%5Etfw"&gt;April 30, 2019&lt;/a&gt;&lt;/blockquote&gt; 
+]
+]
+---
+# Nuclear explosions <i class="fas  fa-bomb fa-pull-right "></i>
+
+
+```r
+df_nuclear &lt;- tt_load("2019-08-20")$nuclear_explosions 
+df_nuclear
+```
+
+```
+  # A tibble: 2,051 x 16
+     date_long  year id_no country region source latitude longitude magnitude_body
+         &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;     &lt;dbl&gt;     &lt;dbl&gt;          &lt;dbl&gt;
+   1  19450716  1945 45001 USA     ALAMO… DOE        32.5     -106.              0
+   2  19450805  1945 45002 USA     HIROS… DOE        34.2      132.              0
+   3  19450809  1945 45003 USA     NAGAS… DOE        32.4      130.              0
+   4  19460630  1946 46001 USA     BIKINI DOE        11.4      165.              0
+   5  19460724  1946 46002 USA     BIKINI DOE        11.4      165.              0
+   6  19480414  1948 48001 USA     ENEWE… DOE        11.3      162.              0
+   7  19480430  1948 48002 USA     ENEWE… DOE        11.3      162.              0
+   8  19480514  1948 48003 USA     ENEWE… DOE        11.3      162.              0
+   9  19490829  1949 49001 USSR    SEMI … DOE        48         76               0
+  10  19510127  1951 51001 USA     NTS    DOE        37       -116               0
+  # … with 2,041 more rows, and 7 more variables: magnitude_surface &lt;dbl&gt;,
+  #   depth &lt;dbl&gt;, yield_lower &lt;dbl&gt;, yield_upper &lt;dbl&gt;, purpose &lt;chr&gt;,
+  #   name &lt;chr&gt;, type &lt;chr&gt;
+```
+
+---
+class: noslidenumber
+# Contributions 
+
+.pull-left[
+
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;📊 My contribution to this week&amp;#39;s &lt;a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#TidyTuesday&lt;/a&gt; (this time actually on a Tuesday): nuclear explosions since 1945!💥&lt;a href="https://twitter.com/R4DScommunity?ref_src=twsrc%5Etfw"&gt;@R4DScommunity&lt;/a&gt;&lt;br&gt; &lt;a href="https://twitter.com/hashtag/dataviz?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#dataviz&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/ggplot2?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#ggplot2&lt;/a&gt;&lt;br&gt;&lt;br&gt;(Code below) &lt;a href="https://t.co/GjyUhgoogX"&gt;pic.twitter.com/GjyUhgoogX&lt;/a&gt;&lt;/p&gt;&amp;mdash; Gil Henriques 🌹 (@_Gil_Henriques) &lt;a href="https://twitter.com/_Gil_Henriques/status/1163836007743025152?ref_src=twsrc%5Etfw"&gt;August 20, 2019&lt;/a&gt;&lt;/blockquote&gt; 
+]
+
+.pull-right[
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;&lt;a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#TidyTuesday&lt;/a&gt; Nuclear explosions. Got some inspiration from the PDF of the original report. Hopefully I will be forgiven for the double axis graph, lol&lt;a href="https://twitter.com/hashtag/r4ds?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#r4ds&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/dataviz?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#dataviz&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/nuclearweapons?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#nuclearweapons&lt;/a&gt; &lt;a href="https://t.co/vAgydjrCHK"&gt;pic.twitter.com/vAgydjrCHK&lt;/a&gt;&lt;/p&gt;&amp;mdash; Harro Cyranka 🔎 (@harrocyranka) &lt;a href="https://twitter.com/harrocyranka/status/1163805331929141248?ref_src=twsrc%5Etfw"&gt;August 20, 2019&lt;/a&gt;&lt;/blockquote&gt; 
+]
+
+
+
+---
+# Roman emperors <i class="fas  fa-crown fa-pull-right "></i> 
+
+
+```r
+df_emperors &lt;- tt_load("2019-08-13")$emperors
+df_emperors
+```
+
+```
+  # A tibble: 68 x 16
+     index name  name_full birth      death      birth_cty birth_prv rise 
+     &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;     &lt;date&gt;     &lt;date&gt;     &lt;chr&gt;     &lt;chr&gt;     &lt;chr&gt;
+   1     1 Augu… IMPERATO… 0062-09-23 0014-08-19 Rome      Italia    Birt…
+   2     2 Tibe… TIBERIVS… 0041-11-16 0037-03-16 Rome      Italia    Birt…
+   3     3 Cali… GAIVS IV… 0012-08-31 0041-01-24 Antitum   Italia    Birt…
+   4     4 Clau… TIBERIVS… 0009-08-01 0054-10-13 Lugdunum  Gallia L… Birt…
+   5     5 Nero  NERO CLA… 0037-12-15 0068-06-09 Antitum   Italia    Birt…
+   6     6 Galba SERVIVS … 0002-12-24 0069-01-15 Terracina Italia    Seiz…
+   7     7 Otho  MARCVS S… 0032-04-28 0069-04-16 Terentin… Italia    Appo…
+   8     8 Vite… AVLVS VI… 0015-09-24 0069-12-20 Rome      Italia    Seiz…
+   9     9 Vesp… TITVS FL… 0009-11-17 0079-06-24 Falacrine Italia    Seiz…
+  10    10 Titus TITVS FL… 0039-12-30 0081-09-13 Rome      Italia    Birt…
+  # … with 58 more rows, and 8 more variables: reign_start &lt;date&gt;,
+  #   reign_end &lt;date&gt;, cause &lt;chr&gt;, killer &lt;chr&gt;, dynasty &lt;chr&gt;, era &lt;chr&gt;,
+  #   notes &lt;chr&gt;, verif_who &lt;chr&gt;
+```
+
+
+---
+class: noslidenumber
+# Contributions
+
+.scroll-output[
+.pull-left[
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;Inspired by the periodic table of elements, I present you the unperiodic table of the Roman emperors for this week’s &lt;a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#TidyTuesday&lt;/a&gt;!&lt;br&gt;&lt;br&gt;code: &lt;a href="https://t.co/yYmzriAURg"&gt;https://t.co/yYmzriAURg&lt;/a&gt;&lt;a href="https://twitter.com/hashtag/dataviz?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#dataviz&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/ggplot?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#ggplot&lt;/a&gt; &lt;a href="https://t.co/fNd21Xl4kl"&gt;pic.twitter.com/fNd21Xl4kl&lt;/a&gt;&lt;/p&gt;&amp;mdash; Georgios Karamanis (@geokaramanis) &lt;a href="https://twitter.com/geokaramanis/status/1162035459884589057?ref_src=twsrc%5Etfw"&gt;August 15, 2019&lt;/a&gt;&lt;/blockquote&gt; 
+]
+
+.pull-right[
+&lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;My &lt;a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#TidyTuesday&lt;/a&gt; contribution. Was fun to work with &lt;a href="https://twitter.com/hashtag/ggforce?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#ggforce&lt;/a&gt; annotations. &lt;a href="https://t.co/QSZdt8bQMy"&gt;pic.twitter.com/QSZdt8bQMy&lt;/a&gt;&lt;/p&gt;&amp;mdash; Philippe Massicotte (@philmassicotte) &lt;a href="https://twitter.com/philmassicotte/status/1161728575734722560?ref_src=twsrc%5Etfw"&gt;August 14, 2019&lt;/a&gt;&lt;/blockquote&gt; 
+]
+]
+
+---
+class: inverse, center, middle
+background-image: url(img/hex_forcats.png)
+background-size: 15%
+background-position: right 20px bottom 20px
+
+.slide-in-left[
+# Dealing with factors
+]
+
+---
+# What is a factor?
+
+* To represent categorical variables.
+
+* Fixed and known set of possible values (even not present in the dataset).
+
+* Could be ordered.
+
+* Essential for modeling.
+
+* Stored as integer in their underlying representation (but now strings too, so no more memory advantage).
+
+
+.footnote[
+<i class="fas  fa-link "></i> [stringsAsFactors: An unauthorized biography](https://simplystatistics.org/2015/07/24/stringsasfactors-an-unauthorized-biography/)
+]
+
+
+
+---
+# Convert to factor
+
+
+```r
+fruits &lt;- c("banana", "apple", "mango", "apple", "pear", "apple", 
+            "banana", "pitaya", "mango", "mango", "apple")
+as.factor(fruits) # Use alphabetical order
+```
+
+```
+   [1] banana apple  mango  apple  pear   apple  banana pitaya mango  mango 
+  [11] apple 
+  Levels: apple banana mango pear pitaya
+```
+
+--
+
+
+```r
+as_factor(fruits) # Use appearance order 
+```
+
+```
+   [1] banana apple  mango  apple  pear   apple  banana pitaya mango  mango 
+  [11] apple 
+  Levels: banana apple mango pear pitaya
+```
+
+
+Using appearance order increased reproducibility because it's independent from `locale()`.
+
+.footnote[
+Everything could be done with base R: `factor(countries, levels = unique(countries))`.
+]
+
+---
+# Change level names
+
+
+```r
+fct_recode(fruits, dragonfruit = "pitaya")
+```
+
+```
+   [1] banana      apple       mango       apple       pear        apple      
+   [7] banana      dragonfruit mango       mango       apple      
+  Levels: apple banana mango pear dragonfruit
+```
+
+--
+
+
+```r
+fct_relabel(fruits, str_to_title)
+```
+
+```
+   [1] Banana Apple  Mango  Apple  Pear   Apple  Banana Pitaya Mango  Mango 
+  [11] Apple 
+  Levels: Apple Banana Mango Pear Pitaya
+```
+
+
+.footnote[
+Note that when converting from strings to factors, `fct_recode()` and `fct_relabel()` use alphabetical order.
+]
+
+
+---
+# Reorder levels
+
+You can reorder levels:
+
+* manually with `fct_relevel()`,
+
+* by appearance with `fct_inorder()`,
+
+* by frequency with `fct_infreq()`,
+
+* according to another variable with `fct_reorder()`,
+
+* according to the last value of another variable with `fct_reorder2()`,
+
+* randomly with `fct_shuffle()`,
+
+* by reversing order with `fct_rev()`...
+
+---
+# By frequency 
+
+
+```r
+fct_count(fruits, sort = TRUE)
+```
+
+```
+  # A tibble: 5 x 2
+    f          n
+    &lt;fct&gt;  &lt;int&gt;
+  1 apple      4
+  2 mango      3
+  3 banana     2
+  4 pear       1
+  5 pitaya     1
+```
+
+```r
+fct_infreq(fruits)
+```
+
+```
+   [1] banana apple  mango  apple  pear   apple  banana pitaya mango  mango 
+  [11] apple 
+  Levels: apple mango banana pear pitaya
+```
+
+---
+# According to another variable 
+
+
+.pull-left-60[
+
+```r
+levels(iris$Species)
+```
+
+```
+  [1] "setosa"     "versicolor" "virginica"
+```
+
+
+```r
+iris %&gt;% 
+* mutate(Species = fct_reorder(Species, Sepal.Width)) %&gt;%
+  ggplot() +
+  aes(x = Species, y = Sepal.Width, fill = Species) +
+  geom_boxplot(notch = TRUE, show.legend = FALSE)  
+```
+]
+
+.pull-right-40[
+&lt;img src="index_files/figure-html/plot-irisreorder-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Tidy WorldPhones <i class="fas  fa-phone fa-pull-right "></i>
+
+
+```r
+WorldPhones %&gt;% 
+  as_tibble(rownames = "Year")
+```
+
+```
+  # A tibble: 7 x 8
+    Year  N.Amer Europe  Asia S.Amer Oceania Africa Mid.Amer
+    &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;
+  1 1951   45939  21574  2876   1815    1646     89      555
+  2 1956   60423  29990  4708   2568    2366   1411      733
+  3 1957   64721  32510  5230   2695    2526   1546      773
+  4 1958   68484  35218  6662   2845    2691   1663      836
+  5 1959   71799  37598  6856   3000    2868   1769      911
+  6 1960   76036  40341  8220   3145    3054   1905     1008
+  7 1961   79831  43173  9053   3338    3224   2005     1076
+```
+
+---
+count: false
+# Tidy WorldPhones <i class="fas  fa-phone fa-pull-right "></i>
+
+
+```r
+WorldPhones %&gt;% 
+  as_tibble(rownames = "Year") %&gt;% 
+* pivot_longer(-Year, names_to = "Region", values_to = "Count")
+```
+
+```
+  # A tibble: 49 x 3
+     Year  Region   Count
+     &lt;chr&gt; &lt;chr&gt;    &lt;dbl&gt;
+   1 1951  N.Amer   45939
+   2 1951  Europe   21574
+   3 1951  Asia      2876
+   4 1951  S.Amer    1815
+   5 1951  Oceania   1646
+   6 1951  Africa      89
+   7 1951  Mid.Amer   555
+   8 1956  N.Amer   60423
+   9 1956  Europe   29990
+  10 1956  Asia      4708
+  # … with 39 more rows
+```
+
+
+---
+# According to the last value <i class="fas  fa-phone fa-pull-right "></i>
+
+.pull-left-60[
+
+```r
+WorldPhones %&gt;% 
+  as_tibble(rownames = "Year") %&gt;% 
+  pivot_longer(-Year, names_to = "Region", values_to = "Count") %&gt;% 
+  mutate(Year = as.numeric(Year),
+*        Region = fct_reorder2(Region, Year, Count)) %&gt;%
+  ggplot() +
+  aes(x = Year, y = Count, color = Region) +
+  geom_line() +
+  scale_y_log10()
+```
+]
+
+.pull-right-40[
+&lt;img src="index_files/figure-html/plot-worldphonesreorder-1.png" width="504" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+# {tidyr} digression
+
+.pull-left[
+
+```r
+anscombe
+```
+
+```
+     x1 x2 x3 x4    y1   y2    y3    y4
+  1  10 10 10  8  8.04 9.14  7.46  6.58
+  2   8  8  8  8  6.95 8.14  6.77  5.76
+  3  13 13 13  8  7.58 8.74 12.74  7.71
+  4   9  9  9  8  8.81 8.77  7.11  8.84
+  5  11 11 11  8  8.33 9.26  7.81  8.47
+  6  14 14 14  8  9.96 8.10  8.84  7.04
+  7   6  6  6  8  7.24 6.13  6.08  5.25
+  8   4  4  4 19  4.26 3.10  5.39 12.50
+  9  12 12 12  8 10.84 9.13  8.15  5.56
+  10  7  7  7  8  4.82 7.26  6.42  7.91
+  11  5  5  5  8  5.68 4.74  5.73  6.89
+```
+]
+
+--
+
+.pull-right[
+
+```r
+anscombe %&gt;% 
+  pivot_longer(
+    everything(), 
+*   names_to = c(".value", "group"),
+*   names_pattern = "(.)(.)")
+```
+
+```
+  # A tibble: 44 x 3
+     group     x     y
+     &lt;chr&gt; &lt;dbl&gt; &lt;dbl&gt;
+   1 1        10  8.04
+   2 2        10  9.14
+   3 3        10  7.46
+   4 4         8  6.58
+   5 1         8  6.95
+   6 2         8  8.14
+   7 3         8  6.77
+   8 4         8  5.76
+   9 1        13  7.58
+  10 2        13  8.74
+  # … with 34 more rows
+```
+]
+
+---
+# Time to practice!
+
+&lt;img src="index_files/figure-html/plot-col-nuclear-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+---
+count: false
+# Time to practice!
+
+.scroll-output[
+
+```r
+df_nuclear %&gt;%  
+  count(country, sort = TRUE) %&gt;%
+  mutate(country = fct_inorder(country), 
+         country = fct_rev(country),
+         country = fct_recode(country, France = "FRANCE", China = "CHINA",
+                              India = "INDIA", Pakistan = "PAKIST")) %&gt;%
+  ggplot() +
+  aes(x = country, y = n, fill = country) +
+  geom_col(show.legend = FALSE) +
+  coord_flip() + 
+  labs(x = "Country", y = "Total number of nuclear explosions") +
+  scale_fill_viridis_d(option = "E", direction = -1)
+```
+
+&lt;img src="index_files/figure-html/col-nuclear-1.png" width="864" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Too many levels?
+
+.scroll-box-16[
+
+```r
+df_nuclear$type &lt;- str_to_title(df_nuclear$type) 
+fct_count(df_nuclear$type, sort = TRUE) 
+```
+
+```
+  # A tibble: 20 x 2
+     f            n
+     &lt;fct&gt;    &lt;int&gt;
+   1 Shaft     1015
+   2 Tunnel     310
+   3 Atmosph    185
+   4 Shaft/Gr    85
+   5 Airdrop     78
+   6 Tower       75
+   7 Balloon     62
+   8 Surface     62
+   9 Shaft/Lg    56
+  10 Barge       40
+  11 Ug          32
+  12 Gallery     13
+  13 Rocket      13
+  14 Crater       9
+  15 Uw           8
+  16 Space        4
+  17 Mine         1
+  18 Ship         1
+  19 Water Su     1
+  20 Watersur     1
+```
+]
+
+
+---
+# Lump least common factors
+
+
+
+```r
+df_nuclear$type %&gt;% # Preserve the most common `n` values
+* fct_lump(n = 5) %&gt;%
+  table() 
+```
+
+```
+  .
+   Airdrop  Atmosph    Shaft Shaft/Gr   Tunnel    Other 
+        78      185     1015       85      310      378
+```
+
+--
+
+
+```r
+df_nuclear$type %&gt;% # Preserve the values that appear at least `min` number of times
+* fct_lump_min(min = 20) %&gt;%
+  table()
+```
+
+```
+  .
+   Airdrop  Atmosph  Balloon    Barge    Shaft Shaft/Gr Shaft/Lg  Surface 
+        78      185       62       40     1015       85       56       62 
+     Tower   Tunnel       Ug    Other 
+        75      310       32       51
+```
+
+
+---
+# Manually collapse levels
+
+
+```r
+df_nuclear$type %&gt;% 
+* fct_collapse(Air = c("Atmosph", "Airdrop", "Balloon", "Rocket"),
+               Underground = c("Shaft", "Tunnel", "Shaft/Gr", 
+                               "Shaft/Lg", "Ug", "Gallery"),
+               Water = c("Barge", "Uw", "Ship", "Water Su", "Watersur"),
+*              group_other = TRUE) %&gt;%
+  fct_count(sort = TRUE)
+```
+
+```
+  # A tibble: 4 x 2
+    f               n
+    &lt;fct&gt;       &lt;int&gt;
+  1 Underground  1136
+  2 Air           365
+  3 Other         352
+  4 Water         198
+```
+
+---
+# Factors are integers!
+
+
+```r
+vegetables &lt;- factor(c("carrot", "lettuce", "endive"))
+fruits &lt;- as_factor(fruits)
+```
+
+--
+
+
+```r
+c(fruits, vegetables)
+```
+
+```
+   [1] 1 2 3 2 4 2 1 5 3 3 2 1 3 2
+```
+
+--
+
+
+```r
+fct_c(fruits, vegetables)
+```
+
+```
+   [1] banana  apple   mango   apple   pear    apple   banana  pitaya  mango  
+  [10] mango   apple   carrot  lettuce endive 
+  Levels: banana apple mango pear pitaya carrot endive lettuce
+```
+
+--
+
+.footnote[
+
+```r
+as.numeric(factor(runif(4))) # Don't forget as.character()
+```
+
+```
+  [1] 3 4 1 2
+```
+]
+
+---
+# Time to practice!
+
+&lt;img src="index_files/figure-html/plot-line-nuclear-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+---
+count: false
+# Time to practice!
+
+.scroll-output[
+
+```r
+df_nuclear %&gt;% 
+  mutate(country = fct_collapse(country, `PAKISTAN\n&amp; INDIA` = c("INDIA", "PAKIST"))) %&gt;%
+  count(year, country) %&gt;% 
+  group_by(country) %&gt;% 
+  mutate(cum = cumsum(n)) %&gt;% 
+  ungroup()
+```
+
+```
+  # A tibble: 165 x 4
+      year country     n   cum
+     &lt;dbl&gt; &lt;fct&gt;   &lt;int&gt; &lt;int&gt;
+   1  1945 USA         3     3
+   2  1946 USA         2     5
+   3  1948 USA         3     8
+   4  1949 USSR        1     1
+   5  1951 USA        16    24
+   6  1951 USSR        2     3
+   7  1952 UK          1     1
+   8  1952 USA        10    34
+   9  1953 UK          2     3
+  10  1953 USA        11    45
+  # … with 155 more rows
+```
+]
+
+---
+count: false
+# Time to practice!
+
+.scroll-output[
+
+```r
+df_nuclear %&gt;% 
+  mutate(country = fct_collapse(country, `PAKISTAN\n&amp; INDIA` = c("INDIA", "PAKIST"))) %&gt;%
+  count(year, country) %&gt;% 
+  group_by(country) %&gt;% 
+  mutate(cum = cumsum(n)) %&gt;% 
+  ungroup() %&gt;% 
+  mutate(country = fct_reorder2(country, year, cum)) %&gt;% 
+  ggplot() +
+  aes(x = year, y = cum, color = country) +
+  geom_line(size = 1, key_glyph = "timeseries") + 
+  ggexpanse::scale_color_expanse() +
+  labs(x = NULL, color = "Country", y = "Cumulative number of nuclear explosions") +
+  ggexpanse::theme_expanse() 
+```
+
+&lt;img src="index_files/figure-html/line-nuclear-1.png" width="864" style="display: block; margin: auto;" /&gt;
+]
+
+---
+class: inverse, center, middle
+background-image: url(img/hex_lubridate.png)
+background-size: 15%
+background-position: right 20px bottom 20px
+
+.slide-in-right[ 
+# Dealing with dates 
+]
+.slide-in-left[
+## and hours  
+] 
+
+
+---
+
+# ISO 8601
+
+.pull-left[
+Convention for dates:
+
+.Large[.center[.content-box[YYYY-MM-DD]]]
+
+&lt;br&gt;
+
+Convention for time:
+
+.Large[.center[.content-box[HH:MM:SS]]]
+
+]
+
+.pull-right[
+.center[
+&lt;img src="img/xkcd_iso8601.png" height="450"&gt;
+]
+]
+
+.footnote[
+<i class="fas  fa-palette "></i> [XKCD](https://xkcd.com/1179/) 
+]
+
+---
+# Parse date
+
+6 functions are available to parse dates from **y**ear, **m**onth, and **d**ay components: `ymd()`, `ydm()`, `mdy()`, `myd()`, `dmy()`, `dym()`.
+
+
+```r
+first_landing &lt;- ymd("1969-07-20")
+class(first_landing)
+```
+
+```
+  [1] "Date"
+```
+
+```r
+first_landing
+```
+
+```
+  [1] "1969-07-20"
+```
+
+--
+
+Formatted dates could be very different, as long as the specified order is respected. 
+
+
+```r
+mdy(c("7/20 69","July 20, 1969", "First step was on July, the 20th (1969)"))
+```
+
+```
+  [1] "1969-07-20" "1969-07-20" "1969-07-20"
+```
+
+---
+# Parse time
+
+Each previous function could be suffixed by `_h`, `_hm` or `_hms` to take into account **h**our, **m**inute, and **s**econd components.
+
+
+```r
+first_step &lt;- ymd_hm("1969-07-20 20:17")
+class(first_step)
+```
+
+```
+  [1] "POSIXct" "POSIXt"
+```
+
+```r
+first_step
+```
+
+```
+  [1] "1969-07-20 20:17:00 UTC"
+```
+
+
+---
+# Extract components
+
+.pull-left[
+
+```r
+year(first_landing)
+```
+
+```
+  [1] 1969
+```
+
+```r
+month(first_landing)
+```
+
+```
+  [1] 7
+```
+
+```r
+day(first_landing)
+```
+
+```
+  [1] 20
+```
+
+```r
+hour(first_step)
+```
+
+```
+  [1] 20
+```
+]
+
+--
+
+.pull-right[
+.scroll-output[
+
+```r
+month(first_landing, label = TRUE) 
+```
+
+```
+  [1] Jul
+  12 Levels: Jan &lt; Feb &lt; Mar &lt; Apr &lt; May &lt; Jun &lt; Jul &lt; Aug &lt; Sep &lt; ... &lt; Dec
+```
+
+```r
+wday(first_landing, label = TRUE, abbr = FALSE)
+```
+
+```
+  [1] Sunday
+  7 Levels: Sunday &lt; Monday &lt; Tuesday &lt; Wednesday &lt; Thursday &lt; ... &lt; Saturday
+```
+
+```r
+hour(first_landing) # returns 0
+```
+
+```
+  [1] 0
+```
+]
+.footnote[
+There is also `yday()`, `quarter()`, `semester()`, `dst()`, `am()`, `pm()`, `tz()`, `leap()`...
+]
+]
+
+---
+# Change and round components
+
+You can change components with a simple assignation.
+
+
+```r
+second(first_step) &lt;- 30
+first_step
+```
+
+```
+  [1] "1969-07-20 20:17:30 UTC"
+```
+
+--
+
+Rounding (to the nearest, down or up) dates is easy.
+
+
+```r
+round_date(first_step, unit = "hours") # ceiling_date() / floor_date() 
+```
+
+```
+  [1] "1969-07-20 20:00:00 UTC"
+```
+
+```r
+round_date(first_step, unit = "15mins")
+```
+
+```
+  [1] "1969-07-20 20:15:00 UTC"
+```
+
+
+
+---
+# Time to practice!
+
+&lt;img src="index_files/figure-html/plot-calendar-nuclear-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+---
+count: false
+# Time to practice!
+
+.scroll-output[
+
+```r
+df_nuclear %&gt;% 
+  select(date_long, country) %&gt;% 
+  mutate(date_long = ymd(date_long),
+         month = month(date_long, label = TRUE),
+         wday = wday(date_long, label = TRUE, abbr = FALSE, week_start = 1),
+         wday = fct_rev(wday)) 
+```
+
+```
+  # A tibble: 2,051 x 4
+     date_long  country month wday     
+     &lt;date&gt;     &lt;chr&gt;   &lt;ord&gt; &lt;ord&gt;    
+   1 1945-07-16 USA     Jul   Monday   
+   2 1945-08-05 USA     Aug   Sunday   
+   3 1945-08-09 USA     Aug   Thursday 
+   4 1946-06-30 USA     Jun   Sunday   
+   5 1946-07-24 USA     Jul   Wednesday
+   6 1948-04-14 USA     Apr   Wednesday
+   7 1948-04-30 USA     Apr   Friday   
+   8 1948-05-14 USA     May   Friday   
+   9 1949-08-29 USSR    Aug   Monday   
+  10 1951-01-27 USA     Jan   Saturday 
+  # … with 2,041 more rows
+```
+]
+
+---
+count: false
+# Time to practice!
+
+.scroll-output[
+
+```r
+df_nuclear %&gt;% 
+  select(date_long, country) %&gt;% 
+  mutate(date_long = ymd(date_long),
+         month = month(date_long, label = TRUE),
+         wday = wday(date_long, label = TRUE, abbr = FALSE, week_start = 1),
+         wday = fct_rev(wday))  %&gt;% 
+  filter(country %in% c("USA", "USSR")) %&gt;% 
+  count(month, wday, country) %&gt;%
+  ggplot() +
+  aes(x = month, y = wday, fill = n) +
+  geom_tile() +
+  scale_fill_viridis_c(option = "E") +
+  facet_grid(~ country) +
+  labs(x = NULL, y = NULL, fill = "Number of\nexplosions") +
+  theme_minimal() +
+  theme(panel.grid = element_blank())
+```
+
+&lt;img src="index_files/figure-html/calendar-nuclear-1.png" width="864" style="display: block; margin: auto;" /&gt;
+]
+
+---
+# Current date and time 
+
+
+```r
+today()
+```
+
+```
+  [1] "2019-12-09"
+```
+
+```r
+now()
+```
+
+```
+  [1] "2019-12-09 17:09:35 CET"
+```
+
+--
+
+
+```r
+today() == Sys.Date()
+```
+
+```
+  [1] TRUE
+```
+
+```r
+now() == Sys.time() # would be TRUE if computer processed both at the same instant
+```
+
+```
+  [1] FALSE
+```
+
+---
+# Intervals
+
+Intervals are objects composed by a starting date and an ending date.
+
+
+An interval is created by `interval()` or `%--%`.
+
+--
+
+Several functions for intervals:
+
+* `time_length()` computes the length of an time span (unit could be specified),
+
+* `int_start()` and `int_end()` extract start and end dates,
+
+* `int_overlaps()` checks if intervals overlap,
+
+* `int_aligns()` checks if intervals share a boundary,
+
+* `%within%` checks if a date-time falls within an interval,
+
+* `int_diff()` computes intervals between a vector of dates...
+
+
+---
+# Practice intervals
+
+
+```r
+df_nuclear %&gt;% 
+  select(date_long, country) %&gt;% 
+  mutate(date_long = ymd(date_long)) %&gt;% 
+  group_by(country) %&gt;% 
+  summarise(start = min(date_long),
+            end = max(date_long))
+```
+
+```
+  # A tibble: 7 x 3
+    country start      end       
+    &lt;chr&gt;   &lt;date&gt;     &lt;date&gt;    
+  1 CHINA   1964-10-16 1996-07-29
+  2 FRANCE  1960-02-13 1996-01-27
+  3 INDIA   1974-05-18 1998-05-13
+  4 PAKIST  1998-05-28 1998-05-30
+  5 UK      1952-10-03 1991-11-26
+  6 USA     1945-07-16 1992-09-23
+  7 USSR    1949-08-29 1990-10-24
+```
+
+---
+count: false
+# Practice intervals
+
+
+```r
+df_nuclear %&gt;% 
+  select(date_long, country) %&gt;% 
+  mutate(date_long = ymd(date_long)) %&gt;% 
+  group_by(country) %&gt;% 
+  summarise(start = min(date_long),
+            end = max(date_long)) %&gt;% 
+  mutate(interval = interval(start, end))
+```
+
+```
+  # A tibble: 7 x 4
+    country start      end        interval                      
+    &lt;chr&gt;   &lt;date&gt;     &lt;date&gt;     &lt;Interval&gt;                    
+  1 CHINA   1964-10-16 1996-07-29 1964-10-16 UTC--1996-07-29 UTC
+  2 FRANCE  1960-02-13 1996-01-27 1960-02-13 UTC--1996-01-27 UTC
+  3 INDIA   1974-05-18 1998-05-13 1974-05-18 UTC--1998-05-13 UTC
+  4 PAKIST  1998-05-28 1998-05-30 1998-05-28 UTC--1998-05-30 UTC
+  5 UK      1952-10-03 1991-11-26 1952-10-03 UTC--1991-11-26 UTC
+  6 USA     1945-07-16 1992-09-23 1945-07-16 UTC--1992-09-23 UTC
+  7 USSR    1949-08-29 1990-10-24 1949-08-29 UTC--1990-10-24 UTC
+```
+
+---
+count: false
+# Practice intervals
+
+
+```r
+df_nuclear %&gt;% 
+  select(date_long, country) %&gt;% 
+  mutate(date_long = ymd(date_long)) %&gt;% 
+  group_by(country) %&gt;% 
+  summarise(start = min(date_long),
+            end = max(date_long)) %&gt;% 
+  mutate(interval = interval(start, end),
+         length = time_length(interval, unit = "years"))
+```
+
+```
+  # A tibble: 7 x 5
+    country start      end        interval                         length
+    &lt;chr&gt;   &lt;date&gt;     &lt;date&gt;     &lt;Interval&gt;                        &lt;dbl&gt;
+  1 CHINA   1964-10-16 1996-07-29 1964-10-16 UTC--1996-07-29 UTC 31.8    
+  2 FRANCE  1960-02-13 1996-01-27 1960-02-13 UTC--1996-01-27 UTC 36.0    
+  3 INDIA   1974-05-18 1998-05-13 1974-05-18 UTC--1998-05-13 UTC 24.0    
+  4 PAKIST  1998-05-28 1998-05-30 1998-05-28 UTC--1998-05-30 UTC  0.00548
+  5 UK      1952-10-03 1991-11-26 1952-10-03 UTC--1991-11-26 UTC 39.1    
+  6 USA     1945-07-16 1992-09-23 1945-07-16 UTC--1992-09-23 UTC 47.2    
+  7 USSR    1949-08-29 1990-10-24 1949-08-29 UTC--1990-10-24 UTC 41.2
+```
+
+---
+count: false
+# Practice intervals
+
+
+```r
+df_nuclear %&gt;% 
+  select(date_long, country) %&gt;% 
+  mutate(date_long = ymd(date_long)) %&gt;% 
+  group_by(country) %&gt;% 
+  summarise(start = min(date_long),
+            end = max(date_long)) %&gt;% 
+  mutate(interval = interval(start, end),
+         length = time_length(interval, unit = "years"),
+         landing = first_landing %within% interval)
+```
+
+```
+  # A tibble: 7 x 6
+    country start      end        interval                         length landing
+    &lt;chr&gt;   &lt;date&gt;     &lt;date&gt;     &lt;Interval&gt;                        &lt;dbl&gt; &lt;lgl&gt;  
+  1 CHINA   1964-10-16 1996-07-29 1964-10-16 UTC--1996-07-29 UTC 31.8     TRUE   
+  2 FRANCE  1960-02-13 1996-01-27 1960-02-13 UTC--1996-01-27 UTC 36.0     TRUE   
+  3 INDIA   1974-05-18 1998-05-13 1974-05-18 UTC--1998-05-13 UTC 24.0     FALSE  
+  4 PAKIST  1998-05-28 1998-05-30 1998-05-28 UTC--1998-05-30 UTC  0.00548 FALSE  
+  5 UK      1952-10-03 1991-11-26 1952-10-03 UTC--1991-11-26 UTC 39.1     TRUE   
+  6 USA     1945-07-16 1992-09-23 1945-07-16 UTC--1992-09-23 UTC 47.2     TRUE   
+  7 USSR    1949-08-29 1990-10-24 1949-08-29 UTC--1990-10-24 UTC 41.2     TRUE
+```
+
+
+---
+# Periods 
+
+Periods are time spans counted in human-readable units which ignore time line irregularities.
+
+
+```r
+days(1) # Periods use pluralized unit names 
+```
+
+```
+  [1] "1d 0H 0M 0S"
+```
+
+```r
+weeks(1)
+```
+
+```
+  [1] "7d 0H 0M 0S"
+```
+
+```r
+months(2)
+```
+
+```
+  [1] "2m 0d 0H 0M 0S"
+```
+
+```r
+time_length(years(1), unit = "days")
+```
+
+```
+  [1] 365.25
+```
+
+
+---
+# Durations
+
+Durations are time spans counted in seconds which track physical time.
+
+
+```r
+ddays(1) # Periods use pluralized unit names prefixed by d
+```
+
+```
+  [1] "86400s (~1 days)"
+```
+
+```r
+dweeks(1)
+```
+
+```
+  [1] "604800s (~1 weeks)"
+```
+
+```r
+time_length(dyears(1), unit = "days")
+```
+
+```
+  [1] 365
+```
+
+.footnote[`dmonths()` doesn't exist.]
+
+---
+# Date algebra
+
+
+```r
+2 * days(3) + hours(3) + minutes(65) - 15 * seconds()
+```
+
+```
+  [1] "6d 3H 65M -15S"
+```
+
+--
+
+
+```r
+seconds_to_period(2 * days(3) + hours(3) + minutes(65) - 15 * seconds())
+```
+
+```
+  [1] "6d 4H 4M 45S"
+```
+
+--
+
+
+```r
+now() + weeks(1) + hours(2)
+```
+
+```
+  [1] "2019-12-16 19:09:35 CET"
+```
+
+```r
+now() + dweeks(1) + dhours(2)
+```
+
+```
+  [1] "2019-12-16 19:09:35 CET"
+```
+
+
+---
+# Leap years
+
+
+```r
+today()
+```
+
+```
+  [1] "2019-12-09"
+```
+
+```r
+today() + years(6)
+```
+
+```
+  [1] "2025-12-09"
+```
+
+```r
+today() + dyears(6)
+```
+
+```
+  [1] "2025-12-07"
+```
+
+```r
+leap_year(today() + years(0:6))
+```
+
+```
+  [1] FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE
+```
+
+---
+# February 31st
+
+
+```r
+ymd("2020-01-31")
+```
+
+```
+  [1] "2020-01-31"
+```
+
+```r
+ymd("2020-01-31") + months(1)
+```
+
+```
+  [1] NA
+```
+
+```r
+ymd("2020-01-31") %m+% months(1) # %m-% exists too 
+```
+
+```
+  [1] "2020-02-29"
+```
+
+```r
+add_with_rollback(ymd("2020-01-31"), months(1), roll_to_first = TRUE)
+```
+
+```
+  [1] "2020-03-01"
+```
+
+---
+# Time zones
+
+There are 593 different time zones.
+
+
+```r
+sample(OlsonNames(), 9)
+```
+
+```
+  [1] "America/Asuncion"     "Antarctica/Rothera"   "America/Lima"        
+  [4] "Africa/Porto-Novo"    "America/Indiana/Knox" "Asia/Qyzylorda"      
+  [7] "Africa/Gaborone"      "Australia/Lord_Howe"  "America/Montevideo"
+```
+
+--
+
+By default, the time zone is UTC for Universal Coordinated time zone.
+
+
+```r
+first_step
+```
+
+```
+  [1] "1969-07-20 20:17:30 UTC"
+```
+
+```r
+tz(first_step)
+```
+
+```
+  [1] "UTC"
+```
+
+---
+# Manipulating time zones
+
+You can change the time zone within which a time is mesured in with `with_tz()`.
+
+
+```r
+first_step
+```
+
+```
+  [1] "1969-07-20 20:17:30 UTC"
+```
+
+```r
+with_tz(first_step, "US/Eastern")
+```
+
+```
+  [1] "1969-07-20 16:17:30 EDT"
+```
+
+--
+
+`force_tz()` will coerce the clock time in a new time zone. 
+
+
+```r
+force_tz(first_step, "US/Eastern")
+```
+
+```
+  [1] "1969-07-20 20:17:30 EDT"
+```
+
+
+---
+# Nice print with template
+
+
+```r
+st &lt;- stamp("Created on Sunday 1 December 2019")
+st(first_landing)
+```
+
+```
+  [1] "Created on Sunday 20 July 1969"
+```
+
+```r
+st(today() + months(0:4)) 
+```
+
+```
+  [1] "Created on Monday 09 December 2019"  "Created on Thursday 09 January 2020"
+  [3] "Created on Sunday 09 February 2020"  "Created on Monday 09 March 2020"    
+  [5] "Created on Thursday 09 April 2020"
+```
+
+---
+# Time to practice!
+
+&lt;img src="index_files/figure-html/plot-cause-death-1.png" width="864" style="display: block; margin: auto;" /&gt;
+
+
+---
+count: false
+# Time to practice!
+
+.scroll-output[
+
+```r
+df_emperors %&gt;% 
+  select(birth, death, cause) %&gt;% 
+  filter(birth &lt;= death) %&gt;% 
+  mutate(age = time_length(death - birth, unit = "year"),
+         cause = fct_lump_min(cause, min = 5),
+         cause = fct_reorder(cause, age))
+```
+
+```
+  # A tibble: 61 x 4
+     birth      death      cause            age
+     &lt;date&gt;     &lt;date&gt;     &lt;fct&gt;          &lt;dbl&gt;
+   1 0012-08-31 0041-01-24 Assassination   28.4
+   2 0009-08-01 0054-10-13 Assassination   45.2
+   3 0037-12-15 0068-06-09 Suicide         30.5
+   4 0002-12-24 0069-01-15 Assassination   66.1
+   5 0032-04-28 0069-04-16 Suicide         37.0
+   6 0015-09-24 0069-12-20 Assassination   54.3
+   7 0009-11-17 0079-06-24 Natural Causes  69.6
+   8 0039-12-30 0081-09-13 Natural Causes  41.7
+   9 0051-10-24 0096-09-18 Assassination   44.9
+  10 0030-11-08 0098-01-27 Natural Causes  67.3
+  # … with 51 more rows
+```
+]
+
+---
+count: false
+# Time to practice!
+
+.scroll-output[
+
+```r
+df_emperors %&gt;% 
+  select(birth, death, cause) %&gt;% 
+  filter(birth &lt;= death) %&gt;% 
+  mutate(age = time_length(death - birth, unit = "year"),
+         cause = fct_lump_min(cause, min = 5),
+         cause = fct_reorder(cause, age)) %&gt;% 
+  ggplot() +
+  aes(x = cause, y = age, fill = cause, color = cause) +
+  gghalves::geom_half_violin(alpha = 0.8) +
+  gghalves::geom_half_dotplot(binwidth = 1.5, alpha = 0.8) +
+  gghalves::geom_half_boxplot(color = "black", alpha = 0) +
+  scale_fill_viridis_d() +
+  scale_color_viridis_d() +
+  labs(x = "Cause of death", y = "Age at death") +
+  theme(legend.position = "none")
+```
+
+&lt;img src="index_files/figure-html/cause-death-1.png" width="864" style="display: block; margin: auto;" /&gt;
+]
+
+
+---
+class: inverse, center, middle
+background-image: url(img/hex_stringr.png)
+background-size: 15%
+background-position: right 20px bottom 20px
+
+.slide-in-left[
+# Dealing with strings
+]
+.slide-in-right[
+## and regular expressions
+]  
+
+---
+# Fruits and vegetables
+
+
+```r
+frvg &lt;- head(sort(c(levels(fruits), levels(vegetables))))
+frvg
+```
+
+```
+  [1] "apple"   "banana"  "carrot"  "endive"  "lettuce" "mango"
+```
+
+--
+
+&lt;br&gt;
+
+To get the number of characters.fn[1] in a string or a factor, use `str_length()`.
+
+
+```r
+str_length(frvg)
+```
+
+```
+  [1] 5 6 6 6 7 5
+```
+
+`nchar()` does not work on factors.
+
+.footnote[[1] Technically, it's the number of *code points*.]
+
+
+---
+# Convert case
+
+
+```r
+str_to_upper(frvg)
+```
+
+```
+  [1] "APPLE"   "BANANA"  "CARROT"  "ENDIVE"  "LETTUCE" "MANGO"
+```
+
+```r
+str_to_title(frvg)
+```
+
+```
+  [1] "Apple"   "Banana"  "Carrot"  "Endive"  "Lettuce" "Mango"
+```
+
+&lt;br&gt;
+
+`str_to_lower()` and `str_to_sentence()` are also available.
+
+
+---
+# Pattern matching
+
+When you have a string and a pattern, you can do a lot of funny things:
+
+--
+
+* count the number of occurrences of the pattern,
+
+--
+
+* detect if the pattern is present,
+
+--
+
+* extract* the pattern,
+
+.footnote[[*] You can do it on the first occurrence of the pattern or on all occurrences.]
+
+--
+
+* locate* the position of the pattern,
+
+--
+
+* remove\* or replace\* the pattern,
+
+--
+
+* split according to the pattern...
+
+---
+# Count
+
+
+```r
+frvg
+```
+
+```
+  [1] "apple"   "banana"  "carrot"  "endive"  "lettuce" "mango"
+```
+
+```r
+str_count(string = frvg, pattern = "a")
+```
+
+```
+  [1] 1 3 1 0 0 1
+```
+
+--
+
+&lt;br&gt;
+
+This function and the next ones always take `string` and `pattern` as first arguments, and are vectorized over them.
+
+
+```r
+str_count(string = frvg, pattern = c("a", "b", "c", "d", "e", "f"))
+```
+
+```
+  [1] 1 1 1 1 2 0
+```
+
+
+---
+# Detect
+
+
+```r
+str_detect(frvg, "e")
+```
+
+```
+  [1]  TRUE FALSE FALSE  TRUE  TRUE FALSE
+```
+
+```r
+frvg[str_detect(frvg, "e")]
+```
+
+```
+  [1] "apple"   "endive"  "lettuce"
+```
+
+---
+# Extract
+
+.scroll-output[
+
+```r
+str_extract(frvg, "a")
+```
+
+```
+  [1] "a" "a" "a" NA  NA  "a"
+```
+
+```r
+str_extract_all(frvg, "a")
+```
+
+```
+  [[1]]
+  [1] "a"
+  
+  [[2]]
+  [1] "a" "a" "a"
+  
+  [[3]]
+  [1] "a"
+  
+  [[4]]
+  character(0)
+  
+  [[5]]
+  character(0)
+  
+  [[6]]
+  [1] "a"
+```
+]
+
+---
+# Locate
+
+.scroll-output[
+
+```r
+str_locate(frvg, "a")
+```
+
+```
+       start end
+  [1,]     1   1
+  [2,]     2   2
+  [3,]     2   2
+  [4,]    NA  NA
+  [5,]    NA  NA
+  [6,]     2   2
+```
+
+```r
+str_locate_all(frvg, "a")
+```
+
+```
+  [[1]]
+       start end
+  [1,]     1   1
+  
+  [[2]]
+       start end
+  [1,]     2   2
+  [2,]     4   4
+  [3,]     6   6
+  
+  [[3]]
+       start end
+  [1,]     2   2
+  
+  [[4]]
+       start end
+  
+  [[5]]
+       start end
+  
+  [[6]]
+       start end
+  [1,]     2   2
+```
+]
+
+---
+# Remove or replace
+
+
+```r
+str_remove(frvg, "a")
+```
+
+```
+  [1] "pple"    "bnana"   "crrot"   "endive"  "lettuce" "mngo"
+```
+
+```r
+str_remove_all(frvg, "a")
+```
+
+```
+  [1] "pple"    "bnn"     "crrot"   "endive"  "lettuce" "mngo"
+```
+
+```r
+str_replace(frvg, "a", replacement =  "AAA")
+```
+
+```
+  [1] "AAApple"  "bAAAnana" "cAAArrot" "endive"   "lettuce"  "mAAAngo"
+```
+
+```r
+str_replace_all(frvg, "a", replacement =  "AAA")
+```
+
+```
+  [1] "AAApple"      "bAAAnAAAnAAA" "cAAArrot"     "endive"       "lettuce"     
+  [6] "mAAAngo"
+```
+
+---
+# Split
+
+
+```r
+str_split(frvg, "n")
+```
+
+```
+  [[1]]
+  [1] "apple"
+  
+  [[2]]
+  [1] "ba" "a"  "a" 
+  
+  [[3]]
+  [1] "carrot"
+  
+  [[4]]
+  [1] "e"    "dive"
+  
+  [[5]]
+  [1] "lettuce"
+  
+  [[6]]
+  [1] "ma" "go"
+```
+
+
+---
+# Regular expressions
+
+A regular expression, or regex, is a sequence of characters that define a search pattern.
+
+
+.center[
+&lt;img src="img/xkcd_regex.png" height="350"&gt;
+]
+
+.footnote[
+<i class="fas  fa-palette "></i> [XKCD](https://xkcd.com/208/) 
+]
+
+---
+# Exact strings
+
+.pull-left[
+
+```r
+str_view_all(frvg, "a")
+```
+
+<div id="htmlwidget-6d1399716e8228581aa3" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-6d1399716e8228581aa3">{"x":{"html":"<ul>\n  <li><span class='match'>a<\/span>pple<\/li>\n  <li>b<span class='match'>a<\/span>n<span class='match'>a<\/span>n<span class='match'>a<\/span><\/li>\n  <li>c<span class='match'>a<\/span>rrot<\/li>\n  <li>endive<\/li>\n  <li>lettuce<\/li>\n  <li>m<span class='match'>a<\/span>ngo<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(frvg, "ana")
+```
+
+<div id="htmlwidget-e4de6c04d3a15b670239" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e4de6c04d3a15b670239">{"x":{"html":"<ul>\n  <li>apple<\/li>\n  <li>b<span class='match'>ana<\/span>na<\/li>\n  <li>carrot<\/li>\n  <li>endive<\/li>\n  <li>lettuce<\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+.footnote[
+When patterns overlap, only the first one is detected.
+]
+
+---
+# Match any character
+
+The dot `.` matches any character (except a newline).
+
+.pull-left[
+
+```r
+str_view_all(frvg, "a.")
+```
+
+<div id="htmlwidget-e029179d2a8e95398723" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e029179d2a8e95398723">{"x":{"html":"<ul>\n  <li><span class='match'>ap<\/span>ple<\/li>\n  <li>b<span class='match'>an<\/span><span class='match'>an<\/span>a<\/li>\n  <li>c<span class='match'>ar<\/span>rot<\/li>\n  <li>endive<\/li>\n  <li>lettuce<\/li>\n  <li>m<span class='match'>an<\/span>go<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(frvg, "e...")
+```
+
+<div id="htmlwidget-43d5916c5bc403e1f7b1" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-43d5916c5bc403e1f7b1">{"x":{"html":"<ul>\n  <li>apple<\/li>\n  <li>banana<\/li>\n  <li>carrot<\/li>\n  <li><span class='match'>endi<\/span>ve<\/li>\n  <li>l<span class='match'>ettu<\/span>ce<\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+# Repeat a match
+
+.pull-left[
+You can specify if a pattern will match 
+
+* 0 or more times with `*`,
+
+* 1 or more with `+`,
+
+* 0 or 1 time with `?`,
+
+* exactly n with `{n}`,
+
+* n or more with `{n,}`,
+
+* at least m with `{,m}`,
+
+* between n and m with `{n,m}`.
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(frvg, "a.*n")
+```
+
+<div id="htmlwidget-62d7d6b0f49971058581" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-62d7d6b0f49971058581">{"x":{"html":"<ul>\n  <li>apple<\/li>\n  <li>b<span class='match'>anan<\/span>a<\/li>\n  <li>carrot<\/li>\n  <li>endive<\/li>\n  <li>lettuce<\/li>\n  <li>m<span class='match'>an<\/span>go<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+count: false
+# Repeat a match 
+
+.pull-left[
+
+```r
+str_view_all(frvg, "a.+n")
+```
+
+<div id="htmlwidget-7302759401f665b98927" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-7302759401f665b98927">{"x":{"html":"<ul>\n  <li>apple<\/li>\n  <li>b<span class='match'>anan<\/span>a<\/li>\n  <li>carrot<\/li>\n  <li>endive<\/li>\n  <li>lettuce<\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(frvg, "(an){2}") 
+```
+
+<div id="htmlwidget-0420b066e36ce9489c4b" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0420b066e36ce9489c4b">{"x":{"html":"<ul>\n  <li>apple<\/li>\n  <li>b<span class='match'>anan<\/span>a<\/li>\n  <li>carrot<\/li>\n  <li>endive<\/li>\n  <li>lettuce<\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+# Alternatives
+
+You can use `(a|d)` to match `a` or `d`, and `[a-d]` to match every character between `a` and `d`.
+
+.pull-left[
+
+```r
+str_view_all(frvg, "(m|an)an")
+```
+
+<div id="htmlwidget-d308ea22dc0f64dbf7ed" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-d308ea22dc0f64dbf7ed">{"x":{"html":"<ul>\n  <li>apple<\/li>\n  <li>b<span class='match'>anan<\/span>a<\/li>\n  <li>carrot<\/li>\n  <li>endive<\/li>\n  <li>lettuce<\/li>\n  <li><span class='match'>man<\/span>go<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(frvg, "a[p-z]")
+```
+
+<div id="htmlwidget-44db758151977091446d" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-44db758151977091446d">{"x":{"html":"<ul>\n  <li><span class='match'>ap<\/span>ple<\/li>\n  <li>banana<\/li>\n  <li>c<span class='match'>ar<\/span>rot<\/li>\n  <li>endive<\/li>\n  <li>lettuce<\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+# Anchors
+
+Anchors are useful to match the beginning (`^`) or the end (`$`) of a string.
+
+.pull-left[
+
+```r
+str_view_all(frvg, "e$")
+```
+
+<div id="htmlwidget-67b62794e33863e62991" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-67b62794e33863e62991">{"x":{"html":"<ul>\n  <li>appl<span class='match'>e<\/span><\/li>\n  <li>banana<\/li>\n  <li>carrot<\/li>\n  <li>endiv<span class='match'>e<\/span><\/li>\n  <li>lettuc<span class='match'>e<\/span><\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(frvg, "^(a|e).*")
+```
+
+<div id="htmlwidget-5a0cb435521fcff53b1c" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-5a0cb435521fcff53b1c">{"x":{"html":"<ul>\n  <li><span class='match'>apple<\/span><\/li>\n  <li>banana<\/li>\n  <li>carrot<\/li>\n  <li><span class='match'>endive<\/span><\/li>\n  <li>lettuce<\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+# Except
+
+Use `[^abc]` if you want to match every character but `a`, `b` or `c`.
+
+.pull-left[
+
+```r
+str_view_all(frvg, "^[^e].*")
+```
+
+<div id="htmlwidget-506bc878547daaf8b96f" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-506bc878547daaf8b96f">{"x":{"html":"<ul>\n  <li><span class='match'>apple<\/span><\/li>\n  <li><span class='match'>banana<\/span><\/li>\n  <li><span class='match'>carrot<\/span><\/li>\n  <li>endive<\/li>\n  <li><span class='match'>lettuce<\/span><\/li>\n  <li><span class='match'>mango<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(frvg, "[^aeiouy]+")
+```
+
+<div id="htmlwidget-471cb6a5008ccd84c836" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-471cb6a5008ccd84c836">{"x":{"html":"<ul>\n  <li>a<span class='match'>ppl<\/span>e<\/li>\n  <li><span class='match'>b<\/span>a<span class='match'>n<\/span>a<span class='match'>n<\/span>a<\/li>\n  <li><span class='match'>c<\/span>a<span class='match'>rr<\/span>o<span class='match'>t<\/span><\/li>\n  <li>e<span class='match'>nd<\/span>i<span class='match'>v<\/span>e<\/li>\n  <li><span class='match'>l<\/span>e<span class='match'>tt<\/span>u<span class='match'>c<\/span>e<\/li>\n  <li><span class='match'>m<\/span>a<span class='match'>ng<\/span>o<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+# Escape special characters
+
+To match a literal `.`, `$`, `(` or any regex meaningful character, you need to escape it with two backslash: `\\.`, `\\$`, `\\(`...
+
+.pull-left[
+
+```r
+str_view_all(c("abc", "a.c"), "a.c")
+```
+
+<div id="htmlwidget-8fd92a2929f760fab89c" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-8fd92a2929f760fab89c">{"x":{"html":"<ul>\n  <li><span class='match'>abc<\/span><\/li>\n  <li><span class='match'>a.c<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(c("abc", "a.c"), "a\\.c")
+```
+
+<div id="htmlwidget-1872be1f50ed0d6e05f7" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1872be1f50ed0d6e05f7">{"x":{"html":"<ul>\n  <li>abc<\/li>\n  <li><span class='match'>a.c<\/span><\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+# Character classes
+
+Character classes are special pattern that match more that one character.
+
+* `\s` matches any whitespace,
+
+* `\d` or `[:digit:]` matches any digit,
+
+* `[:punct:]` matches any punctuation,
+
+* `[:alpha:]` matches any letters,
+
+* `[:lower:]` matches any lowercase letters,
+
+* `[:upper:]` matches any upperclass letters.
+
+--
+
+You have already created your own character classes like `[a-d]` or `[^abc]`.
+
+---
+# Backreferences
+
+Parenthesis can be used to defined groups of patterns than can be referred to with backreferences like `\\1`, `\\2`... 
+
+.pull-left[
+
+```r
+str_view_all(frvg, "^(.).*\\1$")
+```
+
+<div id="htmlwidget-ae2abda4cf70fff570f1" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-ae2abda4cf70fff570f1">{"x":{"html":"<ul>\n  <li>apple<\/li>\n  <li>banana<\/li>\n  <li>carrot<\/li>\n  <li><span class='match'>endive<\/span><\/li>\n  <li>lettuce<\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+--
+
+.pull-right[
+
+```r
+str_view_all(frvg, "(.).*(.)\\2.*\\1")
+```
+
+<div id="htmlwidget-1ea15ddf05d5255e0553" style="width:960px;height:100%;" class="str_view html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1ea15ddf05d5255e0553">{"x":{"html":"<ul>\n  <li>apple<\/li>\n  <li>banana<\/li>\n  <li>carrot<\/li>\n  <li>endive<\/li>\n  <li>l<span class='match'>ettuce<\/span><\/li>\n  <li>mango<\/li>\n<\/ul>"},"evals":[],"jsHooks":[]}</script>
+]
+
+---
+# Regex crossword level 1
+
+.footnote[
+<i class="fas  fa-link "></i> [Regex Crossword](https://regexcrossword.com)
+]
+
+.pull-left[
+.center[&lt;img src="img/rc_1.png" width="300"&gt;]
+]
+
+--
+
+.pull-right[
+.center[&lt;img src="img/rc_1_full.png" width="300"&gt;]
+]
+
+---
+# Regex crossword level 2
+
+.pull-left[
+.center[&lt;img src="img/rc_2.png" width="350"&gt;]
+]
+
+--
+
+.pull-right[
+.center[&lt;img src="img/rc_2_full.png" width="350"&gt;]
+]
+
+---
+# Regex crossword level 3
+
+.pull-left[
+.center[&lt;img src="img/rc_3.png" width="350"&gt;]
+]
+
+--
+
+.pull-right[
+.center[&lt;img src="img/rc_3_full.png" width="350"&gt;]
+]
+
+---
+# Regex crossword level 4
+
+.pull-left[
+.center[&lt;img src="img/rc_4.png" width="350"&gt;]
+]
+
+--
+
+.pull-right[
+.center[&lt;img src="img/rc_4_full.png" width="350"&gt;]
+]
+
+---
+# Regex crossword level 5
+
+.pull-left[
+.center[&lt;img src="img/rc_5.png" width="350"&gt;]
+]
+
+--
+
+.pull-right[
+.center[&lt;img src="img/rc_5_full.png" width="350"&gt;]
+]
+
+---
+# Regex crossword level over 9000
+
+.center[&lt;img src="img/rc_9000.png" width="450"&gt;] 
+
+
+---
+# References
+
+.pull-left[
+&lt;br&gt;
+
+* [forcats.tidyverse.org]()
+
+&lt;br&gt;
+
+* [lubridate.tidyverse.org]()
+
+&lt;br&gt;
+
+* [stringr.tidyverse.org]()
+]
+
+.pull-right[
+.center[&lt;img src="img/book_r4ds.png" height="350"&gt;&amp;nbsp;&amp;nbsp;&lt;img src="img/book_advr.png" height="350"&gt;] 
+]
+
+
+---
+class: end-slide
+
+
+# Thanks!
+
+
+## <i class="fas  fa-envelope "></i>  &lt;a href="mailto:antoine.bichat@mines-nancy.org?subject=SOTR"&gt;antoine.bichat@mines-nancy.org&lt;/a&gt;
+## <i class="fas  fa-link "></i>  &lt;a href="https://abichat.github.io" target="_blank"&gt;abichat.github.io&lt;/a&gt;
+## <i class="fab  fa-twitter "></i> &lt;a href="https://twitter.com/_abichat" target="_blank"&gt;@_abichat&lt;/a&gt;
+## <i class="fab  fa-github "></i> &lt;a href="https://github.com/abichat" target="_blank"&gt;@abichat&lt;/a&gt;
+
+
+.pull-right[.blue-logo[.pull-down[
+
+]]]
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script src="https://platform.twitter.com/widgets.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:10",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
