@@ -114,6 +114,7 @@ class: noslidenumber
 .pull-right[
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;ref_src=twsrc%5Etfw">#TidyTuesday</a> contribution for this week required patience and perseverance but I did it 💪🏻🐦<a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/tidyverse?src=hash&amp;ref_src=twsrc%5Etfw">#tidyverse</a> <a href="https://twitter.com/hashtag/dataviz?src=hash&amp;ref_src=twsrc%5Etfw">#dataviz</a> <a href="https://twitter.com/hashtag/birds?src=hash&amp;ref_src=twsrc%5Etfw">#birds</a> <a href="https://t.co/8P7Zjgvw0e">pic.twitter.com/8P7Zjgvw0e</a></p>&mdash; Antoine (@_abichat) <a href="https://twitter.com/_abichat/status/1123214724928241665?ref_src=twsrc%5Etfw">April 30, 2019</a></blockquote> 
 ]
+]
 
 ---
 # Nuclear explosions `r icon::fa_bomb(pull = "right")`
@@ -1372,6 +1373,8 @@ str_view_all(frvg, "(.).*(.)\\2.*\\1")
 <br>
 
 * [stringr.tidyverse.org]()
+
+
 ]
 
 .pull-right[
