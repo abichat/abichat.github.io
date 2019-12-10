@@ -114,7 +114,7 @@ class: noslidenumber
 .pull-right[
 <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr"><a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;ref_src=twsrc%5Etfw">#TidyTuesday</a> contribution for this week required patience and perseverance but I did it 💪🏻🐦<a href="https://twitter.com/hashtag/rstats?src=hash&amp;ref_src=twsrc%5Etfw">#rstats</a> <a href="https://twitter.com/hashtag/tidyverse?src=hash&amp;ref_src=twsrc%5Etfw">#tidyverse</a> <a href="https://twitter.com/hashtag/dataviz?src=hash&amp;ref_src=twsrc%5Etfw">#dataviz</a> <a href="https://twitter.com/hashtag/birds?src=hash&amp;ref_src=twsrc%5Etfw">#birds</a> <a href="https://t.co/8P7Zjgvw0e">pic.twitter.com/8P7Zjgvw0e</a></p>&mdash; Antoine (@_abichat) <a href="https://twitter.com/_abichat/status/1123214724928241665?ref_src=twsrc%5Etfw">April 30, 2019</a></blockquote> 
 ]
-]
+
 ---
 # Nuclear explosions `r icon::fa_bomb(pull = "right")`
 
@@ -804,10 +804,10 @@ now() + dweeks(1) + dhours(2)
 # Leap years
 
 ```{r leap}
-today()
-today() + years(6)
-today() + dyears(6)
-leap_year(today() + years(0:6))
+now()
+now() + years(6)
+now() + dyears(6)
+leap_year(now() + years(0:6))
 ```
 
 ---
@@ -841,7 +841,7 @@ tz(first_step)
 ---
 # Manipulating time zones
 
-You can change the time zone within which a time is mesured in with `with_tz()`.
+You can change the time zone within which a time is measured in with `with_tz()`.
 
 ```{r}
 first_step
@@ -854,6 +854,7 @@ with_tz(first_step, "US/Eastern")
 
 ```{r}
 force_tz(first_step, "US/Eastern")
+first_step %>% force_tz("US/Eastern") %>% with_tz("UTC")
 ```
 
 
@@ -938,7 +939,7 @@ frvg
 
 <br>
 
-To get the number of characters.fn[1] in a string or a factor, use `str_length()`.
+To get the number of characters* in a string or a factor, use `str_length()`.
 
 ```{r length}
 str_length(frvg)
@@ -946,7 +947,7 @@ str_length(frvg)
 
 `nchar()` does not work on factors.
 
-.footnote[[1] Technically, it's the number of *code points*.]
+.footnote[[\*] Technically, it's the number of *code points*.]
 
 
 ---
@@ -1219,7 +1220,13 @@ str_view_all(frvg, "[^aeiouy]+")
 ---
 # Escape special characters
 
-To match a literal `.`, `$`, `(` or any regex meaningful character, you need to escape it with two backslash: `\\.`, `\\$`, `\\(`...
+To match a literal `.`, `$`, `(` or any regex meaningful character, you need to escape it with two* backslash: `\\.`, `\\$`, `\\(`...
+
+.footnote[
+[*] You need two backslashes because `\` is an escape character in both R strings and the for regex engine to which you're ultimately passing your patterns.
+
+`r icon::fa_stack_overflow()` [Replacing Backslashes](https://stackoverflow.com/a/27492072/8031980)
+]
 
 .pull-left[
 ```{r escape}

@@ -133,7 +133,7 @@ class: noslidenumber
 .pull-right[
 &lt;blockquote class="twitter-tweet" data-lang="en"&gt;&lt;p lang="en" dir="ltr"&gt;&lt;a href="https://twitter.com/hashtag/TidyTuesday?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#TidyTuesday&lt;/a&gt; contribution for this week required patience and perseverance but I did it 💪🏻🐦&lt;a href="https://twitter.com/hashtag/rstats?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#rstats&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/tidyverse?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#tidyverse&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/dataviz?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#dataviz&lt;/a&gt; &lt;a href="https://twitter.com/hashtag/birds?src=hash&amp;amp;ref_src=twsrc%5Etfw"&gt;#birds&lt;/a&gt; &lt;a href="https://t.co/8P7Zjgvw0e"&gt;pic.twitter.com/8P7Zjgvw0e&lt;/a&gt;&lt;/p&gt;&amp;mdash; Antoine (@_abichat) &lt;a href="https://twitter.com/_abichat/status/1123214724928241665?ref_src=twsrc%5Etfw"&gt;April 30, 2019&lt;/a&gt;&lt;/blockquote&gt; 
 ]
-]
+
 ---
 # Nuclear explosions <i class="fas  fa-bomb fa-pull-right "></i>
 
@@ -1050,7 +1050,7 @@ today()
 ```
 
 ```
-  [1] "2019-12-09"
+  [1] "2019-12-10"
 ```
 
 ```r
@@ -1058,7 +1058,7 @@ now()
 ```
 
 ```
-  [1] "2019-12-09 17:09:35 CET"
+  [1] "2019-12-10 21:07:17 CET"
 ```
 
 --
@@ -1321,7 +1321,7 @@ now() + weeks(1) + hours(2)
 ```
 
 ```
-  [1] "2019-12-16 19:09:35 CET"
+  [1] "2019-12-17 23:07:18 CET"
 ```
 
 ```r
@@ -1329,7 +1329,7 @@ now() + dweeks(1) + dhours(2)
 ```
 
 ```
-  [1] "2019-12-16 19:09:35 CET"
+  [1] "2019-12-17 23:07:18 CET"
 ```
 
 
@@ -1338,31 +1338,31 @@ now() + dweeks(1) + dhours(2)
 
 
 ```r
-today()
+now()
 ```
 
 ```
-  [1] "2019-12-09"
-```
-
-```r
-today() + years(6)
-```
-
-```
-  [1] "2025-12-09"
+  [1] "2019-12-10 21:07:18 CET"
 ```
 
 ```r
-today() + dyears(6)
+now() + years(6)
 ```
 
 ```
-  [1] "2025-12-07"
+  [1] "2025-12-10 21:07:18 CET"
 ```
 
 ```r
-leap_year(today() + years(0:6))
+now() + dyears(6)
+```
+
+```
+  [1] "2025-12-08 21:07:18 CET"
+```
+
+```r
+leap_year(now() + years(0:6))
 ```
 
 ```
@@ -1445,7 +1445,7 @@ tz(first_step)
 ---
 # Manipulating time zones
 
-You can change the time zone within which a time is mesured in with `with_tz()`.
+You can change the time zone within which a time is measured in with `with_tz()`.
 
 
 ```r
@@ -1477,6 +1477,14 @@ force_tz(first_step, "US/Eastern")
   [1] "1969-07-20 20:17:30 EDT"
 ```
 
+```r
+first_step %&gt;% force_tz("US/Eastern") %&gt;% with_tz("UTC")
+```
+
+```
+  [1] "1969-07-21 00:17:30 UTC"
+```
+
 
 ---
 # Nice print with template
@@ -1496,9 +1504,9 @@ st(today() + months(0:4))
 ```
 
 ```
-  [1] "Created on Monday 09 December 2019"  "Created on Thursday 09 January 2020"
-  [3] "Created on Sunday 09 February 2020"  "Created on Monday 09 March 2020"    
-  [5] "Created on Thursday 09 April 2020"
+  [1] "Created on Tuesday 10 December 2019" "Created on Friday 10 January 2020"  
+  [3] "Created on Monday 10 February 2020"  "Created on Tuesday 10 March 2020"   
+  [5] "Created on Friday 10 April 2020"
 ```
 
 ---
@@ -1598,7 +1606,7 @@ frvg
 
 &lt;br&gt;
 
-To get the number of characters.fn[1] in a string or a factor, use `str_length()`.
+To get the number of characters* in a string or a factor, use `str_length()`.
 
 
 ```r
@@ -1611,7 +1619,7 @@ str_length(frvg)
 
 `nchar()` does not work on factors.
 
-.footnote[[1] Technically, it's the number of *code points*.]
+.footnote[[\*] Technically, it's the number of *code points*.]
 
 
 ---
@@ -2093,7 +2101,13 @@ str_view_all(frvg, "[^aeiouy]+")
 ---
 # Escape special characters
 
-To match a literal `.`, `$`, `(` or any regex meaningful character, you need to escape it with two backslash: `\\.`, `\\$`, `\\(`...
+To match a literal `.`, `$`, `(` or any regex meaningful character, you need to escape it with two* backslash: `\\.`, `\\$`, `\\(`...
+
+.footnote[
+[*] You need two backslashes because `\` is an escape character in both R strings and the for regex engine to which you're ultimately passing your patterns.
+
+<i class="fab  fa-stack-overflow "></i> [Replacing Backslashes](https://stackoverflow.com/a/27492072/8031980)
+]
 
 .pull-left[
 
