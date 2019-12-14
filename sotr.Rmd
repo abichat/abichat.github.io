@@ -8,6 +8,16 @@ description: |
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+# Manipulating objects in the Tidyverse - Factors, dates and strings
+
+
+* [Slides](slides/factors_dates_strings/ "Manipulating objects in the Tidyverse")
+
+<aside>
+December 13, 2019
+AgroParisTech 
+</aside>
+
 # Modeling in the Tidyverse and applications to metagenomics data
 
 
