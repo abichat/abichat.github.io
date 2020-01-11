@@ -44,6 +44,8 @@ navbar:
         href: "https://abichat.github.io/evabic"
       - text: "rcppclick"
         href: "https://github.com/abichat/rcppclick"
+      - text: "hadamardown"
+        href: "https://github.com/abichat/hadamardown"
       - text: "mytemplatesabichat"
         href: "https://github.com/abichat/mytemplatesabichat"
     - text: "Miscellaneous"
