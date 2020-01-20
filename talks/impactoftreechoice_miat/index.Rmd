@@ -11,6 +11,7 @@ output:
       countIncrementalSlides: false
       slideNumberFormat: '%current% / %total%'
     css: ["these.css", "default-fonts"]
+    chakra: "remark-0.14.0.min.js"
 ---
 class: title-slide, center, middle
 count: false
