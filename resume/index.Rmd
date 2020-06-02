@@ -139,7 +139,7 @@ Teaching Experience {data-icon=chalkboard-teacher}
 
 Paris area, France
 
-2019
+2020 - 2019
 
 
 ### An Introduction to the Linear Model
@@ -148,7 +148,7 @@ AgroParisTech, 40h, engineering students
 
 Paris, France
 
-2019 - 2018
+2020 - 2018
 
 ### Visualization with R
 
@@ -163,13 +163,13 @@ Nancy, France
 Scientific productions {data-icon=dna}
 --------------------------------------------------------------------------------
 
-### Incorporating phylogenetic information in microbiome abundance studies has no effect on detection power and FDR control
+### <a href="https://doi.org/10.3389/fmicb.2020.00649" target="_blank">Incorporating phylogenetic information in microbiome abundance studies has no effect on detection power and FDR control</a>
 
-Article submited in *Frontiers in Microbiology*
+<a href="https://doi.org/10.3389/fmicb.2020.00649" target="_blank">Published in *Frontiers in Microbiology*</a>
 
 N/A
 
-2019
+2020
 
 **Antoine Bichat**, Jonathan Plassais, Christophe Ambroise and Mahendra Mariadassou
 
@@ -206,7 +206,7 @@ Paris, France
 - Treasurer of *MolieR* (French association for the promotion of R)
 - Active member of *<a href="https://stateofther.github.io" target="_blank">State of the R</a>* (AgroParisTech R users group)
 - Organizing Committee for *<a href="https://paris2019.satrdays.org" target="_blank">SatRday Paris</a>* 2019
-- Organizing Committee for *<a href="https://paris2020.rencontresr.fr" target="_blank">Rencontres R</a>* Paris 2020
+- Organizing Committee for *<a href="https://paris2020.rencontresr.fr" target="_blank">Rencontres R</a>* Paris 2020/21
 
 
 ### During Engineering School
