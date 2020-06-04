@@ -8,13 +8,22 @@ description: |
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
+# Hierarchical correction
+
+* [Math For Genomics](talks/hierarchicalcorrection_lamme/ "Hierarchical FDR correction") (30 minutes)
+
+<aside>
+June 3, 2020 <br>
+LaMME, Évry
+</aside>
+
 # About the choice of the tree in metagenomics differential abundance studies
 
 * [Séminaire MIAT](talks/impactoftreechoice_miat/ "Impact of tree choice in metagenomics differential abundance studies") (1 hour)
 
 <aside>
 Septembre 13, 2019 <br>
-Toulouse
+INRA, Toulouse
 </aside>
 
 * [useR!](posters/user19/index.html "Quantifying the impact of tree choice in metagenomics differential abundance studies with R") (Poster - Winner of BIM's poster prize)
@@ -35,14 +44,14 @@ Nancy
 
 <aside>
 March 25, 2019 <br>
-Sorbonne Université
+Sorbonne Université, Paris
 </aside>
 
 * [Séminaire StatInfOmics](talks/impactoftreechoice_statinfomics/ "Impact of tree choice in metagenomics differential abundance studies") (1 hour)
 
 <aside>
 March 11, 2019 <br>
-MaIAGE, INRA
+INRA, Jouy-en-Josas
 </aside>
 
 * [Statistical Methods for Post Genomic Data](talks/impactoftreechoice_smpgd/ "Impact of tree choice in metagenomics differential abundance studies") (15 minutes)
@@ -56,5 +65,5 @@ Barcelona
 
 <aside>
 January 14, 2019
-AgroParisTech
+AgroParisTech, Paris
 </aside>
