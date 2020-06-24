@@ -370,7 +370,7 @@ blockquote, .blockquote {
 
 @media print {
   .has-continuation {
-    display: block;
+    display: block !important;
   }
 }
 
