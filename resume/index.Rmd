@@ -34,8 +34,6 @@ Languages {#language}
 
 `r emo::ji("it")` Italian (proficient - B2, CILS)
 
-`r emo::ji("de")` German (beginner - B1, ZD)
-
 Technical Skills {#skills}
 --------------------------------------------------------------------------------
 
