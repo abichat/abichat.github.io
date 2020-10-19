@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>Hierarchical FDR correction</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Antoine Bichat" />
+    <meta name="date" content="2020-10-19" />
+    <link href="libs/font-awesome/css/fontawesome-all.min.css" rel="stylesheet" />
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: {
+        Macros: {
+          NN: "{\\mathbb{N}}",
+          ZZ: "{\\mathbb{Z}}",
+          QQ: "{\\mathbb{Q}}",
+          RR: "{\\mathbb{R}}",
+          shiftset: "{\\mathcal{D}}",
+          dx: ["{\\mathrm{d}^{#1}\\mspace{-1mu}\\mathord{#2}}", 2, ""],
+          indic: "{\\unicode{x1D7D9}}",
+          prob: "\\mathop{\\mathbb{P}}",
+          esp: "\\mathop{\\mathbb{E}}",
+          var: "\\mathop{\\mathbb{V}\\text{ar}}",
+          cov: "\\mathop{\\mathbb{C}\\text{ov}}",
+          PP: ["{\\prob\\left({#1}\\right)}", 1],
+          EE: ["{\\esp\\left[{#1}\\right]}", 1],
+          VV: ["{\\var\\left[{#1}\\right]}", 1],
+          CC: ["{\\cov\\left[{#1}\\right]}", 1],
+          normal: ["{\\mathcal{N}\\left({#1},{#2}\\right)}", 2],
+          ou: ["{#1}_{\\text{ou}}", 1],
+          oui: ["{#1}_{\\text{ou},#2}", 2],
+          pv: "{\\mathfrak{p}}",
+          qv: "{\\mathfrak{q}}",
+          zs: "{\\mathfrak{z}}",
+          ts: "{\\mathfrak{t}}",
+          sign: "{\\mathfrak{s}}",
+          shifts: "{\\delta}",
+          optim: "{\\beta}",
+          param: "{\\theta}",
+          unif: ["{\\mathcal{U}\\left({#1}\\right)}", 1],
+          argmin: "\\mathop{\\mathrm{argmin}}",
+          diag: "\\mathop{\\mathrm{Diag}}",
+          rang: "\\mathop{\\mathrm{rang}}",
+          pa: "\\mathop{\\mathrm{pa}}",
+          mrca: "\\mathop{\\mathrm{mrca}}",
+          desc: "\\mathop{\\mathrm{desc}}",
+          warning: ["\\color{red}{{#1}}", 1]
+        }
+      }
+    });
+    </script>
+    <link rel="stylesheet" href="style/style.css" type="text/css" />
+    <link rel="stylesheet" href="style/fonts.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Hierarchical FDR correction
+## and applications to metagenomics differentially abundance studies
+### Antoine Bichat
+### Institut Montpelliérain Alexander Grothendieck
+### October 19, 2020
+
+---
+
+
+
+
+
+
+
+
+
+
+
+class: inverse, center, middle
+
+# Context
+
+---
+# Microbiota
+
+_Ecological community of microorganisms that reside in an environmental niche._ 
+
+--
+
+.pull-left[
+
+#### Some figures for human gut
+
+.footnote[📄 Ley Peterson, et al. [LPG06]; Bokulich Chung, et al. [Bok+16]; Opstelten Plassais, et al. [Ops+16]]
+
+* `\(10^{\small{14}}\)` bacterial cells in one gut...
+
+* ... weighing 2 kg.
+
+* More than 1&amp;#8239;500 different species.
+
+* More than 10 millions unique genes.
+]
+
+--
+
+.pull-right[
+
+#### Associated with
+
+* Inflammatory bowel diseases
+
+* Tobacco
+
+* Diet
+
+* Antibiotics
+
+* Birth mode
+
+]
+
+
+---
+class: bold-last-item
+
+# Data
+
+* Abundance table
+
+  * matrix of size `\(m \times p\)`,
+
+  * count or compositional data, with inflation in zero,
+  
+  * correlation between abundances.
+  
+--
+
+* Sample informations
+
+  * vector of length `\(p\)`, could be continuous (age) or discrete (disease).
+
+--
+
+* Phylogeny
+
+  * tree with `\(m\)` leaves,
+  
+  * describe evolutionary history of the taxa.
+
+
+---
+# Classical approach
+
+Vector `\(\pv\)` of p-values, computed independently.
+
+Correction with Benjamini-Hochberg procedure to respect an _a priori_ FDR : `\(\qv^{\text{bh}}\)`.
+
+--
+
+But it assumes independence between taxa and it is not respected.
+
+--
+
+One can use Benjamini-Yekutieli correction which does not make any assumption about dependence between taxa but 
+
+ * it's too conservative,
+ 
+ * we want to correct explicitly for correlation between taxa.
+
+---
+class: inverse, center, middle
+
+# Hierarchical smoothing
+
+---
+class: bold-last-item
+
+# Goal
+
+* Correct explicitly for correlation between taxa.
+
+--
+
+* Increase power.
+
+--
+
+* Keep FDR under a desired level.
+
+
+---
+# Rationale
+
+&lt;center&gt;
+  &lt;img src="img/coherence.png"/ width="600"&gt;
+&lt;/center&gt;
+
+--
+
+Already used in 
+
+* Hierarchical FDR [Yek08; SH14],
+
+* TreeFDR [XCC17].
+
+
+
+---
+# z-scores
+
+z-scores are defined by
+
+`$$\zs = \Phi^{-1}(\pv).$$`
+&lt;center&gt;
+  &lt;img src="img/pvzs.png"/ width="700"&gt;
+&lt;/center&gt;
+
+---
+# Ornstein-Uhlenbeck process 
+
+An Ornstein-Uhlenbeck (OU) process with an optimal value of `\(\ou{\optim}\)` and a strength of selection `\(\ou{\alpha}\)` is a Gaussian process that satisfies the SDE:
+
+`$$\dx{W_t} = -\ou{\alpha} (W_t - \ou{\optim}) \dx{t} + \ou{\sigma}\dx{B_t}.$$`
+
+
+&lt;center&gt;
+  &lt;img src="img/ou.png"/ width="500"&gt;
+&lt;/center&gt;
+
+---
+# OU process on a tree with shifts `\(\shifts\)`
+
+.footnote[📄 Bastide Mariadassou, et al. [BMR17]]
+
+&lt;center&gt;
+  &lt;img src="img/tree_ou.png"/ width="650"&gt;
+&lt;/center&gt;
+
+
+--
+
+Denote `\(T = (\indic_{\{i \in \desc(j)\}})_{ij} \in\{0,1\}^{m \times n}\)` the incidence matrix of the tree.
+
+--
+
+The random variables on leaves are Gaussian `\(\mathcal{N}_m\left(T\shifts, \Sigma \right)\)` with 
+
+`$$\Sigma_{i, j} = \frac{\ou{\sigma}^2}{2\ou{\alpha}}\left(1 - e^{-2\ou{\alpha} t_{i,j} }\right) \times e^{-\ou{\alpha} d_{i,j}}.$$`
+
+---
+# First assumption
+
+`\(\mathfrak{z}\)` is the realization of an OU on a tree with shifts `\(\delta\)`.
+
+--
+
+Then,
+
+$$
+\zs \sim \mathcal{N}_m\left(\mu,\Sigma\right)
+$$
+
+with `\(\mu = T\delta\)` and `\(\Sigma\)` depends on `\(\alpha_{\text{ou}}\)` and `\(\sigma_{\text{ou}}\)` by 
+
+`$$\Sigma_{i,j} = \frac{\ou{\sigma}^2}{2\ou{\alpha}}\left(e^{-\ou{\alpha} d_{i,j}} - e^{-2\ou{\alpha} h}\right)$$`
+
+for an ultrametric tree with total length `\(h\)`.
+
+---
+# Second assumption
+
+.footnote[📄 McLachlan and Peel [MP04]]
+
+For a taxa `\(i\)`, 
+
+* if `\(\mathcal{H}_i \in \mathbb{H}_0\)`, `\(\mathfrak{p}_i \sim \mathcal{U}(\mathopen[0,1\mathclose])\)` so `\(\mathfrak{z}_i \sim \mathcal{N}(0,1)\)`,
+
+* if `\(\mathcal{H}_i \notin \mathbb{H}_0\)`, `\(\mathfrak{p}_i \preccurlyeq \mathcal{U}(\mathopen[0,1\mathclose])\)` so `\(\mathfrak{z}_i \sim \mathcal{N}(\mu_i,1)\)` with `\(\mu_i \lt 0\)`.
+
+--
+
+Then,
+
+`$$\mathfrak{z} \sim \mathcal{N}_m\left(\mu \in \RR_-^m, \Sigma\right).$$`
+
+
+One will find differentially abundant taxa by finding the non-zero elements of `\(\mu\)`.
+
+This impose `\(\Sigma_{i,i} = 1\)` so `\(\ou{\hat{\sigma}}=\frac{2\ou{\hat{\alpha}}}{1 - e^{-2\ou{\hat{\alpha}}h}}\)`.
+
+
+---
+# Estimation of `\(\mu\)` 
+
+A naive ML estimator gives
+
+
+`$$\hat{\mu} = \argmin_{\mu\in\RR_-^m} \|\mathfrak{z} - \mu\|_{\Sigma^{-1}, 2}^2.$$`
+
+--
+
+To take the tree into account, `\(\hat{\mu} = T\hat{\shifts}\)` with
+
+`$$\hat{\shifts} = \argmin_{\shifts\in \RR^{n} / T\shifts \in\RR_-^m} \left\|\mathfrak{z} - T\shifts\right\|_{\Sigma^{-1},2}^2.$$`
+
+--
+
+To add hierarchically coherent sparsity in our estimate 
+
+`$$\hat{\shifts} = \argmin_{\shifts\in \RR^{n} / T\shifts \in\RR_-^m} \left\|\mathfrak{z} - T\shifts\right\|_{\Sigma^{-1},2}^2 + \lambda \|\shifts\|_1.$$`
+
+---
+# Estimation of `\(\mu\)` (bis)
+
+By Cholesky decomposition, `\(\Sigma^{-1} = R^TR\)`
+
+`\begin{align*}
+\left\|\mathfrak{z} - T\shifts\right\|_{\Sigma^{-1},2}^2 &amp; = \left(\mathfrak{z} - T\shifts\right)^T\Sigma^{-1}\left(\mathfrak{z} - T\shifts\right)  \\
+&amp; = \left(\mathfrak{z} - T\shifts\right)^TR^TR\left(\mathfrak{z} - T\shifts\right)   \\
+&amp; = \left(R\mathfrak{z} - RT\shifts\right)^T\left(R\mathfrak{z} - RT\shifts\right) \\
+&amp; = \left(y - X\shifts\right)^T\left(y - X\shifts\right) = \left\|y - X\shifts\right\|_2^2
+\end{align*}`
+
+with `\(y = R\mathfrak{z}\)` and `\(X = RT\)`.
+
+--
+
+Finally,
+
+`$$\hat{\shifts} = \argmin_{\shifts\in \RR^{n} / T\shifts \in\RR_-^m} \left\|y - X\shifts\right\|_2^2 + \lambda \|\shifts\|_1.$$`
+
+---
+# Numerical resolution
+
+.footnote[📄 Fu [98]]
+
+The previous problem could be numerically solved by the shooting algorithm, iterating unidirectional updates form the associated problem:
+
+`\begin{equation}
+\left\{
+  \begin{aligned}
+    \argmin_{\param \in \RR} h(\param) &amp; = \frac{1}{2} \|y - z - x\param\|^2_2 + \lambda |\param| \\
+    &amp; \text{s.t. } u + v\param \leq 0.
+  \end{aligned}
+\right.
+\end{equation}`
+
+--
+
+&lt;br&gt;
+
+But `\(\Sigma\)` and must be known.
+
+---
+# Estimation of `\(\Sigma\)` and choice of `\(\lambda\)`
+
+`\(\widehat{\Sigma} = \left(\frac{e^{-\ou{\hat{\alpha}} d_{ij}} - e^{-2\ou{\hat{\alpha}} h }}{1 - e^{-2\ou{\hat{\alpha}} h }}\right)_{i,j}\)` is determined by `\(\ou{\hat{\alpha}}\)`.
+
+--
+
+&lt;br&gt;
+
+The optimal `\(\left(\ou{\alpha}, \lambda\right)\)`, is chosen on a bidimensional grid as the `\(\argmin\)` of the BIC
+
+`\begin{equation}
+\left\|\zs - T\shifts_{\ou{\alpha}, \lambda}\right\|_{\Sigma(\ou{\alpha})^{-1},2}^2 + \log|\Sigma(\ou{\alpha})| + \|\shifts_{\ou{\alpha}, \lambda}\|_0 \log m.
+\end{equation}`
+
+
+
+---
+# Find non zero values
+
+We need confidence intervals on `\(\hat{\shifts}\)` and `\(\hat{\mu}\)`.
+
+Estimation from lasso provides biased estimators without confidence intervals.
+
+--
+
+&lt;br&gt;
+
+Use of a debiasing procedure
+
+* **score system [ZZ14],**
+
+* column-wise inverse [JM13; JM14].
+
+
+---
+# Debiasing procedure
+
+.footnote[📄 Sun and Zhang [SZ12]]
+
+It requires a **initial joined estimator** of `\(\shifts^{\text{(init)}}\)` and its associated standard error `\(\sigma\)`.
+
+This can be done with a scaled lasso
+
+`$$\left(\hat{\shifts}^{\text{(init)}}, \hat{\sigma}\right) = \argmin_{\shifts, \sigma} \frac{\|y - X\shifts\|_2^2}{2\sigma n} + \frac{\sigma}{2} + \lambda \|\shifts\|_1.$$`
+
+--
+
+&lt;br&gt;
+
+It also required the **score system** `\(S \in \RR^{n\times p}\)` associated with `\(X\)` and `\(y\)` where `\(s_j\)` is the residual of the (classical) lasso regression of `\(y\)` against `\(X_{-j}\)`:
+
+`$$s_j = y - \shifts^{-j}_{\text{lasso}} X_{-j}.$$`
+
+---
+# Debiasing procedure (bis)
+
+
+From the initial estimator `\(\hat{\shifts}_j^{\text{(init)}}\)` of the scaled lasso, one can do a **one-step correction**
+
+`$$\hat{\shifts}_j = \hat{\shifts}_j^{\text{(init)}} + \frac{\langle s_j,y-X\hat{\shifts}^{(\text{init})}\rangle}{\langle s_j,x_j\rangle}.$$`
+
+--
+
+Asymptotically, `\(\hat{\shifts} \sim \mathcal{N}_n\left(\shifts, V\right)\)` with 
+
+`$$v_{i,j} = \hat{\sigma} \frac{\langle s_i,s_j \rangle}{\langle s_i,x_i \rangle\langle s_j,x_j \rangle}.$$`
+--
+
+Then the **bilateral confidence interval** for a shift `\(\hat{\shifts}_j\)` is
+
+`$$\left[ \hat{\shifts}_j \pm \phi^{-1}\left(1-\frac{\alpha}{2}\right) \sqrt{v_{j,j}} \right].$$` 
+
+---
+# Smoothed p-values
+
+To have the **unilateral hierarchically smoothed p-values** `\(\pv^\text{h}\)`, we need to propagate the shifts with the incidence matrix `\(T\)`
+
+`$$\pv^\text{h}_i = \Phi\left(\frac{t_{i.}^T\hat{\shifts}}{\left(t_{i.}^TVt_{i.}\right)^{1/2}}\right)$$`
+
+with `\(t_{i.}\)` the `\(i^{\text{th}}\)` row of `\(T\)`.
+
+---
+# Multiple testing correction
+
+.footnote[📄 Javanmard Javadi, et al. [JJ19]]
+
+Correction designed for debiased lasso based on `\(t\)`-scores `\(\ts_i = \frac{t_{i.}^T\hat{\shifts}}{\left(t_{i.}^TVt_{i.}\right)^{1/2}}\)`.
+
+--
+
+Let `\(t_{\text{max}} = \sqrt{2 \log m - 2 \log \log m}\)` and 
+
+`$$t^{\star} = \inf \left\{ 0 \leq t \leq t_{\max} : \frac{2m(1 - \Phi(t))}{R(t) \vee 1} \leq \alpha \right\}$$`
+
+with `\(R(t)= \sum_{i = 1}^m \indic_{\{\ts_i \leq -t\}}\)`.
+
+--
+
+One reject if `\(\ts_i \leq -t^{\star}\)`  and the associated **hierarchical q-values** are 
+
+`$$\qv^{\text{h}}_i = \frac{\pv^{\text{h}}_i \alpha}{\Phi(-t^{\star})}.$$`
+
+
+---
+class: center, middle, inverse
+
+# Implementation
+
+
+---
+class: bold-last-item
+
+# Simulations
+
+.footnote[📄 Bichat Plassais, et al. [Bic+20]]
+
+.pull-left[
+&lt;center&gt;
+  &lt;img src="img/workflow_simu.png"/ width="430"&gt;
+&lt;/center&gt;
+]
+
+.pull-right[
+The choice differentially abundant taxa is done in a hierarchically consistent manner.
+]
+  
+
+---
+# Results
+
+`zazou` increases the TPR but does not always control the FDR.
+
+&lt;center&gt;
+  &lt;img src="img/tprfdr_zazou.png" height="450"&gt;
+&lt;/center&gt;
+
+---
+# Results
+
+zazou has better AUC and ROC curves.
+
+&lt;center&gt;
+  &lt;img src="img/aucroc_zazou.png" height="450"&gt;
+&lt;/center&gt;
+
+
+---
+class: center, middle, inverse
+
+# Conclusions
+
+---
+# Conclusions
+
+* zazou algorithm improves performances a bit ... 
+
+&lt;br&gt;
+
+* ... but things get worse when the structure is not respected.
+
+&lt;br&gt;
+
+* More theoretical work is required.
+
+&lt;br&gt;
+
+* R package `zazou` is available on [GitHub](https://github.com/abichat/zazou).
+
+
+
+---
+
+# References 1
+
+Bastide, P., M. Mariadassou, and S. Robin. "Detection of adaptive
+shifts on phylogenies by using shifted stochastic processes on a tree
+Series B Statistical methodology".  (2017).
+
+Bichat, A., J. Plassais, C. Ambroise, and M. Mariadassou.
+"Incorporating Phylogenetic Information in Microbiome Differential
+Abundance Studies Has No Effect on Detection Power and FDR Control".
+In: _Frontiers in Microbiology_ 11 (2020), p. 649. ISSN: 1664-302X.
+
+Bokulich, N. A., J. Chung, T. Battaglia, N. Henderson, M. Jay, H. Li,
+A. D. Lieber, F. Wu, G. I. Perez-Perez, Y. Chen, and others.
+"Antibiotics, birth mode, and diet shape microbiome maturation during
+early life". In: _Science translational medicine_ 8.343 (2016), pp.
+343ra82-343ra82.
+
+Fu, W. J. "Penalized regressions: the bridge versus the lasso". In:
+_Journal of computational and graphical statistics_ 7.3 (1998), pp.
+397-416.
+
+---
+count: false
+
+# References 2
+
+Javanmard, A., H. Javadi, and others. "False discovery rate control via
+debiased lasso". In: _Electronic Journal of Statistics_ 13.1 (2019),
+pp. 1212-1253.
+
+Javanmard, A. and A. Montanari. "Confidence intervals and hypothesis
+testing for high-dimensional regression". In: _The Journal of Machine
+Learning Research_ 15.1 (2014), pp. 2869-2909.
+
+\-\-\- "Confidence intervals and hypothesis testing for
+high-dimensional statistical models". In: _Advances in Neural
+Information Processing Systems_. 2013, pp. 1187-1195.
+
+Ley, R. E., D. A. Peterson, and J. I. Gordon. "Ecological and
+evolutionary forces shaping microbial diversity in the human
+intestine". In: _Cell_ 124.4 (2006), pp. 837-848.
+
+---
+count: false
+
+# References 3
+
+McLachlan, G. J. and D. Peel. _Finite mixture models_. John Wiley &amp;
+Sons, 2004.
+
+Opstelten, J. L., J. Plassais, S. W. van Mil, E. Achouri, M. Pichaud,
+P. D. Siersema, B. Oldenburg, and A. C. Cervino. "Gut microbial
+diversity is reduced in smokers with Crohn's disease". In:
+_Inflammatory bowel diseases_ 22.9 (2016), pp. 2070-2077.
+
+Sankaran, K. and S. Holmes. "structSSI: simultaneous and selective
+inference for grouped or hierarchically structured data". In: _Journal
+of statistical software_ 59.13 (2014), p. 1.
+
+Sun, T. and C. Zhang. "Scaled sparse linear regression". In:
+_Biometrika_ 99.4 (2012), pp. 879-898.
+
+---
+count: false
+
+# References 4
+
+Xiao, J., H. Cao, and J. Chen. "False discovery rate control
+incorporating phylogenetic tree increases detection power in
+microbiome-wide multiple testing". In: _Bioinformatics_ 33.18 (2017),
+pp. 2873-2881.
+
+Yekutieli, D. "Hierarchical false discovery rate-controlling
+methodology". In: _Journal of the American Statistical Association_
+103.481 (2008), pp. 309-316.
+
+Zhang, C. and S. S. Zhang. "Confidence intervals for low dimensional
+parameters in high dimensional linear models". In: _Journal of the
+Royal Statistical Society: Series B (Statistical Methodology)_ 76.1
+(2014), pp. 217-242.
+
+---
+class: end-slide
+
+
+# Thanks!
+
+
+## <i class="fas  fa-envelope "></i>  &lt;a href="mailto:antoine.bichat@mines-nancy.org?subject=SOTR"&gt;antoine.bichat@mines-nancy.org&lt;/a&gt;
+## <i class="fas  fa-link "></i>  &lt;a href="https://abichat.github.io" target="_blank"&gt;abichat.github.io&lt;/a&gt;
+## <i class="fab  fa-twitter "></i> &lt;a href="https://twitter.com/_abichat" target="_blank"&gt;@_abichat&lt;/a&gt;
+## <i class="fab  fa-github "></i> &lt;a href="https://github.com/abichat" target="_blank"&gt;@abichat&lt;/a&gt;
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"ratio": "16:10",
+"navigation": {
+"scroll": false
+}
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>

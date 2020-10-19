@@ -10,6 +10,13 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Hierarchical correction
 
+* [Séminaire IMAG](talks/hierarchicalcorrection_imag/ "Hierarchical FDR correction") (1 hour)
+
+<aside>
+October 19, 2020 <br>
+IMAG, Montpellier
+</aside>
+
 * [Math For Genomics](talks/hierarchicalcorrection_lamme/ "Hierarchical FDR correction") (30 minutes)
 
 <aside>
