@@ -41,8 +41,7 @@ Technical Skills {#skills}
 
 - Skilled in Python, Matlab, LaTeX and Office
 
-- Knowledge in C++, HTML and CSS
-
+- Knowledge in C++, SQL, HTML and CSS
 
 
 Main
@@ -51,9 +50,58 @@ Main
 Antoine Bichat {#title}
 --------------------------------------------------------------------------------
 
-### Mathematical Engineer - PhD Student in Biostatistics
+### Mathematical Engineer - PhD in Biostatistics
 
-<i class="fa fa-envelope"></i> <a href="mailto:antoine.bichat@mines-nancy.org?subject=Resume">antoine.bichat@mines-nancy.org</a>
+<i class="fa fa-envelope"></i> <a href="mailto:antoine.bichat@protonmail.com?subject=Resume">antoine.bichat@protonmail.com</a>
+
+
+
+Professional Experience {data-icon=suitcase}
+--------------------------------------------------------------------------------
+
+### Computational scientist
+
+Servier
+
+Paris area, France
+
+Today - 2021
+
+- Disease understanding, statistical modeling
+- Oncology, hard-to-treat cancers, pediatric cancers
+
+### Industrial PhD Student
+
+Enterome
+
+Paris, France
+
+2020 - 2018
+
+- PhD with CIFRE convention
+
+### Biostatistician intern
+
+Nestlé Research Center
+
+Lausanne, Switzerland
+
+2017
+
+- Data analysis of microbiome 16S sequencing 
+- Implementation of DADA2 pipeline for sample inference
+
+
+### Biostatistician intern
+
+Enterome
+
+Paris, France
+
+2016
+
+- Data analysis of microbiome Illumina next-generation sequencing
+- Writing and automation of bioinformatics quality control report
 
 
 Education {data-icon=graduation-cap data-concise=true}
@@ -62,13 +110,14 @@ Education {data-icon=graduation-cap data-concise=true}
 
 ### PhD
 
-Enterome & LaMME
+Université Paris-Saclay
 
 Paris area, France
 
 2020 - 2018
 
-_Discovering multi-scale metagenomic signatures through hierarchical organization of species_. Tutored by Dr Christophe Ambroise, Dr Mahendra Mariadassou and Mr Jonathan Plassais
+- <a href="https://abichat.github.io/thesis/" target="_blank">_Discovering multi-scale metagenomic signatures through hierarchical organization of species_</a>
+- Tutored by Dr Christophe Ambroise, Dr Mahendra Mariadassou and Mr Jonathan Plassais
 
 ### Mathematics of Modelling Master's degree
 
@@ -98,37 +147,9 @@ Lycée du Parc, MP*
 
 Lyon, France
 
+\pagebreak
 
-
-Professional Experience {data-icon=suitcase}
---------------------------------------------------------------------------------
-
-### Biostatistician intern
-
-Nestlé Research Center
-
-Lausanne, Switzerland
-
-2017
-
-- Data analysis of microbiome 16S sequencing 
-- Implementation of DADA2 pipeline for sample inference
-
-
-### Biostatistician intern
-
-Enterome
-
-Paris, France
-
-2016
-
-- Data analysis of microbiome Illumina next-generation sequencing
-- Writing and automation of bioinformatics quality control report
-
-
-
-Teaching Experience {data-icon=chalkboard-teacher}
+Teaching Experience {data-icon=chalkboard-teacher} 
 --------------------------------------------------------------------------------
 
 ### Data Science Starter Program
@@ -137,7 +158,7 @@ Teaching Experience {data-icon=chalkboard-teacher}
 
 Paris area, France
 
-2020 - 2019
+Today - 2019
 
 
 ### An Introduction to the Linear Model
@@ -161,6 +182,14 @@ Nancy, France
 Scientific productions {data-icon=dna}
 --------------------------------------------------------------------------------
 
+### <a href="https://arxiv.org/abs/2009.13335" target="_blank">Hierarchical correction of p-values via a tree running Ornstein-Uhlenbeck process</a>
+
+<a href="https://arxiv.org/abs/2009.13335" target="_blank">Preprint, submited to *Computational Statistics*</a>
+
+N/A
+
+2020
+
 ### <a href="https://doi.org/10.3389/fmicb.2020.00649" target="_blank">Incorporating phylogenetic information in microbiome abundance studies has no effect on detection power and FDR control</a>
 
 <a href="https://doi.org/10.3389/fmicb.2020.00649" target="_blank">Published in *Frontiers in Microbiology*</a>
@@ -168,8 +197,6 @@ Scientific productions {data-icon=dna}
 N/A
 
 2020
-
-**Antoine Bichat**, Jonathan Plassais, Christophe Ambroise and Mahendra Mariadassou
 
 ### Quantifying the impact of tree choice in metagenomics differential abundance studies with R
 
@@ -199,12 +226,12 @@ Involved in the R community
 
 Paris, France
 
-2020 - 2018
+2021 - 2018
 
 - Treasurer of *MolieR* (French association for the promotion of R)
 - Active member of *<a href="https://stateofther.github.io" target="_blank">State of the R</a>* (AgroParisTech R users group)
 - Organizing Committee for *<a href="https://paris2019.satrdays.org" target="_blank">SatRday Paris</a>* 2019
-- Organizing Committee for *<a href="https://paris2020.rencontresr.fr" target="_blank">Rencontres R</a>* Paris 2020/21
+- Organizing Committee for *<a href="https://paris2021.rencontresr.fr" target="_blank">Rencontres R</a>* Paris 2020/21
 
 
 ### During Engineering School
