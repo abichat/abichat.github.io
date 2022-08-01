@@ -1,0 +1,68 @@
+{
+  "articles": [
+    {
+      "path": "404.html",
+      "title": "Error 404",
+      "description": "Page not found",
+      "author": [],
+      "contents": "\n\n\n\n",
+      "last_modified": "2020-10-19T11:29:05+02:00"
+    },
+    {
+      "path": "agro-modlin.html",
+      "title": "Bases du modèle linéaire",
+      "description": "<p align=\"center\"><a href=\"http://www2.agroparistech.fr\" target=\"_blank\"><img src=\"img/logo_apt.png\" alt=\"AgroParisTech\" height=\"130\"><\/a><\/p>",
+      "author": [],
+      "contents": "\nPlanning 2019\n\n\n\n\nDateHeureGroupeTPSalleVendredi 27 septembre8h30F2TP1i1210h15D213h15H215hB2Vendredi 25 octobre8h30H2TP2i1210h15TP313h15D2TP215hTP3Vendredi 29 novembre8h30F2TP2i2110h15TP3Vendredi 6 décembre8h30B2TP2i2110h15TP3\n\nExemples de cours (2018)\nRegression linéaire simple,\nRegression linéaire multiple,\nANOVA à un facteur,\nANOVA à deux facteurs, cas équilibré,\nANOVA à deux facteurs, cas BIE,\nAnalyse de la covariance,\nAnalyse en composantes principales.\nTP\nTP1,\nTP2-3.\nRéférences extérieures\nFacteurs de confusion\n\n\nP-valeur\n\n\n\n\nVariance expliquée\n\n\nRégression\n\n\n\n\n",
+      "last_modified": "2020-10-19T11:29:09+02:00"
+    },
+    {
+      "path": "index.html",
+      "title": "About me",
+      "author": [],
+      "contents": "\n\n  I’m a data scientist in the computational medicine team at\nLes Laboratoires\nServier. I focus my work on omics data for oncology and pediatric\ncancer.   I did my PhD in biostatistics under the supervisation of\nChristophe\nAmbroise,\nMahendra\nMariadassou and Jonathan Plassais at the\nLaboratoire\nde Mathématiques et Modélisation d’Évry (LaMME) and the\npharmaceutical company\nEnterome. The\nworks consisted in discovering multi-scale metagenomic signatures\nthrough hierarchical organization of species.    I studied\nmathematical engineering at\nMines\nNancy and biomathematics at\nSorbonne\nUniversité.    I’m also a big fan of the\n\nprogramming language and the\ntidyverse 😄\n\n\n\n\nTweets\nby _abichat\n\n\n\n",
+      "last_modified": "2022-08-01T18:45:56+02:00"
+    },
+    {
+      "path": "minesnancy-visu.html",
+      "title": "Visualisation with R",
+      "description": "<p align=\"center\"><a href=\"Visualisation and other cool things with R\" target=\"_blank\"><img src=\"img/logo_ensmn.png\" alt=\"Mines Nancy\" height=\"130\"><\/a><\/p>",
+      "author": [],
+      "contents": "\nVisualisation and other cool things with R\nSlides\n\nDecembre 15, 2017  Mines Nancy\nFiles: Glucose.txt, Pokemon.txt.\n\n\n",
+      "last_modified": "2020-10-19T11:29:10+02:00"
+    },
+    {
+      "path": "sotr.html",
+      "title": "Talks at State of the R",
+      "description": "<p align=\"center\"><a href=\"https://stateofther.github.io\" target=\"_blank\"><img src=\"img/sticker_sotr.png\" alt=\"State of the R\" height=\"130\"><\/a><\/p>",
+      "author": [],
+      "contents": "\nManipulating objects in the Tidyverse - Factors, dates and strings\nSlides\n\nDecember 13, 2019 AgroParisTech\nModeling in the Tidyverse and applications to metagenomics data\nSlides\n\nNovember 23, 2018 AgroParisTech\nFiles: pines.txt, abund_table.txt, samples_table.txt.\n\n\n3h30 plus tard, il est toujours là, avec 5 nouvelles fonctions du tidyverse par slide. pic.twitter.com/9Bzyzxeg5x\n\n— State of the R (@RUG_stateofther) 23 novembre 2018\n\n\nIntroduction to the Tidyverse\nSlides\n\nMay 2, 2018 AgroParisTech\n\nScience Communication with R\nSlides\n\nFebruary 23, 2018 AgroParisTech\n",
+      "last_modified": "2020-10-19T11:29:10+02:00"
+    },
+    {
+      "path": "talks-r.html",
+      "title": "Talks about R",
+      "description": "<p align=\"center\"><img src=\"img/logo_r.png\" height=\"130\"><\/p>",
+      "author": [],
+      "contents": "\nMetagenomics with R\nSlides\n\nNovember 23, 2017 Grenoble\n",
+      "last_modified": "2020-10-19T11:29:10+02:00"
+    },
+    {
+      "path": "talks-science.html",
+      "title": "Scientific talks",
+      "description": "<p align=\"center\"><i class=\"fas fa-chalkboard-teacher fa-7x\"><\/i><\/p>",
+      "author": [],
+      "contents": "\nHierarchical correction\nSéminaire IMAG (1 hour)\n\nOctober 19, 2020  IMAG, Montpellier\nMath For Genomics (30 minutes)\n\nJune 3, 2020  LaMME, Évry\nAbout the choice of the tree in metagenomics differential abundance studies\nSéminaire MIAT (1 hour)\n\nSeptembre 13, 2019  INRA, Toulouse\nuseR! (Poster - Winner of BIM’s poster prize)\n\nJuly 11, 2019  Toulouse\nJournées de Statistique (20 minutes)\n\nJune 6, 2019  Nancy\nGroupe de Travail des Thésards de Jussieu (1 hour)\n\nMarch 25, 2019  Sorbonne Université, Paris\nSéminaire StatInfOmics (1 hour)\n\nMarch 11, 2019  INRA, Jouy-en-Josas\nStatistical Methods for Post Genomic Data (15 minutes)\n\nJanuary 31, 2019 Barcelona\nSéminaire AgroParisTech (1 hour)\n\nJanuary 14, 2019 AgroParisTech, Paris\n",
+      "last_modified": "2020-10-19T11:29:10+02:00"
+    },
+    {
+      "path": "x-dssp.html",
+      "title": "Data Science Starter Program",
+      "description": "<p align=\"center\"><a target=\"_blank\"><img src=\"img/logo_x.jpg\" alt=\"Mines Nancy\" height=\"130\"><\/a><\/p>",
+      "author": [],
+      "contents": "\nTable Wrangling & Data Visualization\nSlides\nTP1 & TP2\nIntroduction to R\nSlides\n",
+      "last_modified": "2020-10-19T11:29:11+02:00"
+    }
+  ],
+  "collections": []
+}
